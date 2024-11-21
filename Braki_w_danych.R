@@ -11,3 +11,4 @@ NA_summary <- miss_var_summary(Data)
 NA_summary_case <- miss_case_table(Data)
 
 vis_miss(Data, warn_large_data=FALSE)
+summary(Data)
