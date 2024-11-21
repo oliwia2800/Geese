@@ -1,0 +1,7 @@
+---
+title: "Kredyty"
+author: "Geese"
+date: "2024-11-21"
+output: html_document
+---
+# Kredyty
