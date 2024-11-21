@@ -1,8 +1,3 @@
----
-title: "Geese"
-output: html_document
-date: "2024-11-15"
----
 Autorki:
 Aleksandra Resmerowska
 Beata Stefańczyk
@@ -10,4 +5,3 @@ Paulina Welke
 Oliwia Żaczek
 
 Podział pracy:
-
