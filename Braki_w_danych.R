@@ -42,4 +42,10 @@ ggplot(data = Data, aes(x = INCOME_LOG, y = CREDIT_LOG)) +
   geom_miss_point() +
   scale_color_manual(values = c("#CE4257","#1982C4")) +
   theme_minimal()
+explanatory <- Data [, 3:122]
+dependent <- "TARGET"
 
+library(mice)
+Data %>%
+  missing_pattern(dependent, explanatory)
+md.pattern(Data)
