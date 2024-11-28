@@ -13,6 +13,12 @@ NA_summary_case <- miss_case_table(Data)
 vis_miss(Data, warn_large_data=FALSE)
 
 mean(NA_summary$n_miss)
-
-summary(Data)
-
+library(dplyr)
+target_miss <- Data %>%
+  group_by(TARGET) %>%
+  miss_var_summary
+target_heat_mapa <- gg_miss_fct(Data, fct = TARGET)
+print(target_heat_mapa)
+ncol(Data)
+gg_miss_upset(Data,
+              nsets = 122)
