@@ -6,6 +6,7 @@ library(naniar)
 library(dplyr)
 library(ggplot2)
 library(outliers)
+library(mice)
 
 NA_count <- n_miss(Data)
 complete_values <- n_complete(Data)
@@ -70,10 +71,7 @@ test_grubbs <- function(column) {
 results_grubbs <- lapply(data_numeric, test_grubbs)
 
 
-=======
-library(mice)
 Data %>%
   missing_pattern(dependent, explanatory)
 md.pattern(Data)
 summary(Data)
->>>>>>> parent of a1a988d (Merge pull request #10 from oliwia2800/Paulina)
