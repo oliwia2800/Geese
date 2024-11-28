@@ -1,8 +1,11 @@
 Data <- read.csv("application_data_new.csv")
 
 install.packages("naniar")
-install.packages("mice")
+install.packages("outliers")
 library(naniar)
+library(dplyr)
+library(ggplot2)
+library(outliers)
 
 NA_count <- n_miss(Data)
 complete_values <- n_complete(Data)
@@ -14,7 +17,6 @@ NA_summary_case <- miss_case_table(Data)
 vis_miss(Data, warn_large_data=FALSE)
 
 mean(NA_summary$n_miss)
-library(dplyr)
 
 target_miss <- Data %>%
   group_by(TARGET) %>%
@@ -27,9 +29,6 @@ ncol(Data)
 NA_filter <- NA_summary %>%
   filter(n_miss>0)
 
-library(ggplot2)
-
-  
 gg_miss_upset(Data,
               nsets = 122)
 
@@ -43,10 +42,38 @@ ggplot(data = Data, aes(x = INCOME_LOG, y = CREDIT_LOG)) +
   geom_miss_point() +
   scale_color_manual(values = c("#CE4257","#1982C4")) +
   theme_minimal()
-explanatory <- Data [, 3:122]
-dependent <- "TARGET"
 
+<<<<<<< HEAD
+is.special <- function(x){
+  if (is.numeric(x)) !is.finite(x) else is.na(x)
+}
+
+sapply(Data, is.special)
+
+for (n in colnames(Data)){
+  is.na(Data[[n]]) <- is.special(Data[[n]])
+}
+summary(Data)
+
+data_numeric <- Data %>%
+  select(where(is.numeric))
+
+test_grubbs <- function(column) {
+  if (length(column) > 2) { 
+    result <- grubbs.test(column)
+    return(result)
+  } else {
+    return(NA) 
+  }
+}
+
+results_grubbs <- lapply(data_numeric, test_grubbs)
+
+
+=======
 library(mice)
 Data %>%
   missing_pattern(dependent, explanatory)
 md.pattern(Data)
+summary(Data)
+>>>>>>> parent of a1a988d (Merge pull request #10 from oliwia2800/Paulina)
