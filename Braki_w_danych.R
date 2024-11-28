@@ -47,5 +47,7 @@ explanatory <- Data [, 3:122]
 dependent <- "TARGET"
 
 library(mice)
-colon_s %>%
+Data %>%
   missing_pattern(dependent, explanatory)
+md.pattern(Data)
+summary(Data)
