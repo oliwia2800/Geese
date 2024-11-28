@@ -1,6 +1,7 @@
 Data <- read.csv("application_data_new.csv")
 
 install.packages("naniar")
+install.packages("mice")
 library(naniar)
 
 NA_count <- n_miss(Data)
