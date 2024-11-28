@@ -50,4 +50,3 @@ library(mice)
 Data %>%
   missing_pattern(dependent, explanatory)
 md.pattern(Data)
-summary(Data)
