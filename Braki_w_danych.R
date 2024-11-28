@@ -14,11 +14,32 @@ vis_miss(Data, warn_large_data=FALSE)
 
 mean(NA_summary$n_miss)
 library(dplyr)
+
 target_miss <- Data %>%
   group_by(TARGET) %>%
   miss_var_summary
+
 target_heat_mapa <- gg_miss_fct(Data, fct = TARGET)
 print(target_heat_mapa)
 ncol(Data)
+
+NA_filter <- NA_summary %>%
+  filter(n_miss>0)
+
+library(ggplot2)
+
+  
 gg_miss_upset(Data,
               nsets = 122)
+
+
+Data <- Data %>%
+  mutate(INCOME_LOG = log(AMT_INCOME_TOTAL)) %>%
+           mutate(CREDIT_LOG = log(AMT_CREDIT))
+
+ggplot(data = Data, aes(x = INCOME_LOG, y = CREDIT_LOG)) + 
+  geom_point() +
+  geom_miss_point() +
+  scale_color_manual(values = c("#CE4257","#1982C4")) +
+  theme_minimal()
+
