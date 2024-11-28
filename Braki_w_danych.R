@@ -1,6 +1,7 @@
 Data <- read.csv("application_data_new.csv")
 
 install.packages("naniar")
+install.packages("mice")
 library(naniar)
 
 NA_count <- n_miss(Data)
@@ -42,4 +43,9 @@ ggplot(data = Data, aes(x = INCOME_LOG, y = CREDIT_LOG)) +
   geom_miss_point() +
   scale_color_manual(values = c("#CE4257","#1982C4")) +
   theme_minimal()
+explanatory <- Data [, 3:122]
+dependent <- "TARGET"
 
+library(mice)
+colon_s %>%
+  missing_pattern(dependent, explanatory)
