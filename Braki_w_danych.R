@@ -2,11 +2,33 @@ Data <- read.csv("application_data_new.csv")
 
 install.packages("naniar")
 install.packages("outliers")
+install.packages("mice")
+install.packages("Amelia")
+install.packages("finalfit")
 library(naniar)
 library(dplyr)
 library(ggplot2)
 library(outliers)
 library(mice)
+library(Amelia)
+library(finalfit)
+library(VIM)
+library(rmdformats)
+library(validate)
+library(validatetools)
+library(dcmodify)
+library(errorlocate)
+library(deductive)
+library(simputation)
+library(lumberjack)
+library(ISLR) 
+library(dlookr)
+library(xts)
+library(quantmod)
+library(ROCR)
+library(DMwR)
+library(Information)
+library(scorecard)
 
 NA_count <- n_miss(Data)
 complete_values <- n_complete(Data)
@@ -33,7 +55,6 @@ NA_filter <- NA_summary %>%
 gg_miss_upset(Data,
               nsets = 122)
 
-
 Data <- Data %>%
   mutate(INCOME_LOG = log(AMT_INCOME_TOTAL)) %>%
            mutate(CREDIT_LOG = log(AMT_CREDIT))
@@ -44,7 +65,6 @@ ggplot(data = Data, aes(x = INCOME_LOG, y = CREDIT_LOG)) +
   scale_color_manual(values = c("#CE4257","#1982C4")) +
   theme_minimal()
 
-<<<<<<< HEAD
 is.special <- function(x){
   if (is.numeric(x)) !is.finite(x) else is.na(x)
 }
@@ -70,8 +90,7 @@ test_grubbs <- function(column) {
 
 results_grubbs <- lapply(data_numeric, test_grubbs)
 
+Data_implications <- Data
+VIM::aggr(Data_implications[,3:122])
+VIM::pbox(Data_implications[,3:122], pos=1, las=2)
 
-Data %>%
-  missing_pattern(dependent, explanatory)
-md.pattern(Data)
-summary(Data)
