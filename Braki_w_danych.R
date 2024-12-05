@@ -1,10 +1,3 @@
-Data <- read.csv("application_data_new.csv")
-
-install.packages("naniar")
-install.packages("outliers")
-install.packages("mice")
-install.packages("Amelia")
-install.packages("finalfit")
 library(naniar)
 library(dplyr)
 library(ggplot2)
@@ -26,9 +19,12 @@ library(dlookr)
 library(xts)
 library(quantmod)
 library(ROCR)
-library(DMwR)
 library(Information)
 library(scorecard)
+
+Kredyty <- read.csv("application_data_new.csv")
+set.seed(13)
+Data <- sample_n(Kredyty, 1000)
 
 NA_count <- n_miss(Data)
 complete_values <- n_complete(Data)
@@ -93,4 +89,6 @@ results_grubbs <- lapply(data_numeric, test_grubbs)
 Data_implications <- Data
 VIM::aggr(Data_implications[,3:122])
 VIM::pbox(Data_implications[,3:122], pos=1, las=2)
+
+Data_implications_kNN <- kNN(Data_implications)
 
