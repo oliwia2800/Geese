@@ -92,3 +92,5 @@ VIM::pbox(Data_implications[,3:122], pos=1, las=2)
 
 Data_implications_kNN <- kNN(Data_implications)
 
+# Wybrać 20 kolumn a reszta wywalić m.in. ID
+
