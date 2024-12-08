@@ -22,9 +22,9 @@ library(ROCR)
 library(Information)
 library(scorecard)
 
-Kredyty <- read.csv("application_data_new.csv")
+Kredyty <- read.csv("application_data_new.csv", sep = ";")
 set.seed(13)
-Data <- sample_n(Kredyty, 1000)
+Data <- sample_n(Kredyty, 2500)
 
 NA_count <- n_miss(Data)
 complete_values <- n_complete(Data)
@@ -87,10 +87,8 @@ test_grubbs <- function(column) {
 results_grubbs <- lapply(data_numeric, test_grubbs)
 
 Data_implications <- Data
-VIM::aggr(Data_implications[,3:122])
-VIM::pbox(Data_implications[,3:122], pos=1, las=2)
+VIM::aggr(Data_implications[,1:20])
+VIM::pbox(Data_implications[,1:20], pos=1, las=2)
 
 Data_implications_kNN <- kNN(Data_implications)
-
-# Wybrać 20 kolumn a reszta wywalić m.in. ID
 
