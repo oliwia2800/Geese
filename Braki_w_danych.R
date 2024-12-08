@@ -92,3 +92,13 @@ VIM::pbox(Data_implications[,1:20], pos=1, las=2)
 
 Data_implications_kNN <- kNN(Data_implications)
 
+Data_implications_kNN <- Data_implications_kNN %>%
+  mutate(DAYS_BIRTH = as.Date(DAYS_BIRTH)) %>%
+  mutate(DAYS_EMPLOYED = as.Date(DAYS_EMPLOYED)) 
+
+
+check_that( data.frame(Data_implications_kNN$DAYS_BIRTH),
+            DAYS_BIRTH >= 1850-01-01,
+            DAYS_BIRTH < 2024-12-08
+)
+
