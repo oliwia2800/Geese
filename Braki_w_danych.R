@@ -88,7 +88,6 @@ results_grubbs <- lapply(data_numeric, test_grubbs)
 
 Data_implications <- Data
 VIM::aggr(Data_implications[,1:20])
-VIM::pbox(Data_implications[,1:20], pos=1, las=2)
 
 Data_implications_kNN <- kNN(Data_implications)
 
@@ -97,8 +96,15 @@ Data_implications_kNN <- Data_implications_kNN %>%
   mutate(DAYS_EMPLOYED = as.Date(DAYS_EMPLOYED)) 
 
 
-check_that( data.frame(Data_implications_kNN$DAYS_BIRTH),
-            DAYS_BIRTH >= 1850-01-01,
-            DAYS_BIRTH < 2024-12-08
-)
+rules_birth <- validator(DAYS_BIRTH >= as.Date("1850-01-01"),
+                         DAYS_BIRTH < as.Date("2024-12-08"))
+
+results_birth <- confront(Data_implications_kNN, rules_birth)
+summary(results_birth)
+
+rules_employed <- validator(DAYS_EMPLOYED >= as.Date("1865-01-01"),
+                            DAYS_EMPLOYED < as.Date("2024-12-08"))
+
+results_employed <- confront(Data_implications_kNN, rules_employed)
+summary(results_employed)
 
