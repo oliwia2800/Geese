@@ -95,16 +95,33 @@ Data_implications_kNN <- Data_implications_kNN %>%
   mutate(DAYS_BIRTH = as.Date(DAYS_BIRTH)) %>%
   mutate(DAYS_EMPLOYED = as.Date(DAYS_EMPLOYED)) 
 
-
 rules_birth <- validator(DAYS_BIRTH >= as.Date("1850-01-01"),
                          DAYS_BIRTH < as.Date("2024-12-08"))
-
 results_birth <- confront(Data_implications_kNN, rules_birth)
 summary(results_birth)
 
 rules_employed <- validator(DAYS_EMPLOYED >= as.Date("1865-01-01"),
                             DAYS_EMPLOYED < as.Date("2024-12-08"))
-
 results_employed <- confront(Data_implications_kNN, rules_employed)
 summary(results_employed)
 
+rules_target <- validator(TARGET == 1 | TARGET == 0)
+results_target <- confront(Data_implications_kNN, rules_target)
+summary(results_target)
+
+rules_name_contract_type <- validator(NAME_CONTRACT_TYPE == "Cash loans" | NAME_CONTRACT_TYPE == "Revolving loans")
+results_name_contract_type <- confront(Data_implications_kNN, rules_name_contract_type)
+summary(results_name_contract_type)
+
+rules_code_gender <- validator(CODE_GENDER == "M" | CODE_GENDER == "F")
+results_code_gender <- confront(Data_implications_kNN, rules_code_gender)
+summary(results_code_gender)
+
+rules_flag_own_realty <- validator(FLAG_OWN_REALTY == "Y" | FLAG_OWN_REALTY == "N")
+results_flag_own_realty <- confront(Data_implications_kNN, rules_flag_own_realty)
+summary(results_flag_own_realty)
+
+rules_cnt_children <- validator(CNT_CHILDREN >= 0,
+                                CNT_CHILDREN < 30)
+results_cnt_children <- confront(Data_implications_kNN,rules_cnt_children)
+summary(results_cnt_children)
