@@ -89,47 +89,50 @@ results_grubbs <- lapply(data_numeric, test_grubbs)
 Data_implications <- Data
 VIM::aggr(Data_implications[,1:20])
 
-Data_implications_kNN <- kNN(Data_implications)
+Data_hotdeck<- Data_implications %>%
+  group_by(TARGET) %>%
+  group_modify(~ hotdeck(.x)) %>%
+  ungroup()
 
-Data_implications_kNN <- Data_implications_kNN %>%
+Data_hotdeck <- Data_hotdeck %>%
   mutate(DAYS_BIRTH = as.Date(DAYS_BIRTH)) %>%
   mutate(DAYS_EMPLOYED = as.Date(DAYS_EMPLOYED)) 
 
 rules_birth <- validator(DAYS_BIRTH >= as.Date("1850-01-01"),
                          DAYS_BIRTH < as.Date("2024-12-08"))
-results_birth <- confront(Data_implications_kNN, rules_birth)
+results_birth <- confront(Data_hotdeck, rules_birth)
 summary(results_birth)
 
 rules_employed <- validator(DAYS_EMPLOYED >= as.Date("1865-01-01"),
                             DAYS_EMPLOYED < as.Date("2024-12-08"))
-results_employed <- confront(Data_implications_kNN, rules_employed)
+results_employed <- confront(Data_hotdeck, rules_employed)
 summary(results_employed)
 
 rules_target <- validator(TARGET == 1 | TARGET == 0)
-results_target <- confront(Data_implications_kNN, rules_target)
+results_target <- confront(Data_hotdeck, rules_target)
 summary(results_target)
 
 rules_name_contract_type <- validator(NAME_CONTRACT_TYPE == "Cash loans" | NAME_CONTRACT_TYPE == "Revolving loans")
-results_name_contract_type <- confront(Data_implications_kNN, rules_name_contract_type)
+results_name_contract_type <- confront(Data_hotdeck, rules_name_contract_type)
 summary(results_name_contract_type)
 
 rules_code_gender <- validator(CODE_GENDER == "M" | CODE_GENDER == "F")
-results_code_gender <- confront(Data_implications_kNN, rules_code_gender)
+results_code_gender <- confront(Data_hotdeck, rules_code_gender)
 summary(results_code_gender)
 
 rules_flag_own_realty <- validator(FLAG_OWN_REALTY == "Y" | FLAG_OWN_REALTY == "N")
-results_flag_own_realty <- confront(Data_implications_kNN, rules_flag_own_realty)
+results_flag_own_realty <- confront(Data_hotdeck, rules_flag_own_realty)
 summary(results_flag_own_realty)
 
 rules_cnt_children <- validator(CNT_CHILDREN >= 0,
                                 CNT_CHILDREN < 30)
-results_cnt_children <- confront(Data_implications_kNN,rules_cnt_children)
+results_cnt_children <- confront(Data_hotdeck,rules_cnt_children)
 summary(results_cnt_children)
 
 rules_amt_income_total <- validator(AMT_INCOME_TOTAL >= 0)
-results_amt_income_total <- confront(Data_implications_kNN,rules_amt_income_total)
+results_amt_income_total <- confront(Data_hotdeck,rules_amt_income_total)
 summary(results_amt_income_total)
 
 rules_amt_credit <- validator(AMT_CREDIT > 0)
-results_amt_credit <- confront(Data_implications_kNN,rules_amt_credit)
+results_amt_credit <- confront(Data_hotdeck,rules_amt_credit)
 summary(results_amt_credit)
