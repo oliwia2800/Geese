@@ -98,16 +98,6 @@ Data_hotdeck <- Data_hotdeck %>%
   mutate(DAYS_BIRTH = as.Date(DAYS_BIRTH)) %>%
   mutate(DAYS_EMPLOYED = as.Date(DAYS_EMPLOYED)) 
 
-rules_birth <- validator(DAYS_BIRTH >= as.Date("1850-01-01"),
-                         DAYS_BIRTH < as.Date("2024-12-08"))
-results_birth <- confront(Data_hotdeck, rules_birth)
-summary(results_birth)
-
-rules_employed <- validator(DAYS_EMPLOYED >= as.Date("1865-01-01"),
-                            DAYS_EMPLOYED < as.Date("2024-12-08"))
-results_employed <- confront(Data_hotdeck, rules_employed)
-summary(results_employed)
-
 rules_target <- validator(TARGET == 1 | TARGET == 0)
 results_target <- confront(Data_hotdeck, rules_target)
 summary(results_target)
@@ -126,13 +116,54 @@ summary(results_flag_own_realty)
 
 rules_cnt_children <- validator(CNT_CHILDREN >= 0,
                                 CNT_CHILDREN < 30)
-results_cnt_children <- confront(Data_hotdeck,rules_cnt_children)
+results_cnt_children <- confront(Data_hotdeck, rules_cnt_children)
 summary(results_cnt_children)
 
 rules_amt_income_total <- validator(AMT_INCOME_TOTAL >= 0)
-results_amt_income_total <- confront(Data_hotdeck,rules_amt_income_total)
+results_amt_income_total <- confront(Data_hotdeck, rules_amt_income_total)
 summary(results_amt_income_total)
 
 rules_amt_credit <- validator(AMT_CREDIT > 0)
-results_amt_credit <- confront(Data_hotdeck,rules_amt_credit)
+results_amt_credit <- confront(Data_hotdeck, rules_amt_credit)
 summary(results_amt_credit)
+
+table(Data_hotdeck$NAME_INCOME_TYPE)
+table(Data_hotdeck$NAME_EDUCATION_TYPE)
+table(Data_hotdeck$NAME_FAMILY_STATUS)
+table(Data_hotdeck$NAME_HOUSING_TYPE)
+
+rules_birth <- validator(DAYS_BIRTH >= as.Date("1850-01-01"),
+                         DAYS_BIRTH < as.Date("2024-12-08"))
+results_birth <- confront(Data_hotdeck, rules_birth)
+summary(results_birth)
+
+rules_employed <- validator(DAYS_EMPLOYED >= as.Date("1865-01-01"),
+                            DAYS_EMPLOYED < as.Date("2024-12-08"))
+results_employed <- confront(Data_hotdeck, rules_employed)
+summary(results_employed)
+
+rules_avg <- validator(APARTMENTS_AVG >= 0, 
+                       BASEMENTAREA_AVG >= 0, 
+                       YEARS_BUILD_AVG >= 0, 
+                       COMMONAREA_AVG >= 0, 
+                       ENTRANCES_AVG >= 0, 
+                       LANDAREA_AVG >= 0,
+                       APARTMENTS_AVG <= 1, 
+                       BASEMENTAREA_AVG <= 1,
+                       YEARS_BUILD_AVG <= 1, 
+                       COMMONAREA_AVG <= 1, 
+                       ENTRANCES_AVG <= 1,
+                       LANDAREA_AVG <= 1)
+results_avg <- confront(Data_hotdeck, rules_avg)
+summary(results_avg)
+
+Data_hotdeck <- Data_hotdeck %>%
+  mutate(BASEMENTAREA_AVG = ifelse(BASEMENTAREA_AVG == "5,00E-04", "0,0005", BASEMENTAREA_AVG)) %>%
+  mutate(BASEMENTAREA_AVG = ifelse(BASEMENTAREA_AVG == "1,00E-04", "0,0001", BASEMENTAREA_AVG)) %>%
+  mutate(COMMONAREA_AVG = ifelse(COMMONAREA_AVG == "9,00E-04", "0,0009", COMMONAREA_AVG)) %>%
+  mutate(COMMONAREA_AVG = ifelse(COMMONAREA_AVG == "8,00E-04", "0,0008", COMMONAREA_AVG)) %>%            
+  mutate(COMMONAREA_AVG = ifelse(COMMONAREA_AVG == "7,00E-04", "0,0007", COMMONAREA_AVG)) %>%
+  mutate(COMMONAREA_AVG = ifelse(COMMONAREA_AVG == "5,00E-04", "0,0005", COMMONAREA_AVG)) %>%   
+  mutate(COMMONAREA_AVG = ifelse(COMMONAREA_AVG == "2,00E-04", "0,0002", COMMONAREA_AVG))
+
+
