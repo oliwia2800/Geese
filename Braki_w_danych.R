@@ -125,3 +125,11 @@ rules_cnt_children <- validator(CNT_CHILDREN >= 0,
                                 CNT_CHILDREN < 30)
 results_cnt_children <- confront(Data_implications_kNN,rules_cnt_children)
 summary(results_cnt_children)
+
+rules_amt_income_total <- validator(AMT_INCOME_TOTAL >= 0)
+results_amt_income_total <- confront(Data_implications_kNN,rules_amt_income_total)
+summary(results_amt_income_total)
+
+rules_amt_credit <- validator(AMT_CREDIT > 0)
+results_amt_credit <- confront(Data_implications_kNN,rules_amt_credit)
+summary(results_amt_credit)
