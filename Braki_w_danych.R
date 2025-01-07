@@ -94,7 +94,7 @@ Data_hotdeck<- Data_implications %>%
   group_modify(~ hotdeck(.x)) %>%
   ungroup()
 
-Data_hotdeck<- Data_hotdeck[,1:20]
+Data_hotdeck<- Data_hotdeck[,1:22]
 
 table(Data_hotdeck$NAME_INCOME_TYPE)
 table(Data_hotdeck$NAME_EDUCATION_TYPE)
@@ -149,7 +149,40 @@ sum(is.na(Data_hotdeck))
 NA_proportion2 <- prop_miss(Data_hotdeck)
 
 Data_hotdeck <- kNN(Data_hotdeck)
-Data_hotdeck <- Data_hotdeck$ORGANIZATION_TYPE
-Data_hotdeck<- Data_hotdeck[,1:20]
+
+Data_hotdeck<- Data_hotdeck[,1:22]
 
 table(Data_hotdeck$ORGANIZATION_TYPE)
+
+Data_hotdeck %>% 
+  mutate(APARTMENTS_AVG_Z = transform(Data_hotdeck$APARTMENTS_AVG, method = "zscore"))  %>% 
+  select(APARTMENTS_AVG_Z) %>% 
+  boxplot()
+
+find_skewness(Data_hotdeck, index=FALSE)      
+
+find_skewness(Data_hotdeck, value=TRUE, thres=0.1)
+hist(Data_hotdeck$AMT_INCOME_TOTAL) 
+hist(Data_hotdeck$AMT_CREDIT)
+hist(Data_hotdeck$APARTMENTS_AVG)
+hist(Data_hotdeck$YEARS_BUILD_AVG)
+hist(Data_hotdeck$ENTRANCES_AVG)
+hist(Data_hotdeck$CREDIT_LOG)
+
+AIT <- transform(Data_hotdeck$AMT_INCOME_TOTAL, method = "log")
+plot(AIT)
+
+AC <- transform(Data_hotdeck$AMT_CREDIT, method = "log")
+plot(AC)
+
+AA <- transform(Data_hotdeck$APARTMENTS_AVG, method = "log")
+plot(AA)
+
+YBA <- transform(Data_hotdeck$YEARS_BUILD_AVG, method = "log")
+plot(YBA)
+
+EA <- transform(Data_hotdeck$ENTRANCES_AVG, method = "log")
+plot(EA)
+
+CL <- transform(Data_hotdeck$CREDIT_LOG, method = "log")
+plot(CL)
