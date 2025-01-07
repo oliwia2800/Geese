@@ -94,62 +94,42 @@ Data_hotdeck<- Data_implications %>%
   group_modify(~ hotdeck(.x)) %>%
   ungroup()
 
-rules_target <- validator(TARGET == 1 | TARGET == 0)
-results_target <- confront(Data_hotdeck, rules_target)
-summary(results_target)
-
-rules_name_contract_type <- validator(NAME_CONTRACT_TYPE == "Cash loans" | NAME_CONTRACT_TYPE == "Revolving loans")
-results_name_contract_type <- confront(Data_hotdeck, rules_name_contract_type)
-summary(results_name_contract_type)
-
-rules_code_gender <- validator(CODE_GENDER == "M" | CODE_GENDER == "F")
-results_code_gender <- confront(Data_hotdeck, rules_code_gender)
-summary(results_code_gender)
-
-rules_flag_own_realty <- validator(FLAG_OWN_REALTY == "Y" | FLAG_OWN_REALTY == "N")
-results_flag_own_realty <- confront(Data_hotdeck, rules_flag_own_realty)
-summary(results_flag_own_realty)
-
-rules_cnt_children <- validator(CNT_CHILDREN >= 0,
-                                CNT_CHILDREN < 30)
-results_cnt_children <- confront(Data_hotdeck, rules_cnt_children)
-summary(results_cnt_children)
-
-rules_amt_income_total <- validator(AMT_INCOME_TOTAL >= 0)
-results_amt_income_total <- confront(Data_hotdeck, rules_amt_income_total)
-summary(results_amt_income_total)
-
-rules_amt_credit <- validator(AMT_CREDIT > 0)
-results_amt_credit <- confront(Data_hotdeck, rules_amt_credit)
-summary(results_amt_credit)
+Data_hotdeck<- Data_hotdeck[,1:20]
 
 table(Data_hotdeck$NAME_INCOME_TYPE)
 table(Data_hotdeck$NAME_EDUCATION_TYPE)
 table(Data_hotdeck$NAME_FAMILY_STATUS)
 table(Data_hotdeck$NAME_HOUSING_TYPE)
 table(Data_hotdeck$ORGANIZATION_TYPE)
-
-rules_rating <- validator(REGION_RATING_CLIENT >= 1,
-                          REGION_RATING_CLIENT <= 3)
-results_rating <- confront(Data_hotdeck, rules_rating)
-summary(results_rating)
-
 table(Data_hotdeck$OCCUPATION_TYPE)
 
-rules_avg <- validator(APARTMENTS_AVG >= 0, 
-                       BASEMENTAREA_AVG >= 0, 
-                       YEARS_BUILD_AVG >= 0, 
-                       COMMONAREA_AVG >= 0, 
-                       ENTRANCES_AVG >= 0, 
-                       LANDAREA_AVG >= 0,
-                       APARTMENTS_AVG <= 1, 
-                       BASEMENTAREA_AVG <= 1,
-                       YEARS_BUILD_AVG <= 1, 
-                       COMMONAREA_AVG <= 1, 
-                       ENTRANCES_AVG <= 1,
-                       LANDAREA_AVG <= 1)
-results_avg <- confront(Data_hotdeck, rules_avg)
-summary(results_avg)
+rules <- validator(TARGET == 1 | TARGET == 0, 
+                   NAME_CONTRACT_TYPE == "Cash loans" | NAME_CONTRACT_TYPE == "Revolving loans",
+                   CODE_GENDER == "M" | CODE_GENDER == "F",
+                   FLAG_OWN_REALTY == "Y" | FLAG_OWN_REALTY == "N",
+                   CNT_CHILDREN >= 0,
+                   CNT_CHILDREN < 30,
+                   AMT_INCOME_TOTAL >= 0,
+                   AMT_CREDIT > 0,
+                   REGION_RATING_CLIENT >= 1,
+                   REGION_RATING_CLIENT <= 3,
+                   APARTMENTS_AVG >= 0, 
+                   BASEMENTAREA_AVG >= 0, 
+                   YEARS_BUILD_AVG >= 0, 
+                   COMMONAREA_AVG >= 0, 
+                   ENTRANCES_AVG >= 0, 
+                   LANDAREA_AVG >= 0,
+                   APARTMENTS_AVG <= 1, 
+                   BASEMENTAREA_AVG <= 1,
+                   YEARS_BUILD_AVG <= 1, 
+                   COMMONAREA_AVG <= 1, 
+                   ENTRANCES_AVG <= 1,
+                   LANDAREA_AVG <= 1, 
+                   ORGANIZATION_TYPE != "XNA")
+                   
+results <- confront(Data_hotdeck, rules, key="TARGET")
+summary(results)
+barplot(results, main="Data_hotdeck")
 
 Data_hotdeck <- Data_hotdeck %>%
   mutate(BASEMENTAREA_AVG = ifelse(BASEMENTAREA_AVG == "5,00E-04", "0,0005", BASEMENTAREA_AVG)) %>%
@@ -158,6 +138,11 @@ Data_hotdeck <- Data_hotdeck %>%
   mutate(COMMONAREA_AVG = ifelse(COMMONAREA_AVG == "8,00E-04", "0,0008", COMMONAREA_AVG)) %>%            
   mutate(COMMONAREA_AVG = ifelse(COMMONAREA_AVG == "7,00E-04", "0,0007", COMMONAREA_AVG)) %>%
   mutate(COMMONAREA_AVG = ifelse(COMMONAREA_AVG == "5,00E-04", "0,0005", COMMONAREA_AVG)) %>%   
-  mutate(COMMONAREA_AVG = ifelse(COMMONAREA_AVG == "2,00E-04", "0,0002", COMMONAREA_AVG))
+  mutate(COMMONAREA_AVG = ifelse(COMMONAREA_AVG == "2,00E-04", "0,0002", COMMONAREA_AVG)) %>%
+  mutate(LANDAREA_AVG = ifelse(LANDAREA_AVG == "9,00E-04", "0,0009", LANDAREA_AVG))    
 
+rules <- simplify_rules(rules)
+
+Data_hotdeck <- replace_errors(Data_hotdeck, rules)
+sum(is.na(Data_hotdeck))
 
