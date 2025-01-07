@@ -129,6 +129,13 @@ table(Data_hotdeck$NAME_FAMILY_STATUS)
 table(Data_hotdeck$NAME_HOUSING_TYPE)
 table(Data_hotdeck$ORGANIZATION_TYPE)
 
+rules_rating <- validator(REGION_RATING_CLIENT >= 1,
+                          REGION_RATING_CLIENT <= 3)
+results_rating <- confront(Data_hotdeck, rules_rating)
+summary(results_rating)
+
+table(Data_hotdeck$OCCUPATION_TYPE)
+
 rules_avg <- validator(APARTMENTS_AVG >= 0, 
                        BASEMENTAREA_AVG >= 0, 
                        YEARS_BUILD_AVG >= 0, 
@@ -143,11 +150,6 @@ rules_avg <- validator(APARTMENTS_AVG >= 0,
                        LANDAREA_AVG <= 1)
 results_avg <- confront(Data_hotdeck, rules_avg)
 summary(results_avg)
-
-rules_rating <- validator(REGION_RATING_CLIENT >= 1,
-                          REGION_RATING_CLIENT <= 3)
-results_rating <- confront(Data_hotdeck, rules_rating)
-summary(results_rating)
 
 Data_hotdeck <- Data_hotdeck %>%
   mutate(BASEMENTAREA_AVG = ifelse(BASEMENTAREA_AVG == "5,00E-04", "0,0005", BASEMENTAREA_AVG)) %>%
