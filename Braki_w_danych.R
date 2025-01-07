@@ -146,3 +146,10 @@ rules <- simplify_rules(rules)
 Data_hotdeck <- replace_errors(Data_hotdeck, rules)
 sum(is.na(Data_hotdeck))
 
+NA_proportion2 <- prop_miss(Data_hotdeck)
+
+Data_hotdeck <- kNN(Data_hotdeck)
+Data_hotdeck <- Data_hotdeck$ORGANIZATION_TYPE
+Data_hotdeck<- Data_hotdeck[,1:20]
+
+table(Data_hotdeck$ORGANIZATION_TYPE)
