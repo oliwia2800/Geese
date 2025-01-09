@@ -21,6 +21,8 @@ library(quantmod)
 library(ROCR)
 library(Information)
 library(scorecard)
+library(ggthemes)
+library(ggforce)
 
 Kredyty <- read.csv("application_data_new.csv", sep = ";")
 set.seed(13)
@@ -54,12 +56,6 @@ gg_miss_upset(Data,
 Data <- Data %>%
   mutate(INCOME_LOG = log(AMT_INCOME_TOTAL)) %>%
            mutate(CREDIT_LOG = log(AMT_CREDIT))
-
-ggplot(data = Data, aes(x = INCOME_LOG, y = CREDIT_LOG)) + 
-  geom_point() +
-  geom_miss_point() +
-  scale_color_manual(values = c("#CE4257","#1982C4")) +
-  theme_minimal()
 
 is.special <- function(x){
   if (is.numeric(x)) !is.finite(x) else is.na(x)
@@ -186,3 +182,41 @@ plot(EA)
 
 CL <- transform(Data_hotdeck$CREDIT_LOG, method = "log")
 plot(CL)
+
+data_kat_income <- binning(Data_hotdeck$AMT_INCOME_TOTAL, nbins = 5, type = "equal")
+summary(data_kat_income)
+plot(data_kat_income)
+
+data_kat_credit <- binning(Data_hotdeck$AMT_CREDIT, nbins = 5, type = "equal")
+summary(data_kat_credit)
+plot(data_kat_credit)
+
+
+theme_set(theme_few())
+
+Data_hotdeck <- Data_hotdeck %>%
+  mutate(TARGET_2 = if_else(TARGET==1, "Problemy ze spłatą", "Spłaca"))
+
+ggplot(Data_hotdeck, aes(x=INCOME_LOG,
+                    fill=TARGET_2)) +
+  geom_histogram() +
+  xlab("Dochód") +
+  ggtitle("Udział osób mających problem ze spłatą kredytu w grupie dochodowej")
+
+ggplot(Data_hotdeck, aes(x = INCOME_LOG, y = CREDIT_LOG, color = CODE_GENDER))+
+  geom_point() +
+  xlab("Dochody") +
+  ylab("Wielkość kredytu") +
+  ggtitle("Zależność wielkości kredytu od dochodów")
+
+
+ggplot(Data_hotdeck, aes(x=NAME_CONTRACT_TYPE,
+                         fill=TARGET_2)) +
+  geom_bar() +
+  xlab("Nazwa kontraktu") +
+  ggtitle("Udział osób mających problem ze spłatą kredytu w zależności od rodzaju kontraktu")
+
+
+
+
+
