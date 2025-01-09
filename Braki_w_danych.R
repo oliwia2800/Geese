@@ -191,32 +191,40 @@ data_kat_credit <- binning(Data_hotdeck$AMT_CREDIT, nbins = 5, type = "equal")
 summary(data_kat_credit)
 plot(data_kat_credit)
 
-
 theme_set(theme_few())
 
 Data_hotdeck <- Data_hotdeck %>%
-  mutate(TARGET_2 = if_else(TARGET==1, "Problemy ze spłatą", "Spłaca"))
+  mutate(TARGET_2 = if_else(TARGET == 1, "Problemy ze spłatą", "Spłaca"))
 
-ggplot(Data_hotdeck, aes(x=INCOME_LOG,
-                    fill=TARGET_2)) +
+ggplot(Data_hotdeck, aes(x = INCOME_LOG, fill = TARGET_2)) +
   geom_histogram() +
   xlab("Dochód") +
-  ggtitle("Udział osób mających problem ze spłatą kredytu w grupie dochodowej")
+  ggtitle("Udział osób mających problem ze spłatą kredytu w grupie dochodowej") +
+  scale_fill_brewer(palette = "Set2")
 
 ggplot(Data_hotdeck, aes(x = INCOME_LOG, y = CREDIT_LOG, color = CODE_GENDER))+
   geom_point() +
   xlab("Dochody") +
   ylab("Wielkość kredytu") +
-  ggtitle("Zależność wielkości kredytu od dochodów")
+  ggtitle("Zależność wielkości kredytu od dochodów") +
+  scale_fill_brewer(palette = "Set2")
 
-
-ggplot(Data_hotdeck, aes(x=NAME_CONTRACT_TYPE,
-                         fill=TARGET_2)) +
+ggplot(Data_hotdeck, aes(x = NAME_CONTRACT_TYPE, fill = TARGET_2)) +
   geom_bar() +
   xlab("Nazwa kontraktu") +
-  ggtitle("Udział osób mających problem ze spłatą kredytu w zależności od rodzaju kontraktu")
+  ggtitle("Udział osób mających problem ze spłatą kredytu w zależności od rodzaju kontraktu") +
+  scale_fill_brewer(palette = "Set2")
 
+ggplot(Data_hotdeck, aes(x = TARGET_2, y = AMT_CREDIT, fill = TARGET_2)) +
+  geom_violin(trim = FALSE) +
+  geom_boxplot(width = 0.1, fill = "white", outlier.shape = NA) +
+  theme_minimal() +
+  labs(title = "Wykres skrzypcowy", x = "Grupa", y = "Wartości") +
+  scale_fill_brewer(palette = "Set2")
 
-
-
+ggplot(Data_hotdeck, aes(x = INCOME_LOG, y = CREDIT_LOG)) +
+  geom_point() +
+  facet_wrap(TARGET_2 ~ NAME_EDUCATION_TYPE)
+  scale_fill_brewer(palette = "Set2")
+  
 
