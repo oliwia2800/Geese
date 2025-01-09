@@ -224,7 +224,8 @@ ggplot(Data_hotdeck, aes(x = TARGET_2, y = AMT_CREDIT, fill = TARGET_2)) +
 
 ggplot(Data_hotdeck, aes(x = INCOME_LOG, y = CREDIT_LOG)) +
   geom_point() +
-  facet_wrap(TARGET_2 ~ NAME_EDUCATION_TYPE)
+  facet_wrap(TARGET_2 ~ NAME_EDUCATION_TYPE) +
   scale_fill_brewer(palette = "Set2")
-  
+
+
 
