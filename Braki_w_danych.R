@@ -261,3 +261,10 @@ ggplot(Data_hotdeck, aes(x = INCOME_LOG, fill = NAME_FAMILY_STATUS)) +
   ggtitle("Dochód całkowity w zależności od statusu rodziny") +
   scale_fill_brewer(palette = "Set1")
 geom_boxplot()
+
+ggplot(Data_hotdeck, aes(x = NAME_HOUSING_TYPE, fill = TARGET_2)) +
+  geom_bar() +
+  xlab("Typ nieruchomości") +
+  ggtitle("Udział osób spłacających kredyt w zależności od typu nieruchomości") +
+  scale_fill_brewer(palette = "Set1")
+
