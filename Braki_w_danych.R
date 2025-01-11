@@ -196,36 +196,68 @@ theme_set(theme_few())
 Data_hotdeck <- Data_hotdeck %>%
   mutate(TARGET_2 = if_else(TARGET == 1, "Problemy ze spłatą", "Spłaca"))
 
+pie_chart <- Data_hotdeck %>%
+  count(TARGET_2)
+
+ggplot(pie_chart) +
+  aes(
+    x0 = 0, y0 = 0, # position of pie center
+    r0 = 0, r = 1,  # inner and outer radius
+    amount = n, # size of pie slices
+    fill = TARGET_2
+  ) + 
+  geom_arc_bar(stat = "pie") +  # from ggforce
+  coord_fixed() +
+  scale_fill_brewer(palette = "Set1")
+
 ggplot(Data_hotdeck, aes(x = INCOME_LOG, fill = TARGET_2)) +
   geom_histogram() +
   xlab("Dochód") +
   ggtitle("Udział osób mających problem ze spłatą kredytu w grupie dochodowej") +
-  scale_fill_brewer(palette = "Set2")
+  scale_fill_brewer(palette = "Set1")
 
 ggplot(Data_hotdeck, aes(x = INCOME_LOG, y = CREDIT_LOG, color = CODE_GENDER))+
   geom_point() +
   xlab("Dochody") +
   ylab("Wielkość kredytu") +
   ggtitle("Zależność wielkości kredytu od dochodów") +
-  scale_fill_brewer(palette = "Set2")
+  scale_fill_brewer(palette = "Set1")
 
 ggplot(Data_hotdeck, aes(x = NAME_CONTRACT_TYPE, fill = TARGET_2)) +
   geom_bar() +
   xlab("Nazwa kontraktu") +
   ggtitle("Udział osób mających problem ze spłatą kredytu w zależności od rodzaju kontraktu") +
-  scale_fill_brewer(palette = "Set2")
+  scale_fill_brewer(palette = "Set1")
 
-ggplot(Data_hotdeck, aes(x = TARGET_2, y = AMT_CREDIT, fill = TARGET_2)) +
+ggplot(Data_hotdeck, aes(x = TARGET_2, y = CREDIT_LOG, fill = TARGET_2)) +
   geom_violin(trim = FALSE) +
   geom_boxplot(width = 0.1, fill = "white", outlier.shape = NA) +
   theme_minimal() +
-  labs(title = "Wykres skrzypcowy", x = "Grupa", y = "Wartości") +
-  scale_fill_brewer(palette = "Set2")
+  labs(title = "Wykres skrzypcowy", x = "", y = "Wielkość kredytu") +
+  scale_fill_brewer(palette = "Set1")
 
 ggplot(Data_hotdeck, aes(x = INCOME_LOG, y = CREDIT_LOG)) +
   geom_point() +
   facet_wrap(TARGET_2 ~ NAME_EDUCATION_TYPE) +
-  scale_fill_brewer(palette = "Set2")
+  scale_fill_brewer(palette = "Set1")
 
+pie_chart_g <- Data_hotdeck %>%
+  count(CODE_GENDER)
 
+ggplot(pie_chart_g) +
+  aes(
+    x0 = 0, y0 = 0, # position of pie center
+    r0 = 0, r = 1,  # inner and outer radius
+    amount = n, # size of pie slices
+    fill = CODE_GENDER
+  ) + 
+  geom_arc_bar(stat = "pie") +  # from ggforce
+  coord_fixed() +
+  scale_fill_brewer(palette = "Set1")
 
+ggplot(Data_hotdeck, aes(x = INCOME_LOG, fill = NAME_FAMILY_STATUS)) +
+  geom_boxplot() +
+  xlab("Dochody") +
+  ggtitle("Dochód całkowity w zależności od statusu rodziny") +
+  scale_fill_brewer(palette = "Set1")
+geom_boxplot()
