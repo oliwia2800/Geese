@@ -4,4 +4,57 @@ author: "Geese"
 date: "2024-11-21"
 output: html_document
 ---
+
 # Kredyty
+
+## Wprowadzenie
+
+Zapoznanie się z danymi\
+Konsultacje z profesorem\
+Wybrano 20 kolumn\
+Ustawiono ziarno generatora\
+Wylosowano 2500 obserwancji
+
+```{r}
+
+```
+
+## Czyszczenie i przetwarzanie danych
+
+W początkowym etapie analizy danych przystąpiono do identyfikacji braków danych. Zliczono braki danych:
+
+```{r, echo=FALSE}
+NA_count
+```
+
+Następnie sprawdzono w jakiej są propocji do całego zbioru i przedstawiono ten wynik w postaci procentowej.
+
+```{r, echo=FALSE}
+NA_proportion
+NA_percentage
+```
+
+W celu dogłębniejszej analizy braków danych zbadano, ile jest braków w danej kolumnie oraz w jakiej proporcji procentowej występują
+
+```{r, echo=FALSE}
+NA_summary
+```
+
+Dodatkowym krokiem w analizie braków danych było stworzenie podsumowania, które analizuje, w ilu wierszach wystąpiło od zera do siedmiu braków danych oraz jaki jest to stosunek procentowy.
+```{r, echo=FALSE}
+NA_summary_case
+```
+
+
+
+## Wizualizacja danych
+
+### Charakterystyka próby badawczej
+
+### Analiza danych
+
+## Analiza opisowa
+
+## Wnioskowanie (testy statystyczne)
+
+## Podsumowanie i wnioski końcowe
