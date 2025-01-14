@@ -24,6 +24,7 @@ library(scorecard)
 library(ggthemes)
 library(ggforce)
 library(DescTools)
+library(corrplot)
 
 Kredyty <- read.csv("application_data_new.csv", sep = ";")
 set.seed(13)
@@ -270,13 +271,14 @@ ggplot(Data_hotdeck, aes(x = NAME_HOUSING_TYPE, fill = TARGET_2)) +
   scale_fill_brewer(palette = "Set1")
 
 #Statystyki opisowe
+str(Data_hotdeck)
 Data_hotdeck$BASEMENTAREA_AVG <-as.numeric(Data_hotdeck$BASEMENTAREA_AVG)
 Data_hotdeck$COMMONAREA_AVG <-as.numeric(Data_hotdeck$COMMONAREA_AVG)
 Data_hotdeck$LANDAREA_AVG <-as.numeric(Data_hotdeck$LANDAREA_AVG)
 
 options(scipen=999)
 
-calculate_statistics <- function(data, columns) {
+calculate_statistics_i <- function(data, columns) {
   stats <- lapply(columns, function(column) {
     col_data <- data[[column]]
     data.frame(
@@ -297,48 +299,29 @@ calculate_statistics <- function(data, columns) {
   return(stats)
 }
 
-columns_to_analyze <- c("TARGET","CNT_CHILDREN", "AMT_INCOME_TOTAL", "AMT_CREDIT", "REGION_RATING_CLIENT", 
+columns_to_analyze_i <- c("TARGET","CNT_CHILDREN", "AMT_INCOME_TOTAL", "AMT_CREDIT", "REGION_RATING_CLIENT", 
                         "APARTMENTS_AVG", "BASEMENTAREA_AVG", "YEARS_BUILD_AVG", "COMMONAREA_AVG", "ENTRANCES_AVG", 
                         "LANDAREA_AVG")
-statistics <- calculate_statistics(Data_hotdeck, columns_to_analyze)
 
-print(statistics)
+statistics_i <- calculate_statistics_i(Data_hotdeck, columns_to_analyze_i)
 
-merged_df <- do.call(rbind, statistics)
-print(merged_df)
-str(Data_hotdeck)
+print(statistics_i)
 
-calculate_statistics <- function(data, columns) {
-  stats <- lapply(columns, function(column) {
-    col_data <- data[[column]]
-    data.frame(
-      średnia = mean(col_data),
-      moda = Mode(col_data),
-      mediana = median(col_data),
-      odch_st = sd(col_data),
-      wariancja = var(col_data),
-      wsp_zm = sd(col_data) / mean(col_data),
-      IQR = IQR(col_data),
-      interquartile_deviation = IQR(col_data) / 2,
-      IQR_coeff_var = (IQR(col_data) / 2) / median(col_data),
-      min = min(col_data),
-      max = max(col_data)
-    )
-  })
-  names(stats) <- columns
-  return(stats)
-}
+all_statistics_i <- do.call(rbind, statistics_i)
+print(all_statistics_i)
 
-columns_to_analyze <- c("TARGET","CNT_CHILDREN", "AMT_INCOME_TOTAL", "AMT_CREDIT", "REGION_RATING_CLIENT", 
-                        "APARTMENTS_AVG", "BASEMENTAREA_AVG", "YEARS_BUILD_AVG", "COMMONAREA_AVG", "ENTRANCES_AVG", 
-                        "LANDAREA_AVG")
-statistics <- calculate_statistics(Data_hotdeck, columns_to_analyze)
+-------
+columns_to_analyze_j <- c("NAME_CONTRACT_TYPE", "CODE_GENDER", "FLAG_OWN_REALTY", "NAME_INCOME_TYPE",
+                          "NAME_EDUCATION_TYPE", "NAME_FAMILY_STATUS", "NAME_HOUSING_TYPE", "ORGANIZATION_TYPE", 
+                          "OCCUPATION_TYPE", "TARGET_2")
+------
+  
+corrplot(cor(Data_hotdeck[c("TARGET","CNT_CHILDREN", "AMT_INCOME_TOTAL", "AMT_CREDIT", "REGION_RATING_CLIENT", 
+                            "APARTMENTS_AVG", "BASEMENTAREA_AVG", "YEARS_BUILD_AVG", "COMMONAREA_AVG", "ENTRANCES_AVG", "LANDAREA_AVG")]), 
+                          method = "number", type = "upper", diag =FALSE)
 
-print(statistics)
-
-merged_df <- do.call(rbind, statistics)
-print(merged_df)
-str(Data_hotdeck)
-
+corr_matrix<-cor(Data_hotdeck[c("TARGET","CNT_CHILDREN", "AMT_INCOME_TOTAL", "AMT_CREDIT", "REGION_RATING_CLIENT", 
+                                "APARTMENTS_AVG", "BASEMENTAREA_AVG", "YEARS_BUILD_AVG", "COMMONAREA_AVG", "ENTRANCES_AVG", "LANDAREA_AVG")])
+corrplot(corr_matrix, method="color")
 
 
