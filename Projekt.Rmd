@@ -4,4 +4,64 @@ author: "Geese"
 date: "2024-11-21"
 output: html_document
 ---
+
 # Kredyty
+
+## Wprowadzenie
+
+Zapoznanie się z danymi\
+Konsultacje z profesorem\
+Wybrano 20 kolumn\
+Ustawiono ziarno generatora\
+Wylosowano 2500 obserwancji\
+Najważniejsza zmienna to TARGET
+
+```{r}
+
+```
+
+## Czyszczenie i przetwarzanie danych
+
+W początkowym etapie analizy danych przystąpiono do identyfikacji braków danych. Zliczono braki danych:
+
+```{r, echo=FALSE}
+NA_count
+```
+Na podstawie wyniku można wywnioskować, że baza danych ma 9409 braków w obserwacjach.\
+
+Następnie sprawdzono, w jakiej występują one propocji do całego zbioru i przedstawiono ten wynik w postaci procentowej.
+
+```{r, echo=FALSE}
+NA_proportion
+NA_percentage
+```
+Stwierdzono, że braki danych stanowią 18,818% wszystkich obserwacji.\
+W celu dogłębniejszej ich analizy zbadano, ile jest braków w danej kolumnie oraz w jakiej proporcji procentowej w niej występują.
+
+```{r, echo=FALSE}
+NA_summary
+```
+
+Dodatkowym krokiem w analizie braków danych było stworzenie podsumowania, które analizuje, w ilu wierszach wystąpiło od zera do siedmiu braków danych oraz jaki jest to stosunek procentowy.
+```{r, echo=FALSE}
+NA_summary_case
+```
+
+Podjęto się również wizualizacji braków danych na poniższym wykresie:
+```{r, echo=FALSE}
+vis_miss(Data, warn_large_data=FALSE)
+```
+
+
+
+## Wizualizacja danych
+
+### Charakterystyka próby badawczej
+
+### Analiza danych
+
+## Analiza opisowa
+
+## Wnioskowanie (testy statystyczne)
+
+## Podsumowanie i wnioski końcowe
