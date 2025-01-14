@@ -23,6 +23,7 @@ library(Information)
 library(scorecard)
 library(ggthemes)
 library(ggforce)
+library(DescTools)
 
 Kredyty <- read.csv("application_data_new.csv", sep = ";")
 set.seed(13)
@@ -128,14 +129,14 @@ summary(results)
 barplot(results, main="Data_hotdeck")
 
 Data_hotdeck <- Data_hotdeck %>%
-  mutate(BASEMENTAREA_AVG = ifelse(BASEMENTAREA_AVG == "5,00E-04", "0,0005", BASEMENTAREA_AVG)) %>%
-  mutate(BASEMENTAREA_AVG = ifelse(BASEMENTAREA_AVG == "1,00E-04", "0,0001", BASEMENTAREA_AVG)) %>%
-  mutate(COMMONAREA_AVG = ifelse(COMMONAREA_AVG == "9,00E-04", "0,0009", COMMONAREA_AVG)) %>%
-  mutate(COMMONAREA_AVG = ifelse(COMMONAREA_AVG == "8,00E-04", "0,0008", COMMONAREA_AVG)) %>%            
-  mutate(COMMONAREA_AVG = ifelse(COMMONAREA_AVG == "7,00E-04", "0,0007", COMMONAREA_AVG)) %>%
-  mutate(COMMONAREA_AVG = ifelse(COMMONAREA_AVG == "5,00E-04", "0,0005", COMMONAREA_AVG)) %>%   
-  mutate(COMMONAREA_AVG = ifelse(COMMONAREA_AVG == "2,00E-04", "0,0002", COMMONAREA_AVG)) %>%
-  mutate(LANDAREA_AVG = ifelse(LANDAREA_AVG == "9,00E-04", "0,0009", LANDAREA_AVG))    
+  mutate(BASEMENTAREA_AVG = ifelse(BASEMENTAREA_AVG == "5,00E-04", 0.0005, BASEMENTAREA_AVG)) %>%
+  mutate(BASEMENTAREA_AVG = ifelse(BASEMENTAREA_AVG == "1,00E-04", 0.0001, BASEMENTAREA_AVG)) %>%
+  mutate(COMMONAREA_AVG = ifelse(COMMONAREA_AVG == "9,00E-04", 0.0009, COMMONAREA_AVG)) %>%
+  mutate(COMMONAREA_AVG = ifelse(COMMONAREA_AVG == "8,00E-04", 0.0008, COMMONAREA_AVG)) %>%            
+  mutate(COMMONAREA_AVG = ifelse(COMMONAREA_AVG == "7,00E-04", 0.0007, COMMONAREA_AVG)) %>%
+  mutate(COMMONAREA_AVG = ifelse(COMMONAREA_AVG == "5,00E-04", 0.0005, COMMONAREA_AVG)) %>%   
+  mutate(COMMONAREA_AVG = ifelse(COMMONAREA_AVG == "2,00E-04", 0.0002, COMMONAREA_AVG)) %>%
+  mutate(LANDAREA_AVG = ifelse(LANDAREA_AVG == "9,00E-04", 0.0009, LANDAREA_AVG))    
 
 rules <- simplify_rules(rules)
 
@@ -267,4 +268,77 @@ ggplot(Data_hotdeck, aes(x = NAME_HOUSING_TYPE, fill = TARGET_2)) +
   xlab("Typ nieruchomości") +
   ggtitle("Udział osób spłacających kredyt w zależności od typu nieruchomości") +
   scale_fill_brewer(palette = "Set1")
+
+#Statystyki opisowe
+Data_hotdeck$BASEMENTAREA_AVG <-as.numeric(Data_hotdeck$BASEMENTAREA_AVG)
+Data_hotdeck$COMMONAREA_AVG <-as.numeric(Data_hotdeck$COMMONAREA_AVG)
+Data_hotdeck$LANDAREA_AVG <-as.numeric(Data_hotdeck$LANDAREA_AVG)
+
+options(scipen=999)
+
+calculate_statistics <- function(data, columns) {
+  stats <- lapply(columns, function(column) {
+    col_data <- data[[column]]
+    data.frame(
+      średnia = mean(col_data),
+      moda = Mode(col_data),
+      mediana = median(col_data),
+      odch_st = sd(col_data),
+      wariancja = var(col_data),
+      wsp_zm = sd(col_data) / mean(col_data),
+      IQR = IQR(col_data),
+      interquartile_deviation = IQR(col_data) / 2,
+      IQR_coeff_var = (IQR(col_data) / 2) / median(col_data),
+      min = min(col_data),
+      max = max(col_data)
+      )
+  })
+  names(stats) <- columns
+  return(stats)
+}
+
+columns_to_analyze <- c("TARGET","CNT_CHILDREN", "AMT_INCOME_TOTAL", "AMT_CREDIT", "REGION_RATING_CLIENT", 
+                        "APARTMENTS_AVG", "BASEMENTAREA_AVG", "YEARS_BUILD_AVG", "COMMONAREA_AVG", "ENTRANCES_AVG", 
+                        "LANDAREA_AVG")
+statistics <- calculate_statistics(Data_hotdeck, columns_to_analyze)
+
+print(statistics)
+
+merged_df <- do.call(rbind, statistics)
+print(merged_df)
+str(Data_hotdeck)
+
+calculate_statistics <- function(data, columns) {
+  stats <- lapply(columns, function(column) {
+    col_data <- data[[column]]
+    data.frame(
+      średnia = mean(col_data),
+      moda = Mode(col_data),
+      mediana = median(col_data),
+      odch_st = sd(col_data),
+      wariancja = var(col_data),
+      wsp_zm = sd(col_data) / mean(col_data),
+      IQR = IQR(col_data),
+      interquartile_deviation = IQR(col_data) / 2,
+      IQR_coeff_var = (IQR(col_data) / 2) / median(col_data),
+      min = min(col_data),
+      max = max(col_data)
+    )
+  })
+  names(stats) <- columns
+  return(stats)
+}
+
+columns_to_analyze <- c("TARGET","CNT_CHILDREN", "AMT_INCOME_TOTAL", "AMT_CREDIT", "REGION_RATING_CLIENT", 
+                        "APARTMENTS_AVG", "BASEMENTAREA_AVG", "YEARS_BUILD_AVG", "COMMONAREA_AVG", "ENTRANCES_AVG", 
+                        "LANDAREA_AVG")
+statistics <- calculate_statistics(Data_hotdeck, columns_to_analyze)
+
+print(statistics)
+
+merged_df <- do.call(rbind, statistics)
+print(merged_df)
+str(Data_hotdeck)
+
+
 
