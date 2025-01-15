@@ -9,12 +9,9 @@ output: html_document
 
 ## Wprowadzenie
 
-Zapoznanie się z danymi\
-Konsultacje z profesorem\
-Wybrano 20 kolumn\
-Ustawiono ziarno generatora\
-Wylosowano 2500 obserwancji\
-Najważniejsza zmienna to TARGET
+Celem projektu jest analiza danych dotyczących udzielania kredytów hipotecznych i zidentyfikowanie, które czynniki mają wpływ na to, czy kredytobiorca regularnie spłaca kredyt, czy nie.
+
+W pierwszym etapie analizy zapoznano się z danymi. Baza składała się z 250 000 rekordów. W związku z tym skonsultowano się z prowadzącym i wybrano 20 kluczowych kolumn. Następnie ustalono ziarno generatora i wylosowano 2500 obserwacji do dalszej analizy. Jako najbardziej istotną uznano zmienną binarną TARGET, która mówi o tym, czy dana osoba regularnie spłaca kredyt.
 
 ```{r}
 
@@ -27,6 +24,7 @@ W początkowym etapie analizy danych przystąpiono do identyfikacji braków dany
 ```{r, echo=FALSE}
 NA_count
 ```
+
 Na podstawie wyniku można wywnioskować, że baza danych ma 9409 braków w obserwacjach.\
 
 Następnie sprawdzono, w jakiej występują one propocji do całego zbioru i przedstawiono ten wynik w postaci procentowej.
@@ -35,6 +33,7 @@ Następnie sprawdzono, w jakiej występują one propocji do całego zbioru i prz
 NA_proportion
 NA_percentage
 ```
+
 Stwierdzono, że braki danych stanowią 18,818% wszystkich obserwacji.\
 W celu dogłębniejszej ich analizy zbadano, ile jest braków w danej kolumnie oraz w jakiej proporcji procentowej w niej występują.
 
@@ -42,17 +41,79 @@ W celu dogłębniejszej ich analizy zbadano, ile jest braków w danej kolumnie o
 NA_summary
 ```
 
-Dodatkowym krokiem w analizie braków danych było stworzenie podsumowania, które analizuje, w ilu wierszach wystąpiło od zera do siedmiu braków danych oraz jaki jest to stosunek procentowy.
-```{r, echo=FALSE}
-NA_summary_case
-```
+Braki danych wystąpiły w kolumnach: COMMONAREA_AVG, YEARS_BUILD_AVG, LANDAREA_AVG, BASEMENTAREA_AVG, APARTMENTS_AVG, ENTRANCES_AVG i OCCUPATION_TYPE. Dla pozostałych kolumn nie zdiagnozowano braków.\
 
 Podjęto się również wizualizacji braków danych na poniższym wykresie:
+
 ```{r, echo=FALSE}
 vis_miss(Data, warn_large_data=FALSE)
 ```
 
+Dodatkowym krokiem w analizie braków danych było stworzenie podsumowania, które analizuje, w ilu wierszach wystąpiło od zera do siedmiu braków danych oraz jaki jest to stosunek procentowy.
 
+```{r, echo=FALSE}
+NA_summary_case
+```
+
+Na podstawie braków danych, opierając się na zmiennej TARGET, stworzono mapę cieplną.
+
+```{r, echo=FALSE}
+target_heat_mapa <- gg_miss_fct(Data, fct = TARGET)
+print(target_heat_mapa)
+```
+
+Mapa cieplna ukazała procentowy udział braków danych w całym zbiorze. Skala zbudowana jest na kolorach od fioletowego do żółtego, gdzie fiolet oznacza 0%, a żółty 100%.\
+
+Następnie stworzono wykres upset plot, który służy do wizualizacji braków danych lub analiz złożonych relacji między grupami cech.\
+Oś pionowa wykresu pokazuje liczebność danych dla poszczególnych kombinacji braków w kolumnach. Najwyższe słupki wskazują najczęściej występujące zestawy braków w danych.\
+Kropki i linie na osi poziomej poniżej słupków wskazują, które kolumny mają braki dla danej grupy.\
+W przypadku pojedynczych kropek brak dotyczy jednej kolumny, a linie między kropkami oznaczają brak danych w kilku kolumnach równocześnie.\
+Lewy dolny wykres wyświetla całkowitą liczbę brakujących wartości dla każdej kolumny z osobna, co pozwala ocenić, które zmienne są najbardziej dotknięte brakami.
+
+```{r, echo=FALSE}
+gg_miss_upset(Data, nsets = 122)
+```
+
+Najczęstsze kombinacje braków dotyczą kilku kolumn jednocześnie (814 przypadków), co sugeruje, że brak danych może być skorelowany w tych zmiennych. Kolumny takie jak COMMONAREA_AVG_NA czy YEARS_BUILD_AVG_NA mają największe liczby braków.\
+
+Podjęto się stworzenia również innej wizualizacji braków danych. Wykres po lewej przedstawia proporcje braków w zależności od TARGET. Na osi poziomej znajdują się wartości zmiennej TARGET. Natomiast na osi pionowej przedstawiona jest proporcja braków w danych.\
+Wykres po prawej przedstawia macierz kombinacji braków. Na osi poziomej przedstawiono kombinacje braków danych w różnych kolumnach, a oś pozioma prezentuje wiersze w danych. Niebieskie pola przedstawiają komórki uzupełnione, a czerwone - braki danych.
+
+```{r, echo=FALSE}
+VIM::aggr(Data_implications[,1:20])
+```
+
+Na wykresie po lewej wartości zmiennej TARGET są powiązane z różnym udziałem braków w danych. Wyższe słupki przy jednej z wartości TARGET wskazują, że w tej grupie braki występują częściej.\
+Na drugim wykresie zgrupowane braki mogą sugerować, że braki w danych są skorelowane i występują wspólnie w określonych zmiennych.\
+Z obu wykresów można zatem wnioskować, że brakujące wartości mogą występować częściej dla określonych grup TARGET.\
+W celu pracy nad brakami danych, zamieniono wartości specjalne tj. Inf na NA. Dokonano tego za pomocą poniżej procedury:
+
+```{r, echo=FALSE}
+is.special <- function(x){
+  if (is.numeric(x)) !is.finite(x) else is.na(x)
+}
+
+sapply(Data, is.special)
+
+for (n in colnames(Data)){
+  is.na(Data[[n]]) <- is.special(Data[[n]])
+}
+```
+
+Następnie przeprowadzono test Grubbsa, który sprawdza, czy w zbiorze danych występują wartości odstające.
+
+```{r, echo=FALSE}
+test_grubbs <- function(column) {
+  if (length(column) > 2) { 
+    result <- grubbs.test(column)
+    return(result)
+  } else {
+    return(NA) 
+  }
+}
+
+results_grubbs <- lapply(data_numeric, test_grubbs)
+```
 
 ## Wizualizacja danych
 
