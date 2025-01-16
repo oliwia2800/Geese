@@ -1,3 +1,7 @@
+Data <- read.csv("application_data_new.csv")
+
+install.packages("naniar")
+library(naniar)
 library(naniar)
 library(dplyr)
 library(ggplot2)
@@ -40,6 +44,7 @@ NA_summary_case <- miss_case_table(Data)
 vis_miss(Data, warn_large_data=FALSE)
 
 mean(NA_summary$n_miss)
+library(dplyr)
 
 target_miss <- Data %>%
   group_by(TARGET) %>%
@@ -52,12 +57,21 @@ ncol(Data)
 NA_filter <- NA_summary %>%
   filter(n_miss>0)
 
+library(ggplot2)
+
+  
 gg_miss_upset(Data,
               nsets = 122)
 
 Data <- Data %>%
   mutate(INCOME_LOG = log(AMT_INCOME_TOTAL)) %>%
            mutate(CREDIT_LOG = log(AMT_CREDIT))
+
+ggplot(data = Data, aes(x = INCOME_LOG, y = CREDIT_LOG)) + 
+  geom_point() +
+  geom_miss_point() +
+  scale_color_manual(values = c("#CE4257","#1982C4")) +
+  theme_minimal()
 
 is.special <- function(x){
   if (is.numeric(x)) !is.finite(x) else is.na(x)
@@ -323,5 +337,4 @@ corrplot(cor(Data_hotdeck[c("TARGET","CNT_CHILDREN", "AMT_INCOME_TOTAL", "AMT_CR
 corr_matrix<-cor(Data_hotdeck[c("TARGET","CNT_CHILDREN", "AMT_INCOME_TOTAL", "AMT_CREDIT", "REGION_RATING_CLIENT", 
                                 "APARTMENTS_AVG", "BASEMENTAREA_AVG", "YEARS_BUILD_AVG", "COMMONAREA_AVG", "ENTRANCES_AVG", "LANDAREA_AVG")])
 corrplot(corr_matrix, method="color")
-
 
