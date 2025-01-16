@@ -8,28 +8,21 @@ output: html_document
 # Kredyty
 
 ## Wprowadzenie
+
+Celem projektu jest analiza danych dotyczących udzielania kredytów hipotecznych i zidentyfikowanie, które czynniki mają wpływ na to, czy kredytobiorca regularnie spłaca kredyt, czy nie.\
+
+W pierwszym etapie analizy zapoznano się z danymi. Baza składała się z 250 000 rekordów. W związku z tym skonsultowano się z prowadzącym i wybrano 20 kluczowych kolumn. Następnie ustalono ziarno generatora i wylosowano 2500 obserwacji do dalszej analizy. Jako najbardziej istotną uznano zmienną binarną TARGET, która mówi o tym, czy dana osoba regularnie spłaca kredyt.\
  
-Zapoznanie się z danymi\
-Konsultacje z profesorem\
-Wybrano 20 kolumn\
-Ustawiono ziarno generatora\
-Wylosowano 2500 obserwancji\
-Najważniejsza zmienna to TARGET
-Celem projektu jest analiza danych dotyczących udzielania kredytów hipotecznych i zidentyfikowanie, które czynniki mają wpływ na to, czy kredytobiorca regularnie spłaca kredyt, czy nie.
- 
-W pierwszym etapie analizy zapoznano się z danymi. Baza składała się z 250 000 rekordów. W związku z tym skonsultowano się z prowadzącym i wybrano 20 kluczowych kolumn. Następnie ustalono ziarno generatora i wylosowano 2500 obserwacji do dalszej analizy. Jako najbardziej istotną uznano zmienną binarną TARGET, która mówi o tym, czy dana osoba regularnie spłaca kredyt.
- 
-```{r}
- 
-@ -27,6 +24,7 @@ W początkowym etapie analizy danych przystąpiono do identyfikacji braków dany
+W początkowym etapie analizy danych przystąpiono do identyfikacji braków danych.
 ```{r, echo=FALSE}
 NA_count
 ```
  
 Na podstawie wyniku można wywnioskować, że baza danych ma 9409 braków w obserwacjach.\
  
-Następnie sprawdzono, w jakiej występują one propocji do całego zbioru i przedstawiono ten wynik w postaci procentowej.
-@ -35,6 +33,7 @@ Następnie sprawdzono, w jakiej występują one propocji do całego zbioru i prz
+Następnie sprawdzono, w jakiej występują one propocji do całego zbioru i przedstawiono ten wynik w postaci procentowej.\
+
+```{r, echo=FALSE}
 NA_proportion
 NA_percentage
 ```
@@ -37,7 +30,7 @@ NA_percentage
 Stwierdzono, że braki danych stanowią 18,818% wszystkich obserwacji.\
 W celu dogłębniejszej ich analizy zbadano, ile jest braków w danej kolumnie oraz w jakiej proporcji procentowej w niej występują.
  
-@ -42,27 +41,89 @@
+```{r, echo=FALSE}
 NA_summary
 ```
  
