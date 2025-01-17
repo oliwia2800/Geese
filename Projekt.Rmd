@@ -131,8 +131,7 @@ table(Data_hotdeck$ORGANIZATION_TYPE)
 table(Data_hotdeck$OCCUPATION_TYPE)
 ```
 
-Na tej podstawie zidentyfikowano niepoprawne dane w kolumnie ORGANIZATION_TYPE, gdyż zauważono wartości XNA w ilości 470.
-## Wizualizacja danych
+Na tej podstawie zidentyfikowano niepoprawne dane w kolumnie ORGANIZATION_TYPE, gdyż zauważono wartości XNA w ilości 470. \## Wizualizacja danych
 
 ### Charakterystyka próby badawczej
 
