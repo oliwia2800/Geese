@@ -119,7 +119,7 @@ Data_hotdeck<- Data_implications %>%
   ungroup()
 ```
 
-Program uzupełnił zidentyfikowane dane na podstawie innych podobnych rekordów. Działa to na zasadzie "biorcy" i "dawcy". W zbiorze wyszukiwane są wartości odpowiadające szukanym pod względem zmiennych, następnie pobierane od "biorcy" i przypisywane "dawcy".\
+Program uzupełnił zidentyfikowane braki danych na podstawie innych podobnych rekordów. Działa to na zasadzie "biorcy" i "dawcy". W zbiorze wyszukiwane są wartości odpowiadające szukanym pod względem zmiennych, następnie pobierane od "biorcy" i przypisywane "dawcy".\
 Kolejnym krokiem było ustalenie reguł dla poszczególnych zmiennych w celu sprawdzenia poprawności danych w zbiorze. Dla danych jakościowych o skończonej liczbie wartości, ale wielu wariantach trudnych do zidentyfikowania zdecydowano się sprawdzenie poprawności poprzez stworzenie tabeli.
 
 ```{r, echo=FALSE}
@@ -131,7 +131,70 @@ table(Data_hotdeck$ORGANIZATION_TYPE)
 table(Data_hotdeck$OCCUPATION_TYPE)
 ```
 
-Na tej podstawie zidentyfikowano niepoprawne dane w kolumnie ORGANIZATION_TYPE, gdyż zauważono wartości XNA w ilości 470. \## Wizualizacja danych
+Na tej podstawie zidentyfikowano niepoprawne dane w kolumnie ORGANIZATION_TYPE, gdyż zauważono wartości XNA w ilości 470.\
+Następnie sporządzono reguły dla pozostałych kolumn w zbiorze danych.
+
+```{r, echo=FALSE}
+rules <- validator(TARGET == 1 | TARGET == 0, 
+                   NAME_CONTRACT_TYPE == "Cash loans" | NAME_CONTRACT_TYPE == "Revolving loans",
+                   CODE_GENDER == "M" | CODE_GENDER == "F",
+                   FLAG_OWN_REALTY == "Y" | FLAG_OWN_REALTY == "N",
+                   CNT_CHILDREN >= 0,
+                   CNT_CHILDREN < 30,
+                   AMT_INCOME_TOTAL >= 0,
+                   AMT_CREDIT > 0,
+                   REGION_RATING_CLIENT >= 1,
+                   REGION_RATING_CLIENT <= 3,
+                   APARTMENTS_AVG >= 0, 
+                   BASEMENTAREA_AVG >= 0, 
+                   YEARS_BUILD_AVG >= 0, 
+                   COMMONAREA_AVG >= 0, 
+                   ENTRANCES_AVG >= 0, 
+                   LANDAREA_AVG >= 0,
+                   APARTMENTS_AVG <= 1, 
+                   BASEMENTAREA_AVG <= 1,
+                   YEARS_BUILD_AVG <= 1, 
+                   COMMONAREA_AVG <= 1, 
+                   ENTRANCES_AVG <= 1,
+                   LANDAREA_AVG <= 1, 
+                   ORGANIZATION_TYPE != "XNA")
+```
+
+Dla kolumn z danymi binarnymi, do których należą zmianne TARGET, NAME_CONTRACT_TYPE, CODE_GENDER i FLAG_OWN_REALTY sporządzono reguły mające na celu zidentyfikowanie jeśli, w którymś z rekordów znajdzie się wyrażenie inne niż wskazane. Następnie dla kolumn od CNT_CHILDREN do LANDAREA_AVG stworzono regułu liczbowe dla znajdujących się w nich danych ilościowych. Ostatnia reguła miałą na celu zidentyfikować rekordy, w których pojawiło się wyrażenie "XNA" w kolumnie ORGANIZATION_TYPE.\
+Wykorzystano funkcję confront, by sprawdzić czy dane spełniają ustalone reguły.\
+
+```{r, echo=FALSE}
+results <- confront(Data_hotdeck, rules, key="TARGET")
+summary(results)
+```
+
+W wyniku tego działania ustalono, że 7 rekordów nie przeszło walidacji w kolumnie BASEMENTAREA_AVG, 11 w kolumnie COMMONAREA_AVG, 2 w kolumnie LANDAREA_AVG i 470 w kolumnie ORGANIZATION_TYPE. Stworzono także wykres pokazujący stosunek rekordów zgodnych z regułami do tych, które nie przeszły walidacji dla poszczególnych zmiennych.
+
+```{r, echo=FALSE}
+barplot(results, main="Data_hotdeck")
+```
+
+Ustalono, że w niektórych przypadkach dane nie przeszły walidacji, ponieważ zapisano je w nieodpowiednim formacie. Z tego względu zastąpiono je danymi liczbowymi w poprawnym formacie. W tym celu użyto poniższego kodu.\
+
+```{r, echo=FALSE}
+Data_hotdeck <- Data_hotdeck %>%
+  mutate(BASEMENTAREA_AVG = ifelse(BASEMENTAREA_AVG == "5,00E-04", 0.0005, BASEMENTAREA_AVG)) %>%
+  mutate(BASEMENTAREA_AVG = ifelse(BASEMENTAREA_AVG == "1,00E-04", 0.0001, BASEMENTAREA_AVG)) %>%
+  mutate(COMMONAREA_AVG = ifelse(COMMONAREA_AVG == "9,00E-04", 0.0009, COMMONAREA_AVG)) %>%
+  mutate(COMMONAREA_AVG = ifelse(COMMONAREA_AVG == "8,00E-04", 0.0008, COMMONAREA_AVG)) %>%            
+  mutate(COMMONAREA_AVG = ifelse(COMMONAREA_AVG == "7,00E-04", 0.0007, COMMONAREA_AVG)) %>%
+  mutate(COMMONAREA_AVG = ifelse(COMMONAREA_AVG == "5,00E-04", 0.0005, COMMONAREA_AVG)) %>%   
+  mutate(COMMONAREA_AVG = ifelse(COMMONAREA_AVG == "2,00E-04", 0.0002, COMMONAREA_AVG)) %>%
+  mutate(LANDAREA_AVG = ifelse(LANDAREA_AVG == "9,00E-04", 0.0009, LANDAREA_AVG)) 
+```
+
+Po eliminacji części błędnych danych postanowiono wykorzystać funkcję simplify_rules, by upewnić się, że reguły zapisano w najprostszy możliwy sposób. Program nie znalazł jednak uproszczonej metody ich zapisywania i nie nastąpiły żadne zmiany.
+
+```{r, echo=FALSE}
+rules <- simplify_rules(rules)
+```
+
+## Wizualizacja danych
 
 ### Charakterystyka próby badawczej
 
