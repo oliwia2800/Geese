@@ -278,17 +278,20 @@ plot(data_kat_credit)
 ```
 
 ## Wizualizacja danych
-W procesie analizy danych kluczowym etapem jest wykorzystanie wizualizacji, która pozwala na skuteczne przedstawienie informacji w sposób intuicyjny i łatwy do interpretacji.\ 
-W niniejszym rozdziale skupiono się na wizualizacjach przygotowanych na podstawie oczyszczonego i przetworzonego zbioru danych, mających na celu zidentyfikowanie wzorców wskazujących na trudności klientów ze spłatą rat kredytowych.
+### Charakterystyka próby badawczej
+TUTAJ OPISYWAĆ PRÓBĘ!!!!!!
 
-Dane zostały wcześniej odpowiednio przygotowane, w tym oczyszczone z braków. Ponadto zmienne zostały przekształcone w celu ułatwienia interpretacji, m.in. poprzez standaryzację, transformacje logarytmiczne oraz binning wybranych cech.\ Dzięki tym krokom możliwe jest uzyskanie precyzyjnych i wiarygodnych wniosków opartych na wizualnej analizie.\
+### Analiza danych
+W procesie analizy danych kluczowym etapem jest wykorzystanie wizualizacji, która pozwala na skuteczne przedstawienie informacji w sposób intuicyjny i łatwy do interpretacji. W niniejszym rozdziale skupiono się na wizualizacjach przygotowanych na podstawie oczyszczonego i przetworzonego zbioru danych, mających na celu zidentyfikowanie wzorców wskazujących na trudności klientów ze spłatą rat kredytowych.
+
+Dane zostały wcześniej odpowiednio przygotowane, w tym oczyszczone z braków. Ponadto zmienne zostały przekształcone w celu ułatwienia interpretacji, m.in. poprzez standaryzację, transformacje logarytmiczne oraz binning wybranych cech. Dzięki tym krokom możliwe jest uzyskanie precyzyjnych i wiarygodnych wniosków opartych na wizualnej analizie.\
 Zdecydowano się na użycie motywu z pakietu ggthemes. Dzięki temu wszystkie wykresy w ggplot2 będą wyglądały schludniej i bardziej estetycznie
 
 ```{r, echo=FALSE}
 theme_set(theme_few())
 ```
 
-Stworzono również nową kolumnę "TARGET_2", która przypisuje "Problemy ze spłatą" , jeżeli wartość w kolumnie "TARGET" wynosi 1 oraz przypisuje wartość tekstową "Spłaca", gdy wartość w kolumnie "TARGET"  wynosi 0. Ułatwi to interpretację zmiennej oraz będzie bardziej przejrzyste w tworzonych wizualizacjach. 
+Stworzono również nową kolumnę "TARGET_2", która przypisuje "Problemy ze spłatą" , jeżeli wartość w kolumnie "TARGET" wynosi 1 oraz przypisuje wartość tekstową "Spłaca", gdy wartość w kolumnie "TARGET" wynosi 0. Ułatwi to interpretację zmiennej oraz będzie bardziej przejrzyste w tworzonych wizualizacjach.
 
 ```{r, echo=FALSE}
 Data_hotdeck <- Data_hotdeck %>%
@@ -313,9 +316,9 @@ ggplot(pie_chart) +
   scale_fill_brewer(palette = "Set1")
 ```
 
-Na przedstawionym wykresie można zauważyć, że zdecydowana większość osób spłaca kredyt. 
+Na przedstawionym wykresie można zauważyć, że zdecydowana większość osób spłaca kredyt.
 
-Kolejna wizualizacja prezentuje Udział osób mających problem ze spłatą kredytu w grupie dochodowej. 
+Kolejna wizualizacja prezentuje Udział osób mających problem ze spłatą kredytu w grupie dochodowej.
 
 ```{r, echo=FALSE}
 ggplot(Data_hotdeck, aes(x = INCOME_LOG, fill = TARGET_2)) +
@@ -324,12 +327,9 @@ ggplot(Data_hotdeck, aes(x = INCOME_LOG, fill = TARGET_2)) +
   ggtitle("Udział osób mających problem ze spłatą kredytu w grupie dochodowej") +
   scale_fill_brewer(palette = "Set1")
 ```
+
 Analizując wykres można powiedzieć, że większość klientów mieści się w środkowym przedziale dochodowym (ok. 11.5–12.5 na osi dochodu w skali logarytmicznej), co wskazuje na koncentrację klientów o przeciętnych dochodach. Problemy ze spłatą kredytu (kolor czerwony) występują w każdej grupie dochodowej, jednak ich proporcja jest różna. Chociaż w dolnych przedziałach dochodowych (poniżej 11.5) liczba klientów jest mała, odsetek problemów ze spłatą wydaje się wyższy w porównaniu do grup o średnich dochodach. Może to wskazywać na większe trudności w spłacie kredytów wśród osób o najniższych dochodach.\
 Dochód jest istotnym czynnikiem wpływającym na zdolność do spłaty kredytu. Klienci z niższych grup dochodowych są bardziej narażeni na trudności, podczas gdy osoby z wyższymi dochodami rzadziej mają problemy z regulowaniem zobowiązań.
-
-### Charakterystyka próby badawczej
-
-### Analiza danych
 
 ## Analiza opisowa
 
