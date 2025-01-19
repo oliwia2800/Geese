@@ -194,7 +194,138 @@ Po eliminacji części błędnych danych postanowiono wykorzystać funkcję simp
 rules <- simplify_rules(rules)
 ```
 
+W celu dalszej eliminacji braków danych (0,9%) zastosowano metodę imputacji brakujących danych za pomocą algorytmu k-Nearest Neighbors (kNN), a wynik został przypisany z powrotem do tego samego zbioru danych.
+
+```{r, echo=FALSE}
+Data_hotdeck <- kNN(Data_hotdeck)
+```
+
+W uzupełnionym zbiorze danych po skorzystaniu z algorytmu kNN powstały nowe kolumny informujące o zastosowanej imputacji braków danych. Wartości w kolumnach wskazują czy dana wartość została uzupełniona. Zdecydowano się na usunięcie dodanych kolumn.
+
+```{r, echo=FALSE}
+Data_hotdeck<- Data_hotdeck[,1:22]
+```
+
+Upewniono się, tworząc tabelę dla kolumny ORGANIZATION_TYPE jaki jest rozkład wartości w zmiennej kategorycznej.
+
+```{r, echo=FALSE}
+table(Data_hotdeck$ORGANIZATION_TYPE)
+```
+
+W następnym etapie projektu, skorzystano z transformacji danych. Skorzystano z procedury stanaryzacji Z-score, aby ułatwić porównywanie rozkładów oraz identyfikację odstających wartości.\
+Przedstawiono wizualizację rozkładu standaryzowanych danych APARTMENTS_AVG_Z.
+
+```{r, echo=FALSE}
+Data_hotdeck %>% 
+  mutate(APARTMENTS_AVG_Z = transform(Data_hotdeck$APARTMENTS_AVG, method = "zscore"))  %>% 
+  select(APARTMENTS_AVG_Z) %>% 
+  boxplot()
+```
+
+Wykres pokazuje, że większość danych mieści się wewnątrz pudełka. Znaczna liczba odstających wartości w górnej części wskazuje, że istnieją obserwacje, które są znacznie większe niż reszta danych. Można zauważyć sporo wartości odstających w górnej części rozkładu, co wskazuje na istnienie ekstremalnie dużych wartości w zmiennej APARTMENTS_AVG po transformacji Z-score. Mogą to być błędy lub anomalie, które wymagają dokładniejszej analizy.
+
+Zdecydowano się również na znalezienie zmiennych oraz ich nazw w naszym zbiorze danych, które powodują problemy ze skośnością, a także odfiltrowano te zmienne, których poziom skośności \> 0,1.
+
+```{r, echo=FALSE}
+find_skewness(Data_hotdeck, index=FALSE)
+find_skewness(Data_hotdeck, value=TRUE, thres=0.1)
+```
+
+Według otrzymanych wyników zmienne, które powodują problem ze skośnością w zbiorze danych to "AMT_INCOME_TOTAL" "AMT_CREDIT", "APARTMENTS_AVG", "YEARS_BUILD_AVG", "ENTRANCES_AVG" oraz "CREDIT_LOG".
+
+Dla poszczególnych sześciu zmiennych stworzono histogramy, aby zwizualizować ich rozkład danych. Dzięki niemu możliwe jest sprawdzenie m.in. czy rozkład jest skośny, czy występują wartości odstające, a także jakie wartości dominują. Histogramy przedstawiają kolejno analizę rozkładu dochodów, rozłożone kwoty kredytów klientów, średnią mieszkań, średni wiek budynków, średnią liczbę wejść do budynków, oraz rozłożoną wartość kredytu.
+
+```{r, echo=FALSE}
+hist(Data_hotdeck$AMT_INCOME_TOTAL) 
+hist(Data_hotdeck$AMT_CREDIT)
+hist(Data_hotdeck$APARTMENTS_AVG)
+hist(Data_hotdeck$YEARS_BUILD_AVG)
+hist(Data_hotdeck$ENTRANCES_AVG)
+hist(Data_hotdeck$CREDIT_LOG)
+```
+
+Wcześniejsze kroki analizy potwierdziły się. Histogramy pokazały, że aby przeprowadzić dalszą analizę z wyszczególnionymi zmiennymi,ze wzlędu na występującą skośność konieczne jest dokonanie transformacji zmiennych. Zdecydowano się na dokonanie jej przy użyciu logarytmu.\
+Na wyszczególnionych zmiennych dokonano tranformacji oraz przedstawiono wizualizację.
+
+```{r, echo=FALSE}
+AIT <- transform(Data_hotdeck$AMT_INCOME_TOTAL, method = "log")
+plot(AIT)
+AC <- transform(Data_hotdeck$AMT_CREDIT, method = "log")
+plot(AC)
+AA <- transform(Data_hotdeck$APARTMENTS_AVG, method = "log")
+plot(AA)
+YBA <- transform(Data_hotdeck$YEARS_BUILD_AVG, method = "log")
+plot(YBA)
+EA <- transform(Data_hotdeck$ENTRANCES_AVG, method = "log")
+plot(EA)
+CL <- transform(Data_hotdeck$CREDIT_LOG, method = "log")
+plot(CL)
+```
+
+Logarytmowanie spowodowało, że dane zostały "spłaszczone", pozwoliło to na zmniejszenie różnic pomiędzy wartościami dużymi i bardzo dużymi, co wpłynęło na bardziej symetryczny rozkładu.
+
+Kolejnym etapem projektu było wykonanie procedury "binningu", aby przekształcić zmienne ilościowe w kategoryczne. Zdecydowano się na zastosowanie tej procedury na dwóch zmiennych, pierwszej dotyczącej dochodu całkowitego oraz drugiej związanej z kwotą kredytu. Obie zmienne podzielono na pięć równych przedziałów o takiej samej szerokości.\
+Zmienne już kategoryczne "AMT_INCOME_TOTAL" oraz "AMT_CREDIT" przedstawiono na wykresie.
+
+```{r, echo=FALSE}
+data_kat_income <- binning(Data_hotdeck$AMT_INCOME_TOTAL, nbins = 5, type = "equal")
+summary(data_kat_income)
+plot(data_kat_income)
+
+data_kat_credit <- binning(Data_hotdeck$AMT_CREDIT, nbins = 5, type = "equal")
+summary(data_kat_credit)
+plot(data_kat_credit)
+```
+
 ## Wizualizacja danych
+W procesie analizy danych kluczowym etapem jest wykorzystanie wizualizacji, która pozwala na skuteczne przedstawienie informacji w sposób intuicyjny i łatwy do interpretacji.\ 
+W niniejszym rozdziale skupiono się na wizualizacjach przygotowanych na podstawie oczyszczonego i przetworzonego zbioru danych, mających na celu zidentyfikowanie wzorców wskazujących na trudności klientów ze spłatą rat kredytowych.
+
+Dane zostały wcześniej odpowiednio przygotowane, w tym oczyszczone z braków. Ponadto zmienne zostały przekształcone w celu ułatwienia interpretacji, m.in. poprzez standaryzację, transformacje logarytmiczne oraz binning wybranych cech.\ Dzięki tym krokom możliwe jest uzyskanie precyzyjnych i wiarygodnych wniosków opartych na wizualnej analizie.\
+Zdecydowano się na użycie motywu z pakietu ggthemes. Dzięki temu wszystkie wykresy w ggplot2 będą wyglądały schludniej i bardziej estetycznie
+
+```{r, echo=FALSE}
+theme_set(theme_few())
+```
+
+Stworzono również nową kolumnę "TARGET_2", która przypisuje "Problemy ze spłatą" , jeżeli wartość w kolumnie "TARGET" wynosi 1 oraz przypisuje wartość tekstową "Spłaca", gdy wartość w kolumnie "TARGET"  wynosi 0. Ułatwi to interpretację zmiennej oraz będzie bardziej przejrzyste w tworzonych wizualizacjach. 
+
+```{r, echo=FALSE}
+Data_hotdeck <- Data_hotdeck %>%
+  mutate(TARGET_2 = if_else(TARGET == 1, "Problemy ze spłatą", "Spłaca"))
+```
+
+W celu stworzenia pierwszej wizualizacji policzono liczbę osób, które nie spłacają kredytu oraz tych, które go spłacają i stworzono nową tabelę. Następnie stworzono wykres kołowy prezentujący zestawienie tych dwóch wartości dla zmiennej.
+
+```{r, echo=FALSE}
+pie_chart <- Data_hotdeck %>%
+  count(TARGET_2)
+
+ggplot(pie_chart) +
+  aes(
+    x0 = 0, y0 = 0, # position of pie center
+    r0 = 0, r = 1,  # inner and outer radius
+    amount = n, # size of pie slices
+    fill = TARGET_2
+  ) + 
+  geom_arc_bar(stat = "pie") +  # from ggforce
+  coord_fixed() +
+  scale_fill_brewer(palette = "Set1")
+```
+
+Na przedstawionym wykresie można zauważyć, że zdecydowana większość osób spłaca kredyt. 
+
+Kolejna wizualizacja prezentuje Udział osób mających problem ze spłatą kredytu w grupie dochodowej. 
+
+```{r, echo=FALSE}
+ggplot(Data_hotdeck, aes(x = INCOME_LOG, fill = TARGET_2)) +
+  geom_histogram() +
+  xlab("Dochód") +
+  ggtitle("Udział osób mających problem ze spłatą kredytu w grupie dochodowej") +
+  scale_fill_brewer(palette = "Set1")
+```
+Analizując wykres można powiedzieć, że większość klientów mieści się w środkowym przedziale dochodowym (ok. 11.5–12.5 na osi dochodu w skali logarytmicznej), co wskazuje na koncentrację klientów o przeciętnych dochodach. Problemy ze spłatą kredytu (kolor czerwony) występują w każdej grupie dochodowej, jednak ich proporcja jest różna. Chociaż w dolnych przedziałach dochodowych (poniżej 11.5) liczba klientów jest mała, odsetek problemów ze spłatą wydaje się wyższy w porównaniu do grup o średnich dochodach. Może to wskazywać na większe trudności w spłacie kredytów wśród osób o najniższych dochodach.\
+Dochód jest istotnym czynnikiem wpływającym na zdolność do spłaty kredytu. Klienci z niższych grup dochodowych są bardziej narażeni na trudności, podczas gdy osoby z wyższymi dochodami rzadziej mają problemy z regulowaniem zobowiązań.
 
 ### Charakterystyka próby badawczej
 
