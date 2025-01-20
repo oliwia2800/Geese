@@ -3,6 +3,8 @@ title: "Kredyty"
 author: "Geese"
 date: "2024-11-21"
 output: html_document
+  rmdformats::readthedown
+  highlight: kate
 ---
 
 # Kredyty
@@ -278,10 +280,13 @@ plot(data_kat_credit)
 ```
 
 ## Wizualizacja danych
+
 ### Charakterystyka próby badawczej
+
 TUTAJ OPISYWAĆ PRÓBĘ!!!!!!
 
 ### Analiza danych
+
 W procesie analizy danych kluczowym etapem jest wykorzystanie wizualizacji, która pozwala na skuteczne przedstawienie informacji w sposób intuicyjny i łatwy do interpretacji. W niniejszym rozdziale skupiono się na wizualizacjach przygotowanych na podstawie oczyszczonego i przetworzonego zbioru danych, mających na celu zidentyfikowanie wzorców wskazujących na trudności klientów ze spłatą rat kredytowych.
 
 Dane zostały wcześniej odpowiednio przygotowane, w tym oczyszczone z braków. Ponadto zmienne zostały przekształcone w celu ułatwienia interpretacji, m.in. poprzez standaryzację, transformacje logarytmiczne oraz binning wybranych cech. Dzięki tym krokom możliwe jest uzyskanie precyzyjnych i wiarygodnych wniosków opartych na wizualnej analizie.\
@@ -329,8 +334,48 @@ ggplot(Data_hotdeck, aes(x = INCOME_LOG, fill = TARGET_2)) +
 ```
 
 Analizując wykres można powiedzieć, że większość klientów mieści się w środkowym przedziale dochodowym (ok. 11.5–12.5 na osi dochodu w skali logarytmicznej), co wskazuje na koncentrację klientów o przeciętnych dochodach. Problemy ze spłatą kredytu (kolor czerwony) występują w każdej grupie dochodowej, jednak ich proporcja jest różna. Chociaż w dolnych przedziałach dochodowych (poniżej 11.5) liczba klientów jest mała, odsetek problemów ze spłatą wydaje się wyższy w porównaniu do grup o średnich dochodach. Może to wskazywać na większe trudności w spłacie kredytów wśród osób o najniższych dochodach.\
-Dochód jest istotnym czynnikiem wpływającym na zdolność do spłaty kredytu. Klienci z niższych grup dochodowych są bardziej narażeni na trudności, podczas gdy osoby z wyższymi dochodami rzadziej mają problemy z regulowaniem zobowiązań.
+Dochód jest istotnym czynnikiem wpływającym na zdolność do spłaty kredytu. Klienci z niższych grup dochodowych są bardziej narażeni na trudności, podczas gdy osoby z wyższymi dochodami rzadziej mają problemy z regulowaniem zobowiązań.\
+Następnie stworzono wykres punktowy przedstawiający zależność zlogarytnowanej zmiennej "wielkość kredytu" od zlogarytowanej warotści "dochodów". Dodatkowo na wykresie rozrózniono płeć kolorem punktów. Kobiety zaznaczono kolorem pomarańczowym, mężczyzn kolorem niebieskim.
 
+```{r, echo=FALSE}
+ggplot(Data_hotdeck, aes(x = INCOME_LOG, y = CREDIT_LOG, color = CODE_GENDER))+
+  geom_point() +
+  xlab("Dochody") +
+  ylab("Wielkość kredytu") +
+  ggtitle("Zależność wielkości kredytu od dochodów") +
+  scale_fill_brewer(palette = "Set1")
+```
+
+Na wykresie można zauważyć zależność wielkości kredytu od dochodów. Im więcej zarabia dana osoba tym większy kredyt bierze. Punkty reprezentujące zarówno mężczyzn jak i kobiety są rozproszone po całym wykresie i trudno dostrzec jakąkolwiek zależność pomiędzy przynależnością do danej płci.Można zaobserwować wiele punktów odstających, niezgodnych z ogólnym trendem.\
+Kolejnym wykresem, który stworzono był wykres słupkowy pokazujący udział osób mających problem ze spłatą kredytu w zależności od rodzaju kontraktu./
+
+```{r, echo=FALSE}
+ggplot(Data_hotdeck, aes(x = NAME_CONTRACT_TYPE, fill = TARGET_2)) +
+  geom_bar() +
+  xlab("Nazwa kontraktu") +
+  ggtitle("Udział osób mających problem ze spłatą kredytu w zależności od rodzaju kontraktu") +
+  scale_fill_brewer(palette = "Set1")
+```
+
+W danych można było wyróżnić dwa rodzaje kontraktów: kredyty odnawialne oraz pożyczki gotówkowe.Zdecydowaną wiekszość stanowią pożyczki gotówkowe, bo jest ich ponad 2000, natomiast kredyty odnawialne stanowią niewielką liczbę rekordów. Na stworzonym wykresie można zaobserwować, że zdecydowana wiekszość osób spłaca swoje zobowiązania. Na wykresach zaznaczono te osoby na kolor niebieski. Zarówno na słupku dotyczącym pożyczek gotówkowych, jak i tym z kredytami odnawialnymi większość obszaru słupka jest niebieska. Co istotne, obszar czerwony, odpowiadający ilość osób mających problem ze spłatą na słupku z pożyczkami gotówkowymi stanowi wiekszą część niż w przypadku kredytów odnawialnych. Może to sugerować, że większe problemy ze spłatą występują w przypadku osób korzystających z pożyczek gotówkowych.\
+Kolejnym krokiem było stworzenie wykresów skrzypcowych dla osób, które spłacają i niespłacają swoich zobowiązań, w zależności od wielkości zaciągniętego zobowiązania.
+```{r, echo=FALSE}
+ggplot(Data_hotdeck, aes(x = TARGET_2, y = CREDIT_LOG, fill = TARGET_2)) +
+  geom_violin(trim = FALSE) +
+  geom_boxplot(width = 0.1, fill = "white", outlier.shape = NA) +
+  theme_minimal() +
+  labs(title = "Wykres skrzypcowy", x = "", y = "Wielkość kredytu") +
+  scale_fill_brewer(palette = "Set1")
+```
+Grupę osób mających problem ze spłatą zobowiązania przedstawiono na czerwonym wykresie. Średnia zlogarytmowana wartość kredytu dla tej grupy wynosi około 13. Wartość są skoncentrowane, co może oznaczać, że problem ze spłacaniem zobowiązań mają ludzie o podobnej wartość kredytu. Wykres niebieski przedstawia grupę osób, które regularnie spłacają swoje zobowiązania. Średnia wartość kredytu jest podobna do grupy niespłacającej zobowiązań. To co rózni oba wykresy to ich zakres. W przypadku grupy spłacającej wartości zaciągniętego kredytu są bardziej zróznicowane i więcej jest tych powyżej wartości 13,5.\
+W kolejnym kroku sworzono wykresy łączące w sobie informacje o poziomie edukacji, wielkości zaciągniętego kredytu oraz spłacania kredytu przez daną osobę.
+``` {r, echo=FALSE}
+ggplot(Data_hotdeck, aes(x = INCOME_LOG, y = CREDIT_LOG)) +
+  geom_point() +
+  facet_wrap(TARGET_2 ~ NAME_EDUCATION_TYPE) +
+  scale_fill_brewer(palette = "Set1")
+```
+Z wykresu można wywnioskować, że najliczniejsza grupa niespłacająca kredytu należy do poziomu edukacji "secondary/secondary special", najmniej liczna natomiast do "lower secondary". 
 ## Analiza opisowa
 
 ## Wnioskowanie (testy statystyczne)
