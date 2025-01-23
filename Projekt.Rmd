@@ -375,7 +375,7 @@ ggplot(Data_hotdeck, aes(x = INCOME_LOG, y = CREDIT_LOG)) +
   facet_wrap(TARGET_2 ~ NAME_EDUCATION_TYPE) +
   scale_fill_brewer(palette = "Set1")
 ```
-Z wykresu można wywnioskować, że najliczniejsza grupa niespłacająca kredytu należy do poziomu edukacji "secondary/secondary special", najmniej liczna natomiast do "lower secondary". 
+Z wykresu można wywnioskować, że najliczniejsza grupa niespłacająca kredytu należy do poziomu edukacji "secondary/secondary special", najmniej liczna natomiast do "lower secondary". Wykres potwierdza fakt, że większość osób z bazy danych spłaca swoje zobowiązania.
 ## Analiza opisowa
 
 ## Wnioskowanie (testy statystyczne)
