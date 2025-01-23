@@ -262,12 +262,12 @@ pie_chart_g <- Data_hotdeck %>%
 
 ggplot(pie_chart_g) +
   aes(
-    x0 = 0, y0 = 0, # position of pie center
-    r0 = 0, r = 1,  # inner and outer radius
-    amount = n, # size of pie slices
+    x0 = 0, y0 = 0,
+    r0 = 0, r = 1,
+    amount = n,
     fill = CODE_GENDER
   ) + 
-  geom_arc_bar(stat = "pie") +  # from ggforce
+  geom_arc_bar(stat = "pie") +
   coord_fixed() +
   scale_fill_brewer(palette = "Set1")
 
@@ -323,12 +323,6 @@ print(statistics_i)
 
 all_statistics_i <- do.call(rbind, statistics_i)
 print(all_statistics_i)
-
--------
-columns_to_analyze_j <- c("NAME_CONTRACT_TYPE", "CODE_GENDER", "FLAG_OWN_REALTY", "NAME_INCOME_TYPE",
-                          "NAME_EDUCATION_TYPE", "NAME_FAMILY_STATUS", "NAME_HOUSING_TYPE", "ORGANIZATION_TYPE", 
-                          "OCCUPATION_TYPE", "TARGET_2")
-------
   
 corrplot(cor(Data_hotdeck[c("TARGET","CNT_CHILDREN", "AMT_INCOME_TOTAL", "AMT_CREDIT", "REGION_RATING_CLIENT", 
                             "APARTMENTS_AVG", "BASEMENTAREA_AVG", "YEARS_BUILD_AVG", "COMMONAREA_AVG", "ENTRANCES_AVG", "LANDAREA_AVG")]), 
