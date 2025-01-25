@@ -486,8 +486,12 @@ all_statistics_i <- do.call(rbind, statistics_i)
 print(all_statistics_i)
 
 ```
-Podsumowując wszystkie obliczone statystyki dla zmiennych, można zauważyć następujące ogólne tendencje - większość zmiennych w zestawie danych ma rozkład, który jest albo skondensowany wokół jednej wartości (np. TARGET, REGION_RATING_CLIENT), albo rozproszony w dużym zakresie (np. AMT_INCOME_TOTAL, AMT_CREDIT). Średnia pokazująca centralną tendencję zmiennej, czyli jej przeciętną wartość,  w przypadku zmiennych z dużymi wartościami skrajnymi (np. AMT_INCOME_TOTAL, AMT_CREDIT) średnia jest znacznie wyższa niż mediana. /
-Moda wskazująca najczęściej występującą wartość w zbiorze danych w przypadku zmiennej TARGET  wynosi 0, co sugeruje, że większość danych to obserwacje z wartością 0. Taka sytuacja powatarza się w zestawieniu aż czterokrotnie./
-
+Podsumowując wszystkie obliczone statystyki dla zmiennych, można zauważyć, że zmienna AMT_INCOME_TOTAL miała najwyższą średnią (164686.1), co sugeruje, że średni dochód w zbiorze danych jest wysoki. Z kolei zmienna TARGET miała najniższą średnią (0.0676), co oznacza, że tylko niewielki procent obserwacji ma wartość 1, sugerując dużą dominację 0. \
+Moda wskazująca najczęściej występującą wartość w zbiorze danych w przypadku zmiennej TARGET  wynosi 0, co sugeruje, że większość danych to obserwacje z wartością 0. Taka sytuacja powatarza się w zestawieniu aż czterokrotnie.W przypadku AMT_INCOME_TOTAL i AMT_CREDIT, moda była znacznie niższa od średniej, wskazując na bardziej równomierny rozkład wartości.\
+Mediana będąca wartością środkową dla zmiennej TARGET i REGION_RATING_CLIENT wynosiła 0 i 2, co oznacza, że te zmienne mają dość jednorodne rozkłady z dominującymi właśnie tymi wartościami.\
+Zmienna AMT_CREDIT miała najwyższe odchylenie standardowe (402963.8), co wskazuje na dużą zmienność w wysokości przyznanych kredytów.\
+Wariancja będąca kwadratem odchylenia standardowego, informującą o rozproszeniu danych w jednostkach kwadratowych była najwyższa dla AMT_CREDIT i wyniosła aż 162 379 853 826, wskazując na duży rozrzut wartości kredytów. Zmienna TARGET miała najniższą wariancję w analizowanym zbiorze ze względu na to, że jest to binarna zmienna zero-jedynkowa.\
+Zmienna TARGET miała najwyższy współczynnik zmienności (3.71), co oznacza bardzo duży rozrzut w stosunku do jej średniej (co jest normalne, biorąc pod uwagę, że to zmienna binarna). Z kolei zmienne takie jak REGION_RATING_CLIENT (0.256) i YEARS_BUILD_AVG (0.1396) miały bardzo niskie wartości współczynnika zmienności, co sugeruje małą zmienność w danych. /
+W przypadku zmiennej CNT_CHILDREN, niektóre osoby mają dużą liczbę dzieci (do 5), ale w przeważającej części obserwacji występuje brak dzieci.\
 
 ## Podsumowanie i wnioski końcowe
