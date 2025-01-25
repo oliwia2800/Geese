@@ -284,6 +284,7 @@ plot(data_kat_credit)
 ### Charakterystyka próby badawczej
 
 Na początku analizy danych podjęto się scharakteryzowania próby badawczej. Na poniższym wykresie przedstawiono rozkład płci na wykresie kołowym.
+
 ```{r, echo=FALSE}
 ggplot(pie_chart_g) +
   aes(
@@ -296,9 +297,11 @@ ggplot(pie_chart_g) +
   coord_fixed() +
   scale_fill_brewer(palette = "Set1")
 ```
-Ze stworzonego wykresu wynika, że zdecydowaną większość próby to kobiety. Stanowią one około 67% populacji, a mężczyzny 33%. \
+
+Ze stworzonego wykresu wynika, że zdecydowaną większość próby to kobiety. Stanowią one około 67% populacji, a mężczyzny 33%.\
 
 Na kolejnym wykresie przedstawiono wykres pudełkowy, prezentujących dochód całkowity w zależności od statusu rodziny.
+
 ```{r, echo=FALSE}
 ggplot(Data_hotdeck, aes(x = INCOME_LOG, fill = NAME_FAMILY_STATUS)) +
   geom_boxplot() +
@@ -307,10 +310,11 @@ ggplot(Data_hotdeck, aes(x = INCOME_LOG, fill = NAME_FAMILY_STATUS)) +
   scale_fill_brewer(palette = "Set1")
 geom_boxplot()
 ```
-Na osi poziomej przedstawiono zlogarytmowane wartości dochodów. Każdy wykres pudełkowy odpowiada innemu statusowi rodziny i prezentuje medianę oraz kwartyle i obserwacje odstające.
-Civil marriage charakteryzuje się najniższymi wartości z wyraźnymi obserwacjami odstającymi poniżej. Ze statusu married można wywnioskować, że dochody mieszczą się głównie w dolnym zakresie rozkładu. Dochody w statusie separated są bliskie neutralnego poziomu. Status single / not married charakteryzuje się dochodami zbliżonymi do średniego lub nieco wyższe, a status widow tym, że dochody są wyraźnie wyższe.\
+
+Na osi poziomej przedstawiono zlogarytmowane wartości dochodów. Każdy wykres pudełkowy odpowiada innemu statusowi rodziny i prezentuje medianę oraz kwartyle i obserwacje odstające. Civil marriage charakteryzuje się najniższymi wartości z wyraźnymi obserwacjami odstającymi poniżej. Ze statusu married można wywnioskować, że dochody mieszczą się głównie w dolnym zakresie rozkładu. Dochody w statusie separated są bliskie neutralnego poziomu. Status single / not married charakteryzuje się dochodami zbliżonymi do średniego lub nieco wyższe, a status widow tym, że dochody są wyraźnie wyższe.\
 
 Trzeci wykres charakteryzujący próbę prezentuje udział osób spłacających kredyt w zależności od typu nieruchomości.
+
 ```{r, echo=FALSE}
 ggplot(Data_hotdeck, aes(x = NAME_HOUSING_TYPE, fill = TARGET_2)) +
   geom_bar() +
@@ -318,6 +322,7 @@ ggplot(Data_hotdeck, aes(x = NAME_HOUSING_TYPE, fill = TARGET_2)) +
   ggtitle("Udział osób spłacających kredyt w zależności od typu nieruchomości") +
   scale_fill_brewer(palette = "Set1")
 ```
+
 Z wykresu wynika, że najwięcej osób, które wzięły kredyt, posiadają dom albo mieszkanie. Kolejni kredytobiorcy to osoby mieszkające z rodzicami, zajmujący mieszkania kolumnalne oraz wynajmujący mieszkania. Niewielki odsetek osób stanowią pozostałe nieruchomości.\
 Na czerwono zaznaczono osoby, które mają problemy ze spłatą kredytu, a na niebiesko te, które nigdy problemów nie miały. Można zauważyć, że zdecydowaną większość stanowią osoby bez problemów ze spłatą kredytu.
 
@@ -418,5 +423,71 @@ ggplot(Data_hotdeck, aes(x = INCOME_LOG, y = CREDIT_LOG)) +
 Z wykresu można wywnioskować, że najliczniejsza grupa niespłacająca kredytu należy do poziomu edukacji "secondary/secondary special", najmniej liczna natomiast do "lower secondary". Wykres potwierdza fakt, że większość osób z bazy danych spłaca swoje zobowiązania. \## Analiza opisowa
 
 ## Wnioskowanie (testy statystyczne)
+
+Wniskowanie statystyczne rozpoczęto od ponownego sprawdzenia struktury danych, aby zdecydować jakie testy statystyczne zostaną wykonane dla danych ilościowych. Następnie przekształcono dane, uważane przez nas za numeryczne, ale traktowane przez program jako tekstowe za tekstowe na typ numeric. Po tej operacji, zmienne te będą mogły być wykorzystywane w analizach statystycznych.\
+
+Następnie zdefiniowano funkcję do obliczania statystyk dla określonych kolumn. Statystykami obliczanymi w funkcji są:
+
+-   średnia arytmetyczna wartości w kolumnie;
+
+-   moda;
+
+-   mediana;
+
+-   odchylenie standardowe;
+
+-   wariancja;
+
+-   współczynnik zmienności;
+
+-   IQR - zakres międzykwartylowy;
+
+-   połowa zakresu międzykwartylowego;
+
+-   minimum;
+
+-   maksimum.\
+
+```{r, echo=FALSE}
+calculate_statistics_i <- function(data, columns) {
+  stats <- lapply(columns, function(column) {
+    col_data <- data[[column]]
+    data.frame(
+      średnia = mean(col_data),
+      moda = Mode(col_data),
+      mediana = median(col_data),
+      odch_st = sd(col_data),
+      wariancja = var(col_data),
+      wsp_zm = sd(col_data) / mean(col_data),
+      IQR = IQR(col_data),
+      interquartile_deviation = IQR(col_data) / 2,
+      IQR_coeff_var = (IQR(col_data) / 2) / median(col_data),
+      min = min(col_data),
+      max = max(col_data)
+      )
+  })
+  names(stats) <- columns
+  return(stats)
+}
+
+```
+
+Aby przeanalizować wszystkie wybrane kolumny jednocześnie stworzono wektor columns_to_analyze_i zawierający nazwy kolumn, które mają zostać poddane analizie statystycznej.Wektor zawierające zmienne takie jak: TARGET, CNT_CHILDREN, AMT_INCOME_TOTAL, AMT_CREDIT, REGION_RATING_CLIENT, APARTMENTS_AVG, BASEMENTAREA_AVG, YEARS_BUILD_AVG, COMMONAREA_AVG, ENTRANCES_AVG, LANDAREA_AVG.\
+Po wyborze kolumn przystąpiono do wywołania wcześniej utworzonej funkcji:
+
+```{r, echo=FALSE}
+statistics_i <- calculate_statistics_i(Data_hotdeck, columns_to_analyze_i)
+
+```
+Stworzono jeden zbiór wyników wykorzystując do tego funkcję, która połączyła wszystkie statystyki z listy "statistics_i" w jeden obiekt. 
+
+```{r, echo=FALSE}
+all_statistics_i <- do.call(rbind, statistics_i)
+print(all_statistics_i)
+
+```
+Podsumowując wszystkie obliczone statystyki dla zmiennych, można zauważyć następujące ogólne tendencje - większość zmiennych w zestawie danych ma rozkład, który jest albo skondensowany wokół jednej wartości (np. TARGET, REGION_RATING_CLIENT), albo rozproszony w dużym zakresie (np. AMT_INCOME_TOTAL, AMT_CREDIT). Średnia pokazująca centralną tendencję zmiennej, czyli jej przeciętną wartość,  w przypadku zmiennych z dużymi wartościami skrajnymi (np. AMT_INCOME_TOTAL, AMT_CREDIT) średnia jest znacznie wyższa niż mediana. /
+Moda wskazująca najczęściej występującą wartość w zbiorze danych w przypadku zmiennej TARGET  wynosi 0, co sugeruje, że większość danych to obserwacje z wartością 0. Taka sytuacja powatarza się w zestawieniu aż czterokrotnie./
+
 
 ## Podsumowanie i wnioski końcowe
