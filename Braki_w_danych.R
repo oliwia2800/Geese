@@ -306,6 +306,7 @@ Data_hotdeck %>%
             skośność= Skew(AMT_CREDIT),
             kurtoza=Kurt(AMT_CREDIT)) %>%
   kbl() %>%
+  kable_classic_2(full_width = F) %>%
   kable_paper("striped", full_width = F) %>%
   column_spec(1:2, bold = F) %>%
   row_spec(1, bold = F, color = "black", background = "white")
@@ -323,6 +324,7 @@ Data_hotdeck %>%
             skośność= Skew(AMT_INCOME_TOTAL),
             kurtoza=Kurt(AMT_INCOME_TOTAL)) %>%
   kbl() %>%
+  kable_classic_2(full_width = F) %>%
   kable_paper("striped", full_width = F) %>%
   column_spec(1:2, bold = F) %>%
   row_spec(1, bold = F, color = "black", background = "white")
