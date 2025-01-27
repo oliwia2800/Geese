@@ -352,12 +352,12 @@ pie_chart <- Data_hotdeck %>%
 
 ggplot(pie_chart) +
   aes(
-    x0 = 0, y0 = 0, # position of pie center
-    r0 = 0, r = 1,  # inner and outer radius
-    amount = n, # size of pie slices
+    x0 = 0, y0 = 0, 
+    r0 = 0, r = 1,  
+    amount = n, 
     fill = TARGET_2
   ) + 
-  geom_arc_bar(stat = "pie") +  # from ggforce
+  geom_arc_bar(stat = "pie") +  
   coord_fixed() +
   scale_fill_brewer(palette = "Set1")
 ```
@@ -420,7 +420,7 @@ ggplot(Data_hotdeck, aes(x = INCOME_LOG, y = CREDIT_LOG)) +
   scale_fill_brewer(palette = "Set1")
 ```
 
-Z wykresu można wywnioskować, że najliczniejsza grupa niespłacająca kredytu należy do poziomu edukacji "secondary/secondary special", najmniej liczna natomiast do "lower secondary". Wykres potwierdza fakt, że większość osób z bazy danych spłaca swoje zobowiązania. \
+Z wykresu można wywnioskować, że najliczniejsza grupa niespłacająca kredytu należy do poziomu edukacji "secondary/secondary special", najmniej liczna natomiast do "lower secondary". Wykres potwierdza fakt, że większość osób z bazy danych spłaca swoje zobowiązania.\
 
 ## Analiza opisowa
 
@@ -495,7 +495,8 @@ Zmienna AMT_CREDIT miała najwyższe odchylenie standardowe (402963.8), co wskaz
 Wariancja będąca kwadratem odchylenia standardowego, informującą o rozproszeniu danych w jednostkach kwadratowych była najwyższa dla AMT_CREDIT i wyniosła aż 162379853826, wskazując na duży rozrzut wartości kredytów. Ponadto ta sama zmienna miała najwyższe odchylenie międzykwartylowe (256095), co również podkreśla dużą zmienność kredytów.Zmienna TARGET miała najniższą wariancję w analizowanym zbiorze ze względu na to, że jest to binarna zmienna zero-jedynkowa.\
 Zmienna TARGET miała najwyższy współczynnik zmienności (3.71), co oznacza bardzo duży rozrzut w stosunku do jej średniej (co jest normalne, biorąc pod uwagę, że to zmienna binarna). Z kolei zmienne takie jak REGION_RATING_CLIENT (0.256) i YEARS_BUILD_AVG (0.1396) miały bardzo niskie wartości współczynnika zmienności, co sugeruje małą zmienność w danych.\
 W przypadku zmiennej CNT_CHILDREN, niektóre osoby mają dużą liczbę dzieci (do 5), ale w przeważającej części obserwacji występuje brak dzieci.\
-Zmienna AMT_CREDIT miała najwyższą maksymalną wartość (3020760), co oznacza duży rozrzut wartości kredytów w zbiorze. \## 
+Zmienna AMT_CREDIT miała najwyższą maksymalną wartość (3020760), co oznacza duży rozrzut wartości kredytów w zbiorze. \##
 
 ## Wnioskowanie (testy statystyczne)
+
 ##Podsumowanie i wnioski końcowe
