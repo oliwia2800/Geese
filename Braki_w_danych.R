@@ -332,3 +332,49 @@ corr_matrix<-cor(Data_hotdeck[c("TARGET","CNT_CHILDREN", "AMT_INCOME_TOTAL", "AM
                                 "APARTMENTS_AVG", "BASEMENTAREA_AVG", "YEARS_BUILD_AVG", "COMMONAREA_AVG", "ENTRANCES_AVG", "LANDAREA_AVG")])
 corrplot(corr_matrix, method="color")
 
+install.packages("ggstatsplot")
+library(ggstatsplot)
+
+
+hist(Data_hotdeck$AMT_CREDIT)
+ggstatsplot :: ggbetweenstats(
+  data = Data_hotdeck,
+  x = FLAG_OWN_REALTY,
+  y = AMT_CREDIT,
+  type = "np"
+
+)
+Data_hotdeck <- Data_hotdeck %>%
+  mutate(data_kat_income = binning(Data_hotdeck$AMT_INCOME_TOTAL, nbins = 5, type = "equal"))
+Data_hotdeck <- Data_hotdeck %>%
+  mutate(data_kat_credit = binning(Data_hotdeck$AMT_CREDIT, nbins = 5, type = "equal"))
+
+ggbarstats(
+  data = Data_hotdeck,
+  x = NAME_EDUCATION_TYPE,
+  y = TARGET_2,,
+  caption = "test",
+  package = "ggsci",
+  palette = "default_igv"
+)
+
+ggbarstats(
+  data = Data_hotdeck,
+  x = data_kat_credit,
+  y = CODE_GENDER,
+  caption = "test",
+  package = "ggsci",
+  palette = "default_igv"
+)
+
+ggpiestats(
+  data = Data_hotdeck,
+  x = data_kat_credit,
+  y = NAME_FAMILY_STATUS,
+)  
+
+
+
+
+
+
