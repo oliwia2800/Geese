@@ -1,6 +1,5 @@
 Data <- read.csv("application_data_new.csv")
 
-install.packages("naniar")
 library(naniar)
 library(naniar)
 library(dplyr)
@@ -29,6 +28,8 @@ library(ggthemes)
 library(ggforce)
 library(DescTools)
 library(corrplot)
+library(ggstatsplot)
+library(kableExtra)
 
 Kredyty <- read.csv("application_data_new.csv", sep = ";")
 set.seed(13)
@@ -292,37 +293,39 @@ Data_hotdeck$LANDAREA_AVG <-as.numeric(Data_hotdeck$LANDAREA_AVG)
 
 options(scipen=999)
 
-calculate_statistics_i <- function(data, columns) {
-  stats <- lapply(columns, function(column) {
-    col_data <- data[[column]]
-    data.frame(
-      średnia = mean(col_data),
-      moda = Mode(col_data),
-      mediana = median(col_data),
-      odch_st = sd(col_data),
-      wariancja = var(col_data),
-      wsp_zm = sd(col_data) / mean(col_data),
-      IQR = IQR(col_data),
-      interquartile_deviation = IQR(col_data) / 2,
-      IQR_coeff_var = (IQR(col_data) / 2) / median(col_data),
-      min = min(col_data),
-      max = max(col_data)
-      )
-  })
-  names(stats) <- columns
-  return(stats)
-}
+Data_hotdeck %>%
+  select(AMT_CREDIT, TARGET_2) %>%
+  group_by(TARGET_2) %>%
+  summarize(minimum=min(AMT_CREDIT),
+            maksimum=max(AMT_CREDIT),
+            średnia=mean(AMT_CREDIT),
+            odchylenie = sd(AMT_CREDIT),
+            mediana = median(AMT_CREDIT),
+            Q1=quantile(AMT_CREDIT,0.25),
+            Q3=quantile(AMT_CREDIT,0.75),
+            skośność= Skew(AMT_CREDIT),
+            kurtoza=Kurt(AMT_CREDIT)) %>%
+  kbl() %>%
+  kable_paper("striped", full_width = F) %>%
+  column_spec(1:2, bold = F) %>%
+  row_spec(1, bold = F, color = "black", background = "white")
 
-columns_to_analyze_i <- c("TARGET","CNT_CHILDREN", "AMT_INCOME_TOTAL", "AMT_CREDIT", "REGION_RATING_CLIENT", 
-                        "APARTMENTS_AVG", "BASEMENTAREA_AVG", "YEARS_BUILD_AVG", "COMMONAREA_AVG", "ENTRANCES_AVG", 
-                        "LANDAREA_AVG")
-
-statistics_i <- calculate_statistics_i(Data_hotdeck, columns_to_analyze_i)
-
-print(statistics_i)
-
-all_statistics_i <- do.call(rbind, statistics_i)
-print(all_statistics_i)
+Data_hotdeck %>%
+  select(AMT_INCOME_TOTAL, TARGET_2) %>%
+  group_by(TARGET_2) %>%
+  summarize(minimum=min(AMT_INCOME_TOTAL),
+            maksimum=max(AMT_INCOME_TOTAL),
+            średnia=mean(AMT_INCOME_TOTAL),
+            odchylenie = sd(AMT_INCOME_TOTAL),
+            mediana = median(AMT_INCOME_TOTAL),
+            Q1=quantile(AMT_INCOME_TOTAL,0.25),
+            Q3=quantile(AMT_INCOME_TOTAL,0.75),
+            skośność= Skew(AMT_INCOME_TOTAL),
+            kurtoza=Kurt(AMT_INCOME_TOTAL)) %>%
+  kbl() %>%
+  kable_paper("striped", full_width = F) %>%
+  column_spec(1:2, bold = F) %>%
+  row_spec(1, bold = F, color = "black", background = "white")
   
 corrplot(cor(Data_hotdeck[c("TARGET","CNT_CHILDREN", "AMT_INCOME_TOTAL", "AMT_CREDIT", "REGION_RATING_CLIENT", 
                             "APARTMENTS_AVG", "BASEMENTAREA_AVG", "YEARS_BUILD_AVG", "COMMONAREA_AVG", "ENTRANCES_AVG", "LANDAREA_AVG")]), 
@@ -331,10 +334,6 @@ corrplot(cor(Data_hotdeck[c("TARGET","CNT_CHILDREN", "AMT_INCOME_TOTAL", "AMT_CR
 corr_matrix<-cor(Data_hotdeck[c("TARGET","CNT_CHILDREN", "AMT_INCOME_TOTAL", "AMT_CREDIT", "REGION_RATING_CLIENT", 
                                 "APARTMENTS_AVG", "BASEMENTAREA_AVG", "YEARS_BUILD_AVG", "COMMONAREA_AVG", "ENTRANCES_AVG", "LANDAREA_AVG")])
 corrplot(corr_matrix, method="color")
-
-install.packages("ggstatsplot")
-library(ggstatsplot)
-
 
 hist(Data_hotdeck$AMT_CREDIT)
 ggstatsplot :: ggbetweenstats(

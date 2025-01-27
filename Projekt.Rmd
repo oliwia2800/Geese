@@ -11,11 +11,10 @@ output: html_document
 
 ## Wprowadzenie
 
-Celem projektu jest analiza danych dotyczących udzielania kredytów hipotecznych i zidentyfikowanie, które czynniki mają wpływ na to, czy kredytobiorca regularnie spłaca kredyt, czy nie.\
+OPISAĆ DOKŁADNIE KOLUMNY!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Celem projektu jest analiza danych dotyczących udzielania kredytów hipotecznych i zidentyfikowanie, które czynniki mają wpływ na to, czy kredytobiorca regularnie spłaca kredyt, czy nie.\
 
 W pierwszym etapie analizy zapoznano się z danymi. Baza składała się z 250 000 rekordów. W związku z tym skonsultowano się z prowadzącym i wybrano 20 kluczowych kolumn. Następnie ustalono ziarno generatora i wylosowano 2500 obserwacji do dalszej analizy. Jako najbardziej istotną uznano zmienną binarną TARGET, która mówi o tym, czy dana osoba regularnie spłaca kredyt.\
-
-W początkowym etapie analizy danych przystąpiono do identyfikacji braków danych.
+\## Braki w danych W początkowym etapie analizy danych przystąpiono do identyfikacji braków danych.
 
 ```{r, echo=FALSE}
 NA_count
@@ -496,6 +495,24 @@ Wariancja będąca kwadratem odchylenia standardowego, informującą o rozprosze
 Zmienna TARGET miała najwyższy współczynnik zmienności (3.71), co oznacza bardzo duży rozrzut w stosunku do jej średniej (co jest normalne, biorąc pod uwagę, że to zmienna binarna). Z kolei zmienne takie jak REGION_RATING_CLIENT (0.256) i YEARS_BUILD_AVG (0.1396) miały bardzo niskie wartości współczynnika zmienności, co sugeruje małą zmienność w danych.\
 W przypadku zmiennej CNT_CHILDREN, niektóre osoby mają dużą liczbę dzieci (do 5), ale w przeważającej części obserwacji występuje brak dzieci.\
 Zmienna AMT_CREDIT miała najwyższą maksymalną wartość (3020760), co oznacza duży rozrzut wartości kredytów w zbiorze. \##
+
+```{r, echo=FALSE}
+corrplot(cor(Data_hotdeck[c("TARGET","CNT_CHILDREN", "AMT_INCOME_TOTAL", "AMT_CREDIT", "REGION_RATING_CLIENT", 
+                            "APARTMENTS_AVG", "BASEMENTAREA_AVG", "YEARS_BUILD_AVG", "COMMONAREA_AVG", "ENTRANCES_AVG", "LANDAREA_AVG")]), 
+                          method = "number", type = "upper", diag =FALSE)
+
+```
+
+```{r, echo=FALSE}
+corr_matrix<-cor(Data_hotdeck[c("TARGET","CNT_CHILDREN", "AMT_INCOME_TOTAL", "AMT_CREDIT", "REGION_RATING_CLIENT", 
+                                "APARTMENTS_AVG", "BASEMENTAREA_AVG", "YEARS_BUILD_AVG", "COMMONAREA_AVG", "ENTRANCES_AVG", "LANDAREA_AVG")])
+
+```
+
+```{r, echo=FALSE}
+corrplot(corr_matrix, method="color")
+
+```
 
 ## Wnioskowanie (testy statystyczne)
 
