@@ -11,16 +11,61 @@ output: html_document
 
 ## Wprowadzenie
 
-OPISAĆ DOKŁADNIE KOLUMNY!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Celem projektu jest analiza danych dotyczących udzielania kredytów hipotecznych i zidentyfikowanie, które czynniki mają wpływ na to, czy kredytobiorca regularnie spłaca kredyt, czy nie.\
+Celem projektu jest analiza danych dotyczących udzielania kredytów hipotecznych i zidentyfikowanie, które czynniki mają wpływ na to, czy kredytobiorca regularnie spłaca kredyt, czy nie.\
 
-W pierwszym etapie analizy zapoznano się z danymi. Baza składała się z 250 000 rekordów. W związku z tym skonsultowano się z prowadzącym i wybrano 20 kluczowych kolumn. Następnie ustalono ziarno generatora i wylosowano 2500 obserwacji do dalszej analizy. Jako najbardziej istotną uznano zmienną binarną TARGET, która mówi o tym, czy dana osoba regularnie spłaca kredyt.\
-\## Braki w danych W początkowym etapie analizy danych przystąpiono do identyfikacji braków danych.
+W pierwszym etapie analizy zapoznano się z danymi. Baza składała się z 250 000 rekordów. W związku z tym skonsultowano się z prowadzącym i wybrano 20 kluczowych kolumn. Odnoszą się one do kredytobiorcy:
+
+-   TARGET - spłaca kredyt regularnie (0), ma z tym problemy (1);
+
+-   NAME_CONTRACT_TYPE - określenie, czy kredyt jest gotówkowy, czy odnawialny;
+
+-   CODE_GENDER - płeć (M - mężczyzna, F - kobieta);
+
+-   FLAG_OWN_REALTY - fakt posiadania nieruchomości (1 - tak, 0 - nie)
+
+-   CNT_CHILDREN - liczba dzieci;
+
+-   AMT_INCOME_TOTAL - całkowity roczny dochód;
+
+-   AMT_CREDIT - całkowita kwota kredytu;
+
+-   NAME_INCOME_TYPE - źródło dochodu;
+
+-   NAME_EDUCATION_TYPE - poziom edukacji;
+
+-   NAME_FAMILY_STATUS - status rodzinny;
+
+-   NAME_HOUSING_TYPE - sytuacja mieszkaniowa;
+
+-   ORGANIZATION_TYPE - miejsce pracy;
+
+-   REGION_RATING_CLIENT - ocena na skali porządkowej miejsca zamieszkania;
+
+-   OCCUPATION_TYPE - typ zawodu;
+
+-   APARTMENTS_AVG - średnia znormalizowana powierzchnia mieszkalna;
+
+-   BASEMENTAREA_AVG - średnia znormalizowana powierzchnia piwnicy;
+
+-   YEARS_BUILD_AVG - średni znormalizowany wiek nieruchomości;
+
+-   COMMONAREA_AVG - średnia znormalizowana powierzchnia ewentualnej części wspólnej;
+
+-   ENTRANCES_AVG - średnia znormalizowana liczba wejść;
+
+-   LANDAREA_AVG - średnia znormalizowana powierzchnia terenu posesji.
+
+Po wybraniu zmiennych z najważniejszymi informacjami, ustalono ziarno generatora i wylosowano 2500 obserwacji do dalszej analizy. Jako najbardziej istotną uznano zmienną binarną TARGET, która mówi o tym, czy dana osoba regularnie spłaca kredyt.\
+
+## Braki w danych
+
+W początkowym etapie analizy danych przystąpiono do identyfikacji braków danych.
 
 ```{r, echo=FALSE}
 NA_count
 ```
 
-Na podstawie wyniku można wywnioskować, że baza danych ma 9409 braków w obserwacjach.\
+Na podstawie wyniku można wywnioskować, że baza danych ma 9409 braków w obserwacjach.
 
 Następnie sprawdzono, w jakiej występują one propocji do całego zbioru i przedstawiono ten wynik w postaci procentowej.\
 
@@ -29,7 +74,8 @@ NA_proportion
 NA_percentage
 ```
 
-Stwierdzono, że braki danych stanowią 18,818% wszystkich obserwacji.\
+Stwierdzono, że braki danych stanowią 18,818% wszystkich obserwacji.
+
 W celu dogłębniejszej ich analizy zbadano, ile jest braków w danej kolumnie oraz w jakiej proporcji procentowej w niej występują.
 
 ```{r, echo=FALSE}
@@ -70,7 +116,7 @@ Lewy dolny wykres wyświetla całkowitą liczbę brakujących wartości dla każ
 gg_miss_upset(Data, nsets = 122)
 ```
 
-Najczęstsze kombinacje braków dotyczą kilku kolumn jednocześnie (814 przypadków), co sugeruje, że brak danych może być skorelowany w tych zmiennych. Kolumny takie jak COMMONAREA_AVG_NA czy YEARS_BUILD_AVG_NA mają największe liczby braków.\
+Najczęstsze kombinacje braków dotyczą kilku kolumn jednocześnie (814 przypadków), co sugeruje, że brak danych może być skorelowany w tych zmiennych. Kolumny takie jak COMMONAREA_AVG_NA czy YEARS_BUILD_AVG_NA mają największe liczby braków.
 
 Podjęto się stworzenia również innej wizualizacji braków danych. Wykres po lewej przedstawia proporcje braków w zależności od TARGET. Na osi poziomej znajdują się wartości zmiennej TARGET. Natomiast na osi pionowej przedstawiona jest proporcja braków w danych.\
 Wykres po prawej przedstawia macierz kombinacji braków. Na osi poziomej przedstawiono kombinacje braków danych w różnych kolumnach, a oś pozioma prezentuje wiersze w danych. Niebieskie pola przedstawiają komórki uzupełnione, a czerwone - braki danych.
@@ -423,13 +469,12 @@ Z wykresu można wywnioskować, że najliczniejsza grupa niespłacająca kredytu
 
 ## Analiza opisowa
 
-Analizę opisową rozpoczęto od ponownego sprawdzenia struktury danych, aby zdecydować jakie styatystyki opisowe zostaną wykorzystane w kolejnych krokach. Następnie przekształcono dane, uważane przez nas za numeryczne, ale traktowane przez program jako tekstowe na typ numeric. Po tej operacji, zmienne te będą mogły być wykorzystywane w analizach opisowych.\
+Analizę opisową rozpoczęto od ponownego sprawdzenia struktury danych, aby zdecydować jakie statystyki opisowe zostaną wykorzystane w kolejnych krokach. Następnie przekształcono dane, uważane przez nas za numeryczne, ale traktowane przez program jako tekstowe na typ numeric. Po tej operacji, zmienne te będą mogły być wykorzystywane w analizach opisowych.\
 
-Następnie zdefiniowano funkcję do obliczania statystyk dla wybranych zmiennych jakimi będą:
-wysokość kredytu oraz wysokość dochodów kredytobiorców. Zmienne te zostaną pogrupowane według zmiennej TARGET, aby sprawdzić różnice pomiędzy osobami spłacającymi kredyt oraz tymi, którzy posiadają problem ze spłatą. \
+Następnie zdefiniowano funkcję do obliczania statystyk dla wybranych zmiennych jakimi będą: wysokość kredytu oraz wysokość dochodów kredytobiorców. Zmienne te zostaną pogrupowane według zmiennej TARGET, aby sprawdzić różnice pomiędzy osobami spłacającymi kredyt oraz tymi, którzy posiadają problem ze spłatą.\
 Statystykami obliczanymi w funkcji są:
 
--   minimum; 
+-   minimum;
 
 -   maksimum;
 
@@ -439,16 +484,17 @@ Statystykami obliczanymi w funkcji są:
 
 -   mediana;
 
--   Q1 - pierwszy kwartyl; 
+-   Q1 - pierwszy kwartyl;
 
 -   Q3 - trzeci kwartyl;
 
 -   skośność;
 
--   kurtoza. 
+-   kurtoza.
 
 \
-Jako pierwszą przeanalizowano zmienną AMT_CREDIT. 
+Jako pierwszą przeanalizowano zmienną AMT_CREDIT.
+
 ```{r, echo=FALSE}
 Data_hotdeck %>%
   select(AMT_CREDIT, TARGET_2) %>%
@@ -514,4 +560,4 @@ corrplot(corr_matrix, method="color")
 
 ## Wnioskowanie (testy statystyczne)
 
-##Podsumowanie i wnioski końcowe
+## Podsumowanie i wnioski końcowe
