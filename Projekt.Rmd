@@ -121,6 +121,8 @@ Najczęstsze kombinacje braków dotyczą kilku kolumn jednocześnie (814 przypad
 Podjęto się stworzenia również innej wizualizacji braków danych. Wykres po lewej przedstawia proporcje braków w zależności od TARGET. Na osi poziomej znajdują się wartości zmiennej TARGET. Natomiast na osi pionowej przedstawiona jest proporcja braków w danych.\
 Wykres po prawej przedstawia macierz kombinacji braków. Na osi poziomej przedstawiono kombinacje braków danych w różnych kolumnach, a oś pozioma prezentuje wiersze w danych. Niebieskie pola przedstawiają komórki uzupełnione, a czerwone - braki danych.
 
+SPRAWDZIĆ JAKI JEST PATTERN ZGODNIE Z WYKŁADEM!!!!!!!!!!!!!!!
+
 ```{r, echo=FALSE}
 VIM::aggr(Data_implications[,1:20])
 ```
