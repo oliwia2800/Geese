@@ -423,52 +423,50 @@ Z wykresu można wywnioskować, że najliczniejsza grupa niespłacająca kredytu
 
 ## Analiza opisowa
 
-Analizę opisową rozpoczęto od ponownego sprawdzenia struktury danych, aby zdecydować jakie styatystyki opisowe zostaną wykorzystane w kolejnych krokach. Następnie przekształcono dane, uważane przez nas za numeryczne, ale traktowane przez program jako tekstowe na typ numeric. Po tej operacji, zmienne te będą mogły być wykorzystywane w analizach statystycznych.\
+Analizę opisową rozpoczęto od ponownego sprawdzenia struktury danych, aby zdecydować jakie styatystyki opisowe zostaną wykorzystane w kolejnych krokach. Następnie przekształcono dane, uważane przez nas za numeryczne, ale traktowane przez program jako tekstowe na typ numeric. Po tej operacji, zmienne te będą mogły być wykorzystywane w analizach opisowych.\
 
-Następnie zdefiniowano funkcję do obliczania statystyk dla określonych kolumn. Statystykami obliczanymi w funkcji są:
+Następnie zdefiniowano funkcję do obliczania statystyk dla wybranych zmiennych jakimi będą:
+wysokość kredytu oraz wysokość dochodów kredytobiorców. Zmienne te zostaną pogrupowane według zmiennej TARGET, aby sprawdzić różnice pomiędzy osobami spłacającymi kredyt oraz tymi, którzy posiadają problem ze spłatą. \
+Statystykami obliczanymi w funkcji są:
 
--   średnia arytmetyczna wartości w kolumnie;
+-   minimum; 
 
--   moda;
+-   maksimum;
 
--   mediana;
+-   średnia arytmetyczna;
 
 -   odchylenie standardowe;
 
--   wariancja;
+-   mediana;
 
--   współczynnik zmienności;
+-   Q1 - pierwszy kwartyl; 
 
--   IQR - zakres międzykwartylowy;
+-   Q3 - trzeci kwartyl;
 
--   połowa zakresu międzykwartylowego;
+-   skośność;
 
--   minimum;
+-   kurtoza. 
 
--   maksimum.\
-
+\
+Jako pierwszą przeanalizowano zmienną AMT_CREDIT. 
 ```{r, echo=FALSE}
-calculate_statistics_i <- function(data, columns) {
-  stats <- lapply(columns, function(column) {
-    col_data <- data[[column]]
-    data.frame(
-      średnia = mean(col_data),
-      moda = Mode(col_data),
-      mediana = median(col_data),
-      odch_st = sd(col_data),
-      wariancja = var(col_data),
-      wsp_zm = sd(col_data) / mean(col_data),
-      IQR = IQR(col_data),
-      interquartile_deviation = IQR(col_data) / 2,
-      IQR_coeff_var = (IQR(col_data) / 2) / median(col_data),
-      min = min(col_data),
-      max = max(col_data)
-      )
-  })
-  names(stats) <- columns
-  return(stats)
-}
-
+Data_hotdeck %>%
+  select(AMT_CREDIT, TARGET_2) %>%
+  group_by(TARGET_2) %>%
+  summarize(minimum=min(AMT_CREDIT),
+            maksimum=max(AMT_CREDIT),
+            średnia=mean(AMT_CREDIT),
+            odchylenie = sd(AMT_CREDIT),
+            mediana = median(AMT_CREDIT),
+            Q1=quantile(AMT_CREDIT,0.25),
+            Q3=quantile(AMT_CREDIT,0.75),
+            skośność= Skew(AMT_CREDIT),
+            kurtoza=Kurt(AMT_CREDIT)) %>%
+  kbl() %>%
+  kable_classic_2(full_width = F) %>%
+  kable_paper("striped", full_width = F) %>%
+  column_spec(1:2, bold = F) %>%
+  row_spec(1, bold = F, color = "black", background = "white")
 ```
 
 Aby przeanalizować wszystkie wybrane kolumny jednocześnie stworzono wektor columns_to_analyze_i zawierający nazwy kolumn, które mają zostać poddane analizie. Wektor zawiera zmienne takie jak: TARGET, CNT_CHILDREN, AMT_INCOME_TOTAL, AMT_CREDIT, REGION_RATING_CLIENT, APARTMENTS_AVG, BASEMENTAREA_AVG, YEARS_BUILD_AVG, COMMONAREA_AVG, ENTRANCES_AVG, LANDAREA_AVG.\
