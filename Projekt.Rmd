@@ -104,6 +104,8 @@ target_heat_mapa <- gg_miss_fct(Data, fct = TARGET)
 print(target_heat_mapa)
 ```
 
+PO TYM DODAĆ GGPLOTA Z KOMPLETNOŚCIĄ DANYCH I OPISAĆ, BO TEGO TU BRAKUJE Z GŁÓWNEGO KODU
+
 Mapa cieplna ukazała procentowy udział braków danych w całym zbiorze. Skala zbudowana jest na kolorach od fioletowego do żółtego, gdzie fiolet oznacza 0%, a żółty 100%.\
 
 Następnie stworzono wykres upset plot, który służy do wizualizacji braków danych lub analiz złożonych relacji między grupami cech.\
@@ -475,7 +477,33 @@ Z wykresu można wywnioskować, że najliczniejsza grupa niespłacająca kredytu
 
 ## Analiza opisowa
 
-Analizę opisową rozpoczęto od ponownego sprawdzenia struktury danych, aby zdecydować jakie statystyki opisowe zostaną wykorzystane w kolejnych krokach. Następnie przekształcono dane, uważane przez nas za numeryczne, ale traktowane przez program jako tekstowe na typ numeric. Po tej operacji, zmienne te będą mogły być wykorzystywane w analizach opisowych.\
+Analizę opisową rozpoczęto od stworzenia wykresu korelacji pomiędzy wybranymi zmiennymi numerycznymi wizualizowaną za pomocą funkcji z pakietu corrplot.\
+Zakresem wartości korelacji jest zakres od -1 do 1, gdzie:
+
+-   Korelacja bliska **1** oznacza silny dodatni związek między zmiennymi.
+
+-   Korelacja bliska **0** wskazuje na brak związku.
+
+-   Korelacja bliska **-1** sugeruje silną zależność ujemną.\
+
+```{r, echo=FALSE}
+corrplot(cor(Data_hotdeck[c("TARGET","CNT_CHILDREN", "AMT_INCOME_TOTAL", "AMT_CREDIT", "REGION_RATING_CLIENT", 
+                            "APARTMENTS_AVG", "BASEMENTAREA_AVG", "YEARS_BUILD_AVG", "COMMONAREA_AVG", "ENTRANCES_AVG", "LANDAREA_AVG")]), 
+         method = "number", type = "upper", diag =FALSE)
+```
+
+Najwyższą dodatnią korelację można zauważyć między APARTMENTS_AVG a ENTRANCES_AVG oraz BASEMENTAREA_AVG, co oznacza, że średnia powierzchnia mieszkań jest silnie powiązana z liczbą wejść do budynku oraz powierzchnią piwnicy.\
+AMT_INCOME_TOTAL wykazuje umiarkowaną korelację z AMT_CREDIT (0.38), co sugeruje, że osoby o wyższym dochodzie częściej zaciągają wyższe kredyty.\
+Wartość korelacji zmiennej REGION_RATING_CLIENT jest bliska zeru, co sugeruje brak silnego związku z innymi zmiennymi.
+Brak silnej korelacji między zmiennymi a TARGET sugeruje, że inne czynniki (np.zatrudnienie, poziom edukacji, typ pożyczki) mogą mieć większy wpływ na przewidywanie zmiennej dotyczącej regularnego spłacania i niespłacania kredytu.\
+
+
+
+
+
+
+
+
 
 Następnie zdefiniowano funkcję do obliczania statystyk dla wybranych zmiennych jakimi będą: wysokość kredytu oraz wysokość dochodów kredytobiorców. Zmienne te zostaną pogrupowane według zmiennej TARGET, aby sprawdzić różnice pomiędzy osobami spłacającymi kredyt oraz tymi, którzy posiadają problem ze spłatą.\
 Statystykami obliczanymi w funkcji są:
