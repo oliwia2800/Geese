@@ -562,4 +562,40 @@ corrplot(corr_matrix, method="color")
 
 ## Wnioskowanie (testy statystyczne)
 
+W ramach niniejszego rozdziału przeprowadzono analizę statystyczna zbioru danych. Ma ona na celu zbadanie zależności pomiędzy wybranymi zmiennymi. Wykorzystane metody statystyczne pozwolą na ocenę istotności różnic oraz zidentyfikowanie potencjalnych zależności w danych.
+
+Dokonano kategoryzacji danych liczbowych dotyczących dochodów (AMT_INCOME_TOTAL) oraz kwoty kredytu (AMT_CREDIT) na pięć równych przedziałów, co pozwala na lepsze zobrazowanie struktury tych zmiennych. W celu wizualizacji wyników wykorzystano histogramy oraz wykresy słupkowe, co ułatwia interpretację rozkładów.
+
+```{r, echo=FALSE}
+data_kat_income <- binning(Data_hotdeck$AMT_INCOME_TOTAL, nbins = 5, type = "equal")
+summary(data_kat_income)
+plot(data_kat_income)
+```
+
+```{r, echo=FALSE}
+data_kat_credit <- binning(Data_hotdeck$AMT_CREDIT, nbins = 5, type = "equal")
+summary(data_kat_credit)
+plot(data_kat_credit)
+```
+
+Pierwsza hipoteza, którą zdecydowano się postawić ma na celu zbadanie czy poziom edukacji (NAME_EDUCATION_TYPE) ma istotny wpływ na problemy ze spłatą kredytu (TARGET_2).\
+Hipotezy statystyczne:
+- H₀: Nie ma istotnej zależności między poziomem edukacji a problemami ze spłatą kredytu. Rozkład wartości TARGET_2 jest równomierny w różnych grupach edukacyjnych.
+- H₁: Istnieje istotna zależność między poziomem edukacji a problemami ze spłatą kredytu. Pewne grupy edukacyjne mają wyraźnie większe lub mniejsze ryzyko problemów kredytowych.
+
+```{r, echo=FALSE}
+ggpiestats(
+  data = Data_hotdeck,
+  x = data_kat_credit,
+  y = NAME_FAMILY_STATUS,
+  palette = "Set1",
+  title = "Rozkład pięciu przedziałów kredytów w zależności od statusu rodziny"
+)  
+```
+
+Wartość p=0.01 wskazuje na to, że poziom edukacji wpływa na problemy ze spłatą kredytu. Współczynnik V Craméra (0.06) sugeruje słabą zależność między zmiennymi.P=0.01 jest mniejsze niż poziom istotności α=0.05. Odrzucamy hipotezę zerową. Oznacza to, że istnieje statystycznie istotna zależność między poziomem edukacji, a problemami ze spłatą kredytu.\
+
+Na podstawie rozkłądu poziomu edukacji w zależności od problemów ze spłatą kredytu można zauważyć pewne różnice. Osoby z wykształceniem średnim dominują w obu grupach, ale ich udział jest większy wśród osób mających problemy ze spłatą kredytu (75%). Osoby z wykształceniem wyższym częściej spłacają kredyt regularnie (27%) w porównaniu do tych, które mają problemy (18%).
+
+Druga postawiona hipoteza związana jest z 
 ## Podsumowanie i wnioski końcowe
