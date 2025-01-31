@@ -69,7 +69,9 @@ ggplot(data = Data, aes(x = INCOME_LOG, y = CREDIT_LOG)) +
   geom_point() +
   geom_miss_point() +
   scale_fill_brewer(palette = "Set1") +
-  theme_minimal()
+  theme_minimal()+
+  ggtitle("Wykres ilustrujący kompletność danych dla zmiennych INCOME_LOG i CREDIT_LOG") +
+  theme(plot.title = element_text(hjust = 0.5)) 
 
 is.special <- function(x){if(is.numeric(x)) !is.finite(x) else is.na(x)}
 sapply(Data, is.special)

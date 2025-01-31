@@ -494,18 +494,20 @@ corrplot(cor(Data_hotdeck[c("TARGET","CNT_CHILDREN", "AMT_INCOME_TOTAL", "AMT_CR
 
 Najwyższą dodatnią korelację można zauważyć między APARTMENTS_AVG a ENTRANCES_AVG oraz BASEMENTAREA_AVG, co oznacza, że średnia powierzchnia mieszkań jest silnie powiązana z liczbą wejść do budynku oraz powierzchnią piwnicy.\
 AMT_INCOME_TOTAL wykazuje umiarkowaną korelację z AMT_CREDIT (0.38), co sugeruje, że osoby o wyższym dochodzie częściej zaciągają wyższe kredyty.\
-Wartość korelacji zmiennej REGION_RATING_CLIENT jest bliska zeru, co sugeruje brak silnego związku z innymi zmiennymi.
-Brak silnej korelacji między zmiennymi a TARGET sugeruje, że inne czynniki (np.zatrudnienie, poziom edukacji, typ pożyczki) mogą mieć większy wpływ na przewidywanie zmiennej dotyczącej regularnego spłacania i niespłacania kredytu.\
+Wartość korelacji zmiennej REGION_RATING_CLIENT jest bliska zeru, co sugeruje brak silnego związku z innymi zmiennymi. Brak silnej korelacji między zmiennymi a TARGET sugeruje, że inne czynniki (np.zatrudnienie, poziom edukacji, typ pożyczki) mogą mieć większy wpływ na przewidywanie zmiennej dotyczącej regularnego spłacania i niespłacania kredytu.\
 
+Następnie stworzono wykres przedstawiający macierz korelacji. Kolory użyte w wizualizacji pozwalają na szybkie rozpoznanie siły oraz kierunku zależności między zmiennymi – ciemnoniebieskie odcienie oznaczają silną dodatnią korelację, natomiast czerwone wskazują na ujemną korelację.\
 
+```{r, echo=FALSE}
+corr_matrix<-cor(Data_hotdeck[c("TARGET","CNT_CHILDREN", "AMT_INCOME_TOTAL", "AMT_CREDIT", "REGION_RATING_CLIENT", 
+                                "APARTMENTS_AVG", "BASEMENTAREA_AVG", "YEARS_BUILD_AVG", "COMMONAREA_AVG", "ENTRANCES_AVG", "LANDAREA_AVG")])
+corrplot(corr_matrix, method="color")
 
+```
 
+Dzięki zastosowaniu kolorów w odniesieniu do każdej korelacji między zmiennymi oraz usunięciu danych liczbowych z macierzy wizualizacja stała się bardziej czytelna. Najwyższe wartości korelacji oznaczające silne powiązania dodatnie można zauważyć w dolnym prawym rogu wykresu. Pokazują one powiązania między zmiennymi opisujacymi charakterystykę nieruchomości.\
 
-
-
-
-
-Następnie zdefiniowano funkcję do obliczania statystyk dla wybranych zmiennych jakimi będą: wysokość kredytu oraz wysokość dochodów kredytobiorców. Zmienne te zostaną pogrupowane według zmiennej TARGET, aby sprawdzić różnice pomiędzy osobami spłacającymi kredyt oraz tymi, którzy posiadają problem ze spłatą.\
+W kolejnym etapie analizy zdefiniowano funkcję do obliczania statystyk opisowych dla wybranych zmiennych jakimi będą: wysokość kredytu oraz wysokość dochodów kredytobiorców. Zmienne te zostaną pogrupowane według zmiennej TARGET, aby sprawdzić różnice pomiędzy osobami spłacającymi kredyt oraz tymi, które posiadają problem ze spłatą.\
 Statystykami obliczanymi w funkcji są:
 
 -   minimum;
@@ -527,7 +529,7 @@ Statystykami obliczanymi w funkcji są:
 -   kurtoza.
 
 \
-Jako pierwszą przeanalizowano zmienną AMT_CREDIT.
+Jako pierwszą przeanalizowano zmienną AMT_CREDIT opisującą wysokość kredytu.
 
 ```{r, echo=FALSE}
 Data_hotdeck %>%
@@ -548,49 +550,71 @@ Data_hotdeck %>%
   column_spec(1:2, bold = F) %>%
   row_spec(1, bold = F, color = "black", background = "white")
 ```
+Podsumowując dane z powyższej tabeli średnia kredytów w grupie "spłaca" jest wyższa niż w grupie "problemy ze spłatą", co może sugerować, że osoby spłacające kredyty mają wyższe zobowiązania.\
+Najniższy kredyt w grupie posiadającej probelmy ze spłata wynosi 101880, a  najwyższy wynosi 3020760. W grupie osób bezproblemowo spłacających kredyt minimalną wartością udzielonego kredytu jestg 47970, a maksymalną 2517300.\
+Mediana wartości kredytu dla osób z problemami ze spłatą wynosi 495000, co wskazuje, że połowa kredytów jest mniejsza lub równa tej kwocie, a połowa większa. W przypadku grupy bez problemów ze spłatą mediana jest bliska średniej, co oznacza, że kredyty w tej grupie są bardziej jednorodne pod względem wartości niż w grupie osób mających problemy ze spłatą.
+Zmienność w obu grupach jest duża, ale grupa "problemy ze spłatą" ma wyższe odchylenie standardowe i wyższą kurtozę, co oznacza, że istnieje większe zróżnicowanie wysokości kredytów w tej grupie. \
+Skośność w grupie "problemy ze spłatą" jest znacznie większa, co oznacza, że kredyty w tej grupie mają długie ogony w prawo (więcej bardzo wysokich kredytów). \
+Z kolei kurtoza w grupie osób z problemami dotyczącymi spłaty wskazuje na rozkład z bardziej ekstremalnymi wartościami, podczas gdy w grupie spłacających bezproblemowo rozkład jest bardziej "normalny".\
+Te różnice mogą sugerować, że osoby z problemami ze spłatą kredytu mają bardziej zróżnicowane kredyty, w tym więcej kredytów o bardzo wysokiej wartości, podczas gdy osoby spłacające kredyty mają bardziej jednorodny rozkład kredytów.\
 
-Aby przeanalizować wszystkie wybrane kolumny jednocześnie stworzono wektor columns_to_analyze_i zawierający nazwy kolumn, które mają zostać poddane analizie. Wektor zawiera zmienne takie jak: TARGET, CNT_CHILDREN, AMT_INCOME_TOTAL, AMT_CREDIT, REGION_RATING_CLIENT, APARTMENTS_AVG, BASEMENTAREA_AVG, YEARS_BUILD_AVG, COMMONAREA_AVG, ENTRANCES_AVG, LANDAREA_AVG.\
-Po wyborze kolumn przystąpiono do wywołania wcześniej utworzonej funkcji:
-
-```{r, echo=FALSE}
-statistics_i <- calculate_statistics_i(Data_hotdeck, columns_to_analyze_i)
-
-```
-
-Stworzono jeden zbiór wyników, który połączył wszystkie statystyki z listy "statistics_i" w jeden obiekt.
-
-```{r, echo=FALSE}
-all_statistics_i <- do.call(rbind, statistics_i)
-print(all_statistics_i)
-
-```
-
-Podsumowując wszystkie obliczone statystyki dla zmiennych, można zauważyć, że zmienna AMT_INCOME_TOTAL miała najwyższą średnią (164686.1), co sugeruje, że średni dochód w zbiorze danych jest wysoki. Z kolei zmienna TARGET miała najniższą średnią (0.0676), co oznacza, że tylko niewielki procent obserwacji ma wartość 1, sugerując dużą dominację 0.\
-Moda wskazująca najczęściej występującą wartość w zbiorze danych w przypadku zmiennej TARGET wynosi 0, co sugeruje, że większość danych to obserwacje z wartością 0. Taka sytuacja powatarza się w zestawieniu aż czterokrotnie.W przypadku AMT_INCOME_TOTAL i AMT_CREDIT, moda była znacznie niższa od średniej, wskazując na bardziej równomierny rozkład wartości.\
-Mediana będąca wartością środkową dla zmiennej TARGET i REGION_RATING_CLIENT wynosiła 0 i 2, co oznacza, że te zmienne mają dość jednorodne rozkłady z dominującymi właśnie tymi wartościami.\
-Zmienna AMT_CREDIT miała najwyższe odchylenie standardowe (402963.8), co wskazuje na dużą zmienność w wysokości przyznanych kredytów.\
-Wariancja będąca kwadratem odchylenia standardowego, informującą o rozproszeniu danych w jednostkach kwadratowych była najwyższa dla AMT_CREDIT i wyniosła aż 162379853826, wskazując na duży rozrzut wartości kredytów. Ponadto ta sama zmienna miała najwyższe odchylenie międzykwartylowe (256095), co również podkreśla dużą zmienność kredytów.Zmienna TARGET miała najniższą wariancję w analizowanym zbiorze ze względu na to, że jest to binarna zmienna zero-jedynkowa.\
-Zmienna TARGET miała najwyższy współczynnik zmienności (3.71), co oznacza bardzo duży rozrzut w stosunku do jej średniej (co jest normalne, biorąc pod uwagę, że to zmienna binarna). Z kolei zmienne takie jak REGION_RATING_CLIENT (0.256) i YEARS_BUILD_AVG (0.1396) miały bardzo niskie wartości współczynnika zmienności, co sugeruje małą zmienność w danych.\
-W przypadku zmiennej CNT_CHILDREN, niektóre osoby mają dużą liczbę dzieci (do 5), ale w przeważającej części obserwacji występuje brak dzieci.\
-Zmienna AMT_CREDIT miała najwyższą maksymalną wartość (3020760), co oznacza duży rozrzut wartości kredytów w zbiorze. \##
+Operację powtórzono dla zmiennej AMT_INCOME_TOTAL opisującej wysokość dochodów kredytobiorców.
 
 ```{r, echo=FALSE}
-corrplot(cor(Data_hotdeck[c("TARGET","CNT_CHILDREN", "AMT_INCOME_TOTAL", "AMT_CREDIT", "REGION_RATING_CLIENT", 
-                            "APARTMENTS_AVG", "BASEMENTAREA_AVG", "YEARS_BUILD_AVG", "COMMONAREA_AVG", "ENTRANCES_AVG", "LANDAREA_AVG")]), 
-                          method = "number", type = "upper", diag =FALSE)
+Data_hotdeck %>%
+  select(AMT_INCOME_TOTAL, TARGET_2) %>%
+  group_by(TARGET_2) %>%
+  summarize(minimum=min(AMT_INCOME_TOTAL),
+            maksimum=max(AMT_INCOME_TOTAL),
+            średnia=mean(AMT_INCOME_TOTAL),
+            odchylenie=sd(AMT_INCOME_TOTAL),
+            mediana=median(AMT_INCOME_TOTAL),
+            Q1=quantile(AMT_INCOME_TOTAL,0.25),
+            Q3=quantile(AMT_INCOME_TOTAL,0.75),
+            skośność=Skew(AMT_INCOME_TOTAL),
+            kurtoza=Kurt(AMT_INCOME_TOTAL)) %>%
+  kbl() %>%
+  kable_classic_2(full_width = F) %>%
+  kable_paper("striped", full_width = F) %>%
+  column_spec(1:2, bold = F) %>%
+  row_spec(1, bold = F, color = "black", background = "white")
 
 ```
+W związku z wysokością dochodów kredytobiorców można stwierdzić, że średnie dochody w grupie "problemy ze spłatą" są nieco wyższe i wynoszą 1693556 w porównaniu do drigiej grupy z dochodami równymi 1643476. \
+Mediana wynosi 135000, co oznacza, że połowa kredytobiorców zarabia mniej niż 135000, a połowa więcej.
+Zmienność dochodów w obu grupach jest dość duża, z wysokim odchyleniem standardowym w każdej z nich. Dochody są mocno zróżnicowane w obu grupach, ale szczególnie wyraźne są w grupie "spłaca", gdzie wartości ekstremalne są jeszcze bardziej rozproszone (wyższa kurtoza).\
+Skośność w obu grupach jest dodatnia, wskazując na większą liczbę osób z wyższymi dochodami w porównaniu do tych z niższymi dochodami. W grupie "spłaca" zauważalne jest silniejsze przesunięcie w stronę wyższych dochodów.\
+Kurtoza w obu grupach wskazuje na rozkład z koncentracją wokół średnich wartości dochodów. W grupie "spłaca" koncentracja jest wyraźniejsza, z większą liczbą osób o dochodach w górnej części rozkładu.\
+Wnioski mogą sugerować, że osoby spłacające kredyty mają bardziej jednorodny poziom dochodów, ale nadal istnieje grupa osób o bardzo wysokich dochodach. Z kolei osoby mające problemy ze spłatą mają bardziej zróżnicowane dochody, z większymi skrajnymi wartościami.\
+
+Statystyki opisowe przygotowano także do cech budynków mieszkaniowych analizowanych uprzednio w macierzy korelacji. Pogrupowano je tak jak w dwóch powyższych tabelach ze względu na zmienna TARGET_2 oznaczającą problemy ze spłatą lub ich brak.
 
 ```{r, echo=FALSE}
-corr_matrix<-cor(Data_hotdeck[c("TARGET","CNT_CHILDREN", "AMT_INCOME_TOTAL", "AMT_CREDIT", "REGION_RATING_CLIENT", 
-                                "APARTMENTS_AVG", "BASEMENTAREA_AVG", "YEARS_BUILD_AVG", "COMMONAREA_AVG", "ENTRANCES_AVG", "LANDAREA_AVG")])
-
-```
-
-```{r, echo=FALSE}
-corrplot(corr_matrix, method="color")
-
-```
+Data_hotdeck %>%
+  select(TARGET_2, APARTMENTS_AVG, BASEMENTAREA_AVG, YEARS_BUILD_AVG, COMMONAREA_AVG, ENTRANCES_AVG, LANDAREA_AVG) %>%
+  pivot_longer(cols = -TARGET_2, names_to = "Zmienna", values_to = "VALUE") %>%
+  group_by(Zmienna, TARGET_2) %>%
+  summarize(minimum=min(VALUE),
+            maksimum=max(VALUE),
+            średnia=mean(VALUE),
+            odchylenie=sd(VALUE),
+            mediana=median(VALUE),
+            Q1=quantile(VALUE,0.25),
+            Q3=quantile(VALUE,0.75),
+            skośność=Skew(VALUE),
+            kurtoza=Kurt(VALUE)) %>%
+  kbl() %>%
+  kable_classic_2(full_width = F) %>%
+  kable_paper("striped", full_width = F) %>%
+  column_spec(1:2, bold = F) %>%
+  row_spec(1, bold = F, color = "black", background = "white")
+```  
+Dla zmiennych APARTMENTS_AVG, BASEMENTAREA_AVG, COMMONAREA_AVG, ENTRANCES_AVG, LANDAREA_AVG minimum wynosi 0, co sugeruje, że niektóre nieruchomości nie mają w ogóle tych cech (np. brak wspólnych przestrzeni, piwnic, działek, wejść). Dla zmiennej YEARS_BUILD_AVG minimum wynosi 0.6192 dla osób z problemami w spłacie, co może wskazywać na stosunkowo nowe budynki w tej grupie, co jest ciekawe, ponieważ oczekiwalibyśmy, że starsze nieruchomości częściej będą miały problemy ze spłatą. \
+Średnia w grupie "problemy ze spłatą" dla zmiennej APARTMENTS_AVG wynosi 0.0974, a w grupie "spłaca" wynosi 0.1189, co sugeruje, że osoby spłacające kredyt mają nieco większe mieszkania niż osoby z problemami. Podobnie, osoby spłacające kredyt mają nieco większe powierzchnie piwnic i działek, podczas gdy powierzchnia wspólnych przestrzeni jest bardzo podobna w obu grupach. Dzięki zmiennej opisującej wiek nieruchomości można zauważyć, że osoby z problemami mają średnio nieco starsze budynki, choć różnice są niewielkie.\
+W przypadku zmiennych takich jak APARTMENTS_AVG czy LANDAREA_AVG, odchylenie standardowe wskazuje na dużą rozbieżność w wielkości nieruchomości, zwłaszcza w grupie spłacających kredyt. Natomiast dla zmiennych takich jak BASEMENTAREA_AVG czy COMMONAREA_AVG odchylenie jest mniejsze, co oznacza mniejszą zmienność w tych cechach.\
+Mediana dla powierzchni mieszkań, piwnic i działek jest nieco wyższa w grupie spłacających kredyt, co sugeruje, że osoby te mieszkają w nieruchomościach o większej powierzchni w tych kategoriach. Mediana dla wspólnych przestrzeni i liczby wejść jest w zasadzie identyczna w obu grupach.
+Wartości skośności wskazują, że w obu grupach występuje przesunięcie w stronę wyższych wartości, ale szczególnie mocne w grupie spłacających kredyt. Dla zmiennych takich jak BASEMENTAREA_AVG czy YEARS_BUILD_AVG skośność jest wyraźnie wyższa w grupie spłacających kredyt, co sugeruje większe odchylenie w tych grupach.\
+Kurtoza wskazuje na silną koncentrację danych wokół średnich wartości w obu grupach, z wyraźnie większą koncentracją w grupie spłacających kredyt. Wartości kurtozy są szczególnie wysokie w przypadku zmiennych takich jak APARTMENTS_AVG czy BASEMENTAREA_AVG, co sugeruje, że w tych grupach pojawiają się skrajne przypadki (bardzo duże mieszkania, piwnice itp.).
 
 ## Wnioskowanie (testy statystyczne)
 
