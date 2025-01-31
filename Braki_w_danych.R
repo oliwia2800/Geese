@@ -369,9 +369,9 @@ Data_hotdeck %>%
   row_spec(1, bold = F, color = "black", background = "white")
 
 Data_hotdeck %>%
-  select(APARTMENTS_AVG, BASEMENTAREA_AVG, YEARS_BUILD_AVG, COMMONAREA_AVG, ENTRANCES_AVG, LANDAREA_AVG) %>%
-  pivot_longer(cols = everything(), names_to = "Zmienna", values_to = "VALUE") %>%
-  group_by(Zmienna) %>%
+  select(TARGET_2, APARTMENTS_AVG, BASEMENTAREA_AVG, YEARS_BUILD_AVG, COMMONAREA_AVG, ENTRANCES_AVG, LANDAREA_AVG) %>%
+  pivot_longer(cols = -TARGET_2, names_to = "Zmienna", values_to = "VALUE") %>%
+  group_by(Zmienna, TARGET_2) %>%
   summarize(minimum=min(VALUE),
             maksimum=max(VALUE),
             średnia=mean(VALUE),
