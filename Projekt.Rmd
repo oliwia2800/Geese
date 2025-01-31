@@ -584,13 +584,15 @@ Hipotezy statystyczne:\
 - H₁: Istnieje istotna zależność między poziomem edukacji, a problemami ze spłatą kredytu. Pewne grupy edukacyjne mają wyraźnie większe lub mniejsze ryzyko problemów kredytowych.
 
 ```{r, echo=FALSE}
-ggpiestats(
+ggbarstats(
   data = Data_hotdeck,
-  x = data_kat_credit,
-  y = NAME_FAMILY_STATUS,
-  palette = "Set1",
-  title = "Rozkład pięciu przedziałów kredytów w zależności od statusu rodziny"
-)  
+  x = NAME_EDUCATION_TYPE,
+  y = TARGET_2,
+  caption = "test",
+  package = "ggsci",
+  palette = "default_igv",
+  title = "Rozkład poziomu edukacji w zależności od problemów ze spłatą kredytu"
+) 
 ```
 
 Wartość p=0.01 wskazuje na to, że poziom edukacji wpływa na problemy ze spłatą kredytu. Współczynnik V Craméra (0.06) sugeruje słabą zależność między zmiennymi.P-value jest mniejsze niż poziom istotności α=0.05. Odrzucamy hipotezę zerową. Oznacza to, że istnieje statystycznie istotna zależność między poziomem edukacji, a problemami ze spłatą kredytu.\
