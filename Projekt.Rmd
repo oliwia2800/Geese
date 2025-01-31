@@ -579,8 +579,8 @@ plot(data_kat_credit)
 ```
 
 Pierwsza hipoteza, którą zdecydowano się postawić ma na celu zbadanie czy poziom edukacji (NAME_EDUCATION_TYPE) ma istotny wpływ na problemy ze spłatą kredytu (TARGET_2).\
-Hipotezy statystyczne:
-- H₀: Nie ma istotnej zależności między poziomem edukacji a problemami ze spłatą kredytu. Rozkład wartości TARGET_2 jest równomierny w różnych grupach edukacyjnych.
+Hipotezy statystyczne:\
+- H₀: Nie ma istotnej zależności między poziomem edukacji a problemami ze spłatą kredytu. Rozkład wartości TARGET_2 jest równomierny w różnych grupach edukacyjnych.\
 - H₁: Istnieje istotna zależność między poziomem edukacji a problemami ze spłatą kredytu. Pewne grupy edukacyjne mają wyraźnie większe lub mniejsze ryzyko problemów kredytowych.
 
 ```{r, echo=FALSE}
@@ -597,5 +597,29 @@ Wartość p=0.01 wskazuje na to, że poziom edukacji wpływa na problemy ze spł
 
 Na podstawie rozkłądu poziomu edukacji w zależności od problemów ze spłatą kredytu można zauważyć pewne różnice. Osoby z wykształceniem średnim dominują w obu grupach, ale ich udział jest większy wśród osób mających problemy ze spłatą kredytu (75%). Osoby z wykształceniem wyższym częściej spłacają kredyt regularnie (27%) w porównaniu do tych, które mają problemy (18%).
 
-Druga postawiona hipoteza związana jest z 
+Druga postawiona hipoteza związana jest ze sprawdzeniem, czy istnieje zależność między przedziałem kwot kredytu a statusem rodzinnym. Chcemy zobaczyć jak np. małżeństwa czy osoby samotne różnią się pod względem wielkości kredytów, które biorą. Zdecydowano się na wizualizację kołową.
+
+Hipotezy statystyczne:\
+- H₀: Nie ma zależności między przedziałem kwoty kredytu (data_kat_credit), a statusem rodzinnym (NAME_FAMILY_STATUS). Rozkład wielkości kredytów jest taki sam we wszystkich grupach rodzinnych.\
+- H₁: Istnieje zależność między przedziałem kwoty kredytu a statusem rodzinnym. Rozkład wielkości kredytów różni się w zależności od statusu rodziny.
+
+```{r, echo=FALSE}
+ggpiestats(
+  data = Data_hotdeck,
+  x = data_kat_credit,
+  y = NAME_FAMILY_STATUS,
+  palette = "Set1",
+  title = "Rozkład pięciu przedziałów kredytów w zależności od statusu rodziny"
+)  
+```
+
+Na wykresie podano wyniki testu chi-kwadrat dla każdej grupy.\
+Dla każdej grupy p-value < 0.05, co oznacza, że odrzucamy hipotezę zerową. Istnieje istotny statystycznie związek między przedziałem kwoty kredytu, a statusem rodzinnym. Współczynnik V Craméra (0.06), wskazuje na słaby, ale istotny związek między zmiennymi.\
+Najniższy przedział kredytów dominuje we wszystkich grupach rodzinnych:
+
+Największy udział najniższego przedziału kredytów (49770 - 642528) występuje w grupach: Widow (75%), Single / not married (74%), oraz Separated (71%). W grupie Married udział najniższego przedziału wynosi 59%, co oznacza, że małżeństwa częściej biorą kredyty w wyższych przedziałach niż inne grupy.\
+
+Wyższe przedziały kredytów są bardziej popularne wśród osób pozostających w małżeństwie. W grupie Married, aż 41% osób korzysta z kredytów w wyższych przedziałach, w tym 8% z najwyższego przedziału. W innych grupach udział wyższych przedziałów kredytów jest znacznie mniejszy.\
+Osoby samotne, wdowy i osoby po rozwodzie częściej biorą niższe kredyty. W grupach Single, Widow i Separated, kredyty z wyższych przedziałów stanowią jedynie niewielki procent wszystkich przypadków, co sugeruje ograniczone możliwości finansowe tych grup.
+
 ## Podsumowanie i wnioski końcowe
