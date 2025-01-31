@@ -29,6 +29,7 @@ library(ggstatsplot)
 library(kableExtra)
 library(tidyverse)
 library(ggplot2)
+library(RColorBrewer)
 
 #Baza danych
 Kredyty <- read.csv("application_data_new.csv", sep = ";")

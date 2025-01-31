@@ -562,9 +562,9 @@ corrplot(corr_matrix, method="color")
 
 ## Wnioskowanie (testy statystyczne)
 
-W ramach niniejszego rozdziału przeprowadzono analizę statystyczna zbioru danych. Ma ona na celu zbadanie zależności pomiędzy wybranymi zmiennymi. Wykorzystane metody statystyczne pozwolą na ocenę istotności różnic oraz zidentyfikowanie potencjalnych zależności w danych.
+W ramach niniejszego rozdziału przeprowadzono analizę statystyczną zbioru danych. Ma ona na celu zbadanie zależności pomiędzy wybranymi zmiennymi. Wykorzystane metody statystyczne pozwolą na ocenę istotności różnic oraz zidentyfikowanie potencjalnych zależności w danych.
 
-Dokonano kategoryzacji danych liczbowych dotyczących dochodów (AMT_INCOME_TOTAL) oraz kwoty kredytu (AMT_CREDIT) na pięć równych przedziałów, co pozwala na lepsze zobrazowanie struktury tych zmiennych. W celu wizualizacji wyników wykorzystano histogramy oraz wykresy słupkowe, co ułatwia interpretację rozkładów.
+Dokonano kategoryzacji danych liczbowych dotyczących dochodów (AMT_INCOME_TOTAL) oraz kwoty kredytu (AMT_CREDIT) na pięć równych przedziałów, co pozwala na lepsze przedstawienie struktury tych zmiennych. W celu wizualizacji wyników wykorzystano histogramy oraz wykresy słupkowe, co ułatwia interpretację rozkładów.
 
 ```{r, echo=FALSE}
 data_kat_income <- binning(Data_hotdeck$AMT_INCOME_TOTAL, nbins = 5, type = "equal")
@@ -578,10 +578,10 @@ summary(data_kat_credit)
 plot(data_kat_credit)
 ```
 
-Pierwsza hipoteza, którą zdecydowano się postawić ma na celu zbadanie czy poziom edukacji (NAME_EDUCATION_TYPE) ma istotny wpływ na problemy ze spłatą kredytu (TARGET_2).\
+Pierwsza hipoteza, którą zdecydowano się postawić, ma na celu zbadanie czy poziom edukacji (NAME_EDUCATION_TYPE) ma istotny wpływ na problemy ze spłatą kredytu (TARGET_2).\
 Hipotezy statystyczne:\
-- H₀: Nie ma istotnej zależności między poziomem edukacji a problemami ze spłatą kredytu. Rozkład wartości TARGET_2 jest równomierny w różnych grupach edukacyjnych.\
-- H₁: Istnieje istotna zależność między poziomem edukacji a problemami ze spłatą kredytu. Pewne grupy edukacyjne mają wyraźnie większe lub mniejsze ryzyko problemów kredytowych.
+- H₀: Nie ma istotnej zależności między poziomem edukacji, a problemami ze spłatą kredytu. Rozkład wartości TARGET_2 jest równomierny w różnych grupach edukacyjnych.\
+- H₁: Istnieje istotna zależność między poziomem edukacji, a problemami ze spłatą kredytu. Pewne grupy edukacyjne mają wyraźnie większe lub mniejsze ryzyko problemów kredytowych.
 
 ```{r, echo=FALSE}
 ggpiestats(
@@ -593,15 +593,15 @@ ggpiestats(
 )  
 ```
 
-Wartość p=0.01 wskazuje na to, że poziom edukacji wpływa na problemy ze spłatą kredytu. Współczynnik V Craméra (0.06) sugeruje słabą zależność między zmiennymi.P=0.01 jest mniejsze niż poziom istotności α=0.05. Odrzucamy hipotezę zerową. Oznacza to, że istnieje statystycznie istotna zależność między poziomem edukacji, a problemami ze spłatą kredytu.\
+Wartość p=0.01 wskazuje na to, że poziom edukacji wpływa na problemy ze spłatą kredytu. Współczynnik V Craméra (0.06) sugeruje słabą zależność między zmiennymi.P-value jest mniejsze niż poziom istotności α=0.05. Odrzucamy hipotezę zerową. Oznacza to, że istnieje statystycznie istotna zależność między poziomem edukacji, a problemami ze spłatą kredytu.\
 
-Na podstawie rozkłądu poziomu edukacji w zależności od problemów ze spłatą kredytu można zauważyć pewne różnice. Osoby z wykształceniem średnim dominują w obu grupach, ale ich udział jest większy wśród osób mających problemy ze spłatą kredytu (75%). Osoby z wykształceniem wyższym częściej spłacają kredyt regularnie (27%) w porównaniu do tych, które mają problemy (18%).
+Na podstawie rozkładu poziomu edukacji w zależności od problemów ze spłatą kredytu można zauważyć pewne różnice. Osoby z wykształceniem średnim dominują w obu grupach, ale ich udział jest większy wśród osób mających problemy ze spłatą kredytu (75%). Osoby z wykształceniem wyższym częściej spłacają kredyt regularnie (27%) w porównaniu do tych, które mają problemy (18%).
 
-Druga postawiona hipoteza związana jest ze sprawdzeniem, czy istnieje zależność między przedziałem kwot kredytu a statusem rodzinnym. Chcemy zobaczyć jak np. małżeństwa czy osoby samotne różnią się pod względem wielkości kredytów, które biorą. Zdecydowano się na wizualizację kołową.
+Druga postawiona hipoteza związana jest ze sprawdzeniem, czy istnieje zależność między przedziałem kwot branego kredytu, a statusem rodzinnym. Chcemy zobaczyć jak np. małżeństwa czy osoby samotne różnią się pod względem wielkości kredytów, które biorą. Zdecydowano się na wizualizację kołową.
 
 Hipotezy statystyczne:\
 - H₀: Nie ma zależności między przedziałem kwoty kredytu (data_kat_credit), a statusem rodzinnym (NAME_FAMILY_STATUS). Rozkład wielkości kredytów jest taki sam we wszystkich grupach rodzinnych.\
-- H₁: Istnieje zależność między przedziałem kwoty kredytu a statusem rodzinnym. Rozkład wielkości kredytów różni się w zależności od statusu rodziny.
+- H₁: Istnieje zależność między przedziałem kwoty kredyt, a statusem rodzinnym. Rozkład wielkości kredytów różni się w zależności od statusu rodziny.
 
 ```{r, echo=FALSE}
 ggpiestats(
@@ -613,7 +613,7 @@ ggpiestats(
 )  
 ```
 
-Na wykresie podano wyniki testu chi-kwadrat dla każdej grupy.\
+Na wykresie przedstawiono wyniki testu chi-kwadrat dla każdej grupy.\
 Dla każdej grupy p-value < 0.05, co oznacza, że odrzucamy hipotezę zerową. Istnieje istotny statystycznie związek między przedziałem kwoty kredytu, a statusem rodzinnym. Współczynnik V Craméra (0.06), wskazuje na słaby, ale istotny związek między zmiennymi.\
 Najniższy przedział kredytów dominuje we wszystkich grupach rodzinnych:
 
@@ -621,5 +621,31 @@ Największy udział najniższego przedziału kredytów (49770 - 642528) występu
 
 Wyższe przedziały kredytów są bardziej popularne wśród osób pozostających w małżeństwie. W grupie Married, aż 41% osób korzysta z kredytów w wyższych przedziałach, w tym 8% z najwyższego przedziału. W innych grupach udział wyższych przedziałów kredytów jest znacznie mniejszy.\
 Osoby samotne, wdowy i osoby po rozwodzie częściej biorą niższe kredyty. W grupach Single, Widow i Separated, kredyty z wyższych przedziałów stanowią jedynie niewielki procent wszystkich przypadków, co sugeruje ograniczone możliwości finansowe tych grup.
+
+Wykorzystano również analizę waraincji (ANOVA). Celem tego testu jest zrozumienie, jak typ zawodu oraz sytuacja mieszkaniowa wpływają na to, czy klient ma problemy ze spłatą kredytu.\
+W modelu uwzględniono interakcję między zmiennymi OCCUPATION_TYPE i NAME_HOUSING_TYPE. Oznacza to, że sprawdzamy nie tylko główny wpływ każdej z tych zmiennych na TARGET, ale także, czy wpływ jednej zmiennej zależy od poziomu drugiej zmiennej.
+
+W przypadku tego modelu ANOVA postawiono następujące hipotezy dotyczące efektów:\
+- H₀:Typ zawodu OCCUPATION_TYPE nie ma wpływu na zmienną zależną TARGET, a  typ sytuacji mieszkaniowej NAME_HOUSING_TYPE nie ma wpływu na zmienną zależną TARGET.\
+- H₁:Typ zawodu OCCUPATION_TYPE ma istotny wpływ na zmienną zależną TARGET, a  Typ sytuacji mieszkaniowej NAME_HOUSING_TYPE ma istotny wpływ na zmienną zależną TARGET.\
+Postawiono również hipotezy dotyczące interakcji:\
+- H₀: Nie ma interakcji między typem zawodu (OCCUPATION_TYPE), a typem sytuacji mieszkaniowej (NAME_HOUSING_TYPE) w odniesieniu do zmiennej zależnej TARGET.\
+- H₁: Istnieje interakcja między typem zawodu (OCCUPATION_TYPE), a typem sytuacji mieszkaniowej (NAME_HOUSING_TYPE) w odniesieniu do zmiennej zależnej TARGET.\
+
+```{r, echo=FALSE}
+mod <- aov(
+  TARGET ~ OCCUPATION_TYPE * NAME_HOUSING_TYPE,
+  data = Data_hotdeck
+)
+```
+
+```{r, echo=FALSE}
+summary(mod)
+ggcoefstats(mod, title = "Test Anova dla zmiennej TARGET w zależności od typu zawodu i typu nieruchomości")
+```
+
+Typ zawodu (OCCUPATION_TYPE) ma istotny wpływ na to, czy klient ma problemy ze spłatą kredytu, ponieważ wartość p-value jest bardzo mała (6.14e-10), odrzucamy hipotezę zerową. Sytuacja mieszkaniowa (NAME_HOUSING_TYPE) również ma istotny wpływ na problemy ze spłatą kredytu, z wartością p-value wynoszącą 0.00293, również odrzucamy w takim wypadku hipotezę zerową.\
+Interakcja między typem zawodu, a sytuacją mieszkaniową jest istotna statystycznie (p = 0.01130), oznacza to że wpływ jednego czynnika na TARGET (problemy ze spłatą kredytu) zależy od poziomu drugiego czynnika. Istotna interakcja pokazuje, że zawód i sytuacja mieszkaniowa razem mają bardziej złożony wpływ na to, czy klient ma problemy ze spłatą kredytu, niż gdybyśmy oceniali te zmienne oddzielnie.
+
 
 ## Podsumowanie i wnioski końcowe
