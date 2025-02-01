@@ -323,6 +323,21 @@ ggplot(Data_hotdeck, aes(x = OCCUPATION_TYPE, fill = NAME_EDUCATION_TYPE)) +
   ggtitle("Udział osób z danym wykształceniem w zależności od typu wykonywanego zawodu") +
   scale_fill_brewer(palette = "Set1") +
   theme_minimal()
+apartment_vars <- c("APARTMENTS_AVG", "BASEMENTAREA_AVG", 
+                    "YEARS_BUILD_AVG", "COMMONAREA_AVG", 
+                    "ENTRANCES_AVG", "LANDAREA_AVG")
+
+data_long_apartment <- Data_hotdeck %>%
+  select(all_of(apartment_vars)) %>%
+  pivot_longer(cols = everything(), names_to = "Variable", values_to = "Value")
+
+ggplot(data_long_apartment, aes(x = Value)) +
+  geom_density(fill = "steelblue", color = "black") +
+  facet_wrap(~Variable, scales = "free") +
+  theme_minimal() +
+  labs(title = "Dane o zamieszkiwanych nieruchomościach",
+       x = "Wartość", 
+       y = "Częstotliwość")
 
 #Statystyki opisowe
 corrplot(cor(Data_hotdeck[c("TARGET","CNT_CHILDREN", "AMT_INCOME_TOTAL", "AMT_CREDIT", "REGION_RATING_CLIENT", 
@@ -387,6 +402,22 @@ Data_hotdeck %>%
   kable_paper("striped", full_width = F) %>%
   column_spec(1:2, bold = F) %>%
   row_spec(1, bold = F, color = "black", background = "white")
+
+apartment_vars <- c("APARTMENTS_AVG", "BASEMENTAREA_AVG", 
+                    "YEARS_BUILD_AVG", "COMMONAREA_AVG", 
+                    "ENTRANCES_AVG", "LANDAREA_AVG")
+ 
+data_long_apartment <- Data_hotdeck %>%
+  select(all_of(apartment_vars)) %>%
+  pivot_longer(cols = everything(), names_to = "Variable", values_to = "Value")
+ 
+ggplot(data_long_apartment, aes(x = Value)) +
+  geom_density(fill = "steelblue", color = "black") +
+  facet_wrap(~Variable, scales = "free") +
+  theme_minimal() +
+  labs(title = "Dane o zamieszkiwanych nieruchomościach",
+       x = "Wartość", 
+       y = "Częstotliwość")
   
 #Hipotezy
 hist(Data_hotdeck$AMT_CREDIT)
