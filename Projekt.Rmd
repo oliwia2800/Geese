@@ -614,7 +614,27 @@ Dla zmiennych APARTMENTS_AVG, BASEMENTAREA_AVG, COMMONAREA_AVG, ENTRANCES_AVG, L
 W przypadku zmiennych takich jak APARTMENTS_AVG czy LANDAREA_AVG, odchylenie standardowe wskazuje na dużą rozbieżność w wielkości nieruchomości, zwłaszcza w grupie spłacających kredyt. Natomiast dla zmiennych takich jak BASEMENTAREA_AVG czy COMMONAREA_AVG odchylenie jest mniejsze, co oznacza mniejszą zmienność w tych cechach.\
 Mediana dla powierzchni mieszkań, piwnic i działek jest nieco wyższa w grupie spłacających kredyt, co sugeruje, że osoby te mieszkają w nieruchomościach o większej powierzchni w tych kategoriach. Mediana dla wspólnych przestrzeni i liczby wejść jest w zasadzie identyczna w obu grupach.
 Wartości skośności wskazują, że w obu grupach występuje przesunięcie w stronę wyższych wartości, ale szczególnie mocne w grupie spłacających kredyt. Dla zmiennych takich jak BASEMENTAREA_AVG czy YEARS_BUILD_AVG skośność jest wyraźnie wyższa w grupie spłacających kredyt, co sugeruje większe odchylenie w tych grupach.\
-Kurtoza wskazuje na silną koncentrację danych wokół średnich wartości w obu grupach, z wyraźnie większą koncentracją w grupie spłacających kredyt. Wartości kurtozy są szczególnie wysokie w przypadku zmiennych takich jak APARTMENTS_AVG czy BASEMENTAREA_AVG, co sugeruje, że w tych grupach pojawiają się skrajne przypadki (bardzo duże mieszkania, piwnice itp.).
+Kurtoza wskazuje na silną koncentrację danych wokół średnich wartości w obu grupach, z wyraźnie większą koncentracją w grupie spłacających kredyt. Wartości kurtozy są szczególnie wysokie w przypadku zmiennych takich jak APARTMENTS_AVG czy BASEMENTAREA_AVG, co sugeruje, że w tych grupach pojawiają się skrajne przypadki (np. bardzo duże mieszkania, czy piwnice).\
+
+Aby stworzyć wizualizację rozkładu danych oraz porównać dwie grupy pod kątem różnic w wartościach stworzono wykres skrzypcowy. Porównuje on kwoty kredytów (AMT_CREDIT) w zależności od posiadania nieruchomości (FLAG_OWN_REALTY).
+
+```{r, echo=FALSE}
+hist(Data_hotdeck$AMT_CREDIT)
+ggstatsplot :: ggbetweenstats(
+  data = Data_hotdeck,
+  x = FLAG_OWN_REALTY,
+  y = AMT_CREDIT,
+  type = "np",
+  palette = "Set1",
+  title = "Porównanie kwot kredytów w zależności od posiadania nieruchomości"
+)
+``` 
+
+Oś pozioma (X) przedstawia kategorię: N (Nie posiada nieruchomości) i Y (Posiada nieruchomość).
+Oś pionowa (Y) reprezentuje kwotę kredytu, gdzie kolory reprezentują dwie grupy:
+czerwony (osoby nieposiadające nieruchomości),
+niebieski (osoby posiadające nieruchomość). \
+Z wykresu można wywnioskować, że osoby nieposiadające nieruchomości zaciągają nieco wyższe kredyty (mediana = 536 tys.) niż osoby posiadające nieruchomości (mediana = 495 tys.). Rozkład kredytów w obu grupach jest zbliżony, ale osoby bez nieruchomości mają więcej ekstremalnych wartości. Wartość p = 3.39e-04 sugeruje, że różnica jest istotna statystycznie, ale efekt nie jest duży (r_biserial = 0.09).
 
 ## Wnioskowanie (testy statystyczne)
 
