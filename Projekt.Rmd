@@ -2,16 +2,21 @@
 title: "Kredyty"
 author: "Geese"
 date: "2024-11-21"
-output: html_document
-  rmdformats::readthedown
-  highlight: kate
+output:
+  rmdformats::html_clean:
+    highlight: kate
 ---
+
+```{r setup, include=FALSE}
+## Global options
+knitr::opts_chunk$set(cache = TRUE)
+```
 
 # Kredyty
 
 ## Wprowadzenie
 
-Celem projektu jest analiza danych dotyczących udzielania kredytów hipotecznych i zidentyfikowanie, które czynniki mają wpływ na to, czy kredytobiorca regularnie spłaca kredyt, czy nie.\
+Celem projektu jest analiza danych dotyczących udzielania kredytów hipotecznych i zidentyfikowanie, które czynniki mają wpływ na to, czy kredytobiorca regularnie spłaca kredyt, czy nie.
 
 W pierwszym etapie analizy zapoznano się z danymi. Baza składała się z 250 000 rekordów. W związku z tym skonsultowano się z prowadzącym i wybrano 20 kluczowych kolumn. Odnoszą się one do kredytobiorcy:
 
@@ -57,7 +62,7 @@ W pierwszym etapie analizy zapoznano się z danymi. Baza składała się z 250 0
 
 Po wybraniu zmiennych z najważniejszymi informacjami, ustalono ziarno generatora i wylosowano 2500 obserwacji do dalszej analizy. Jako najbardziej istotną uznano zmienną binarną TARGET, która mówi o tym, czy dana osoba regularnie spłaca kredyt.\
 
-## Braki w danych
+## Data Wrangling
 
 W początkowym etapie analizy danych przystąpiono do identyfikacji braków danych.
 
@@ -67,7 +72,7 @@ NA_count
 
 Na podstawie wyniku można wywnioskować, że baza danych ma 9409 braków w obserwacjach.
 
-Następnie sprawdzono, w jakiej występują one propocji do całego zbioru i przedstawiono ten wynik w postaci procentowej.\
+Następnie sprawdzono, w jakiej występują one proporcji do całego zbioru i przedstawiono ten wynik w postaci procentowej.\
 
 ```{r, echo=FALSE}
 NA_proportion
@@ -82,7 +87,7 @@ W celu dogłębniejszej ich analizy zbadano, ile jest braków w danej kolumnie o
 NA_summary
 ```
 
-Braki danych wystąpiły w kolumnach: COMMONAREA_AVG, YEARS_BUILD_AVG, LANDAREA_AVG, BASEMENTAREA_AVG, APARTMENTS_AVG, ENTRANCES_AVG i OCCUPATION_TYPE. Dla pozostałych kolumn nie zdiagnozowano braków.\
+Braki danych wystąpiły w kolumnach: COMMONAREA_AVG, YEARS_BUILD_AVG, LANDAREA_AVG, BASEMENTAREA_AVG, APARTMENTS_AVG, ENTRANCES_AVG i OCCUPATION_TYPE. Dla pozostałych kolumn nie zdiagnozowano braków.
 
 Podjęto się również wizualizacji braków danych na poniższym wykresie:
 
@@ -106,12 +111,15 @@ print(target_heat_mapa)
 
 PO TYM DODAĆ GGPLOTA Z KOMPLETNOŚCIĄ DANYCH I OPISAĆ, BO TEGO TU BRAKUJE Z GŁÓWNEGO KODU
 
-Mapa cieplna ukazała procentowy udział braków danych w całym zbiorze. Skala zbudowana jest na kolorach od fioletowego do żółtego, gdzie fiolet oznacza 0%, a żółty 100%.\
+Mapa cieplna ukazała procentowy udział braków danych w całym zbiorze. Skala zbudowana jest na kolorach od fioletowego do żółtego, gdzie fiolet oznacza 0%, a żółty 100%.
 
-Następnie stworzono wykres upset plot, który służy do wizualizacji braków danych lub analiz złożonych relacji między grupami cech.\
-Oś pionowa wykresu pokazuje liczebność danych dla poszczególnych kombinacji braków w kolumnach. Najwyższe słupki wskazują najczęściej występujące zestawy braków w danych.\
+Następnie stworzono wykres upset plot, który służy do wizualizacji braków danych lub analiz złożonych relacji między grupami cech.
+
+Oś pionowa wykresu pokazuje liczebność danych dla poszczególnych kombinacji braków w kolumnach. Najwyższe słupki wskazują najczęściej występujące zestawy braków w danych.
+
 Kropki i linie na osi poziomej poniżej słupków wskazują, które kolumny mają braki dla danej grupy.\
-W przypadku pojedynczych kropek brak dotyczy jednej kolumny, a linie między kropkami oznaczają brak danych w kilku kolumnach równocześnie.\
+W przypadku pojedynczych kropek brak dotyczy jednej kolumny, a linie między kropkami oznaczają brak danych w kilku kolumnach równocześnie.
+
 Lewy dolny wykres wyświetla całkowitą liczbę brakujących wartości dla każdej kolumny z osobna, co pozwala ocenić, które zmienne są najbardziej dotknięte brakami.
 
 ```{r, echo=FALSE}
@@ -120,7 +128,8 @@ gg_miss_upset(Data, nsets = 122)
 
 Najczęstsze kombinacje braków dotyczą kilku kolumn jednocześnie (814 przypadków), co sugeruje, że brak danych może być skorelowany w tych zmiennych. Kolumny takie jak COMMONAREA_AVG_NA czy YEARS_BUILD_AVG_NA mają największe liczby braków.
 
-Podjęto się stworzenia również innej wizualizacji braków danych. Wykres po lewej przedstawia proporcje braków w zależności od TARGET. Na osi poziomej znajdują się wartości zmiennej TARGET. Natomiast na osi pionowej przedstawiona jest proporcja braków w danych.\
+Podjęto się stworzenia również innej wizualizacji braków danych. Wykres po lewej przedstawia proporcje braków w zależności od TARGET. Na osi poziomej znajdują się wartości zmiennej TARGET. Natomiast na osi pionowej przedstawiona jest proporcja braków w danych.
+
 Wykres po prawej przedstawia macierz kombinacji braków. Na osi poziomej przedstawiono kombinacje braków danych w różnych kolumnach, a oś pozioma prezentuje wiersze w danych. Niebieskie pola przedstawiają komórki uzupełnione, a czerwone - braki danych. Z macierzy kombinacji braków można wywnioskować, że wzorce są wielowymiarowe, gdyż braki pojawiają się dla więcej niż jednej zmiennej. W kilku przypadkach można również stwierdzić, że braki są monotoniczne tak jak np. w ostatnim rekordzie. Można na tej podstawie przypuścić, że brak w jednej kolumnie przyczynił się do powstania braku w kolejnej. Wzorce są również w dużej mierze ze sobą połączone.
 
 ```{r, echo=FALSE}
@@ -128,8 +137,10 @@ VIM::aggr(Data_implications[,1:20])
 ```
 
 Na wykresie po lewej wartości zmiennej TARGET są powiązane z różnym udziałem braków w danych. Wyższe słupki przy jednej z wartości TARGET wskazują, że w tej grupie braki występują częściej.\
-Na drugim wykresie zgrupowane braki mogą sugerować, że braki w danych są skorelowane i występują wspólnie w określonych zmiennych.\
-Z obu wykresów można zatem wnioskować, że brakujące wartości mogą występować częściej dla określonych grup TARGET.\
+Na drugim wykresie zgrupowane braki mogą sugerować, że braki w danych są skorelowane i występują wspólnie w określonych zmiennych.
+
+Z obu wykresów można zatem wnioskować, że brakujące wartości mogą występować częściej dla określonych grup TARGET.
+
 W celu pracy nad brakami danych, zamieniono wartości specjalne tj. Inf na NA. Dokonano tego za pomocą poniżej procedury:
 
 ```{r, echo=FALSE}
@@ -161,9 +172,12 @@ results_grubbs
 
 ```
 
-Dla testu postawiono dwie hipotezy:\
-- H₀: Nie ma wartości odstających w zbiorze wartości badanej zmiennej.\
-- H₁: Największa lub najmniejsza wartość w zbiorze jest outlierem. Dla zmiennych AMT_INCOME_TOTAL, AMT_CREDIT, APARTMENTS_AVG, ENTRANCES_AVG, CNT_CHILDREN i YEARS_BUILD_AVG wartość p\<0.05, co dla poziomu istotności α=0.05 oznacza, że odrzucamy hipotezę zerową i najmniejsza lub największa wartość jest outlierem. W przypadku pozostałych zmiennych nie ma podstaw do odrzucenia hipotezy zerowej, co oznacza, że nie wykryto obserwacji odstających.
+Dla testu postawiono dwie hipotezy:
+
+-   H₀: Nie ma wartości odstających w zbiorze wartości badanej zmiennej.
+-   H₁: Największa lub najmniejsza wartość w zbiorze jest outlierem.
+
+Dla zmiennych AMT_INCOME_TOTAL, AMT_CREDIT, APARTMENTS_AVG, ENTRANCES_AVG, CNT_CHILDREN i YEARS_BUILD_AVG wartość p\<0.05, co dla poziomu istotności α=0.05 oznacza, że odrzucamy hipotezę zerową i najmniejsza lub największa wartość jest outlierem. W przypadku pozostałych zmiennych nie ma podstaw do odrzucenia hipotezy zerowej, co oznacza, że nie wykryto obserwacji odstających.
 
 Następnie skorzystano z metody Hot-deck imputation, mającej na celu uzupełnienie braków danych w posiadanym zbiorze.
 
@@ -174,7 +188,8 @@ Data_hotdeck<- Data_implications %>%
   ungroup()
 ```
 
-Program uzupełnił zidentyfikowane braki danych na podstawie innych podobnych rekordów. Działa to na zasadzie "biorcy" i "dawcy". W zbiorze wyszukiwane są wartości odpowiadające szukanym pod względem zmiennych, następnie pobierane od "biorcy" i przypisywane "dawcy".\
+Program uzupełnił zidentyfikowane braki danych na podstawie innych podobnych rekordów. Działa to na zasadzie "biorcy" i "dawcy". W zbiorze wyszukiwane są wartości odpowiadające szukanym pod względem zmiennych, następnie pobierane od "biorcy" i przypisywane "dawcy".
+
 Kolejnym krokiem było ustalenie reguł dla poszczególnych zmiennych w celu sprawdzenia poprawności danych w zbiorze. Dla danych jakościowych o skończonej liczbie wartości, ale wielu wariantach trudnych do zidentyfikowania zdecydowano się sprawdzenie poprawności poprzez stworzenie tabeli.
 
 ```{r, echo=FALSE}
@@ -186,7 +201,8 @@ table(Data_hotdeck$ORGANIZATION_TYPE)
 table(Data_hotdeck$OCCUPATION_TYPE)
 ```
 
-Na tej podstawie zidentyfikowano niepoprawne dane w kolumnie ORGANIZATION_TYPE, gdyż zauważono wartości XNA w ilości 470.\
+Na tej podstawie zidentyfikowano niepoprawne dane w kolumnie ORGANIZATION_TYPE, gdyż zauważono wartości XNA w ilości 470.
+
 Następnie sporządzono reguły dla pozostałych kolumn w zbiorze danych.
 
 ```{r, echo=FALSE}
@@ -215,8 +231,9 @@ rules <- validator(TARGET == 1 | TARGET == 0,
                    ORGANIZATION_TYPE != "XNA")
 ```
 
-Dla kolumn z danymi binarnymi, do których należą zmianne TARGET, NAME_CONTRACT_TYPE, CODE_GENDER i FLAG_OWN_REALTY sporządzono reguły mające na celu zidentyfikowanie jeśli, w którymś z rekordów znajdzie się wyrażenie inne niż wskazane. Następnie dla kolumn od CNT_CHILDREN do LANDAREA_AVG stworzono regułu liczbowe dla znajdujących się w nich danych ilościowych. Ostatnia reguła miałą na celu zidentyfikować rekordy, w których pojawiło się wyrażenie "XNA" w kolumnie ORGANIZATION_TYPE.\
-Wykorzystano funkcję confront, by sprawdzić czy dane spełniają ustalone reguły.\
+Dla kolumn z danymi binarnymi, do których należą zmienne TARGET, NAME_CONTRACT_TYPE, CODE_GENDER i FLAG_OWN_REALTY sporządzono reguły mające na celu zidentyfikowanie jeśli, w którymś z rekordów znajdzie się wyrażenie inne niż wskazane. Następnie dla kolumn od CNT_CHILDREN do LANDAREA_AVG stworzono reguły liczbowe dla znajdujących się w nich danych ilościowych. Ostatnia reguła miała na celu zidentyfikować rekordy, w których pojawiło się wyrażenie "XNA" w kolumnie ORGANIZATION_TYPE.
+
+Wykorzystano funkcję confront, by sprawdzić czy dane spełniają ustalone reguły.
 
 ```{r, echo=FALSE}
 results <- confront(Data_hotdeck, rules, key="TARGET")
@@ -229,7 +246,7 @@ W wyniku tego działania ustalono, że 7 rekordów nie przeszło walidacji w kol
 barplot(results, main="Data_hotdeck")
 ```
 
-Ustalono, że w niektórych przypadkach dane nie przeszły walidacji, ponieważ zapisano je w nieodpowiednim formacie. Z tego względu zastąpiono je danymi liczbowymi w poprawnym formacie. W tym celu użyto poniższego kodu.\
+Ustalono, że w niektórych przypadkach dane nie przeszły walidacji, ponieważ zapisano je w nieodpowiednim formacie. Z tego względu zastąpiono je danymi liczbowymi w poprawnym formacie. W tym celu użyto poniższego kodu.
 
 ```{r, echo=FALSE}
 Data_hotdeck <- Data_hotdeck %>%
@@ -267,7 +284,7 @@ Upewniono się, tworząc tabelę dla kolumny ORGANIZATION_TYPE jaki jest rozkła
 table(Data_hotdeck$ORGANIZATION_TYPE)
 ```
 
-W następnym etapie projektu, skorzystano z transformacji danych. Skorzystano z procedury stanaryzacji Z-score, aby ułatwić porównywanie rozkładów oraz identyfikację odstających wartości.\
+W następnym etapie projektu, skorzystano z transformacji danych. Skorzystano z procedury standaryzacji Z-score, aby ułatwić porównywanie rozkładów oraz identyfikację odstających wartości.\
 Przedstawiono wizualizację rozkładu standaryzowanych danych APARTMENTS_AVG_Z.
 
 ```{r, echo=FALSE}
@@ -299,8 +316,8 @@ hist(Data_hotdeck$ENTRANCES_AVG)
 hist(Data_hotdeck$CREDIT_LOG)
 ```
 
-Wcześniejsze kroki analizy potwierdziły się. Histogramy pokazały, że aby przeprowadzić dalszą analizę z wyszczególnionymi zmiennymi,ze wzlędu na występującą skośność konieczne jest dokonanie transformacji zmiennych. Zdecydowano się na dokonanie jej przy użyciu logarytmu.\
-Na wyszczególnionych zmiennych dokonano tranformacji oraz przedstawiono wizualizację.
+Wcześniejsze kroki analizy potwierdziły się. Histogramy pokazały, że aby przeprowadzić dalszą analizę z wyszczególnionymi zmiennymi, ze względu na występującą skośność konieczne jest dokonanie transformacji zmiennych. Zdecydowano się na dokonanie jej przy użyciu logarytmu.\
+Na wyszczególnionych zmiennych dokonano transformacji oraz przedstawiono wizualizację.
 
 ```{r, echo=FALSE}
 AIT <- transform(Data_hotdeck$AMT_INCOME_TOTAL, method = "log")
@@ -334,57 +351,10 @@ plot(data_kat_credit)
 
 ## Wizualizacja danych
 
-### Charakterystyka próby badawczej
+W procesie analizy danych kluczowym etapem jest wykorzystanie wizualizacji, która pozwala na skuteczne przedstawienie informacji w sposób intuicyjny i łatwy do interpretacji. Skupiono się na wizualizacjach przygotowanych na podstawie oczyszczonego i przetworzonego zbioru danych, mających na celu zidentyfikowanie wzorców wskazujących na trudności klientów ze spłatą rat kredytowych.
 
-Na początku analizy danych podjęto się scharakteryzowania próby badawczej. Na poniższym wykresie przedstawiono rozkład płci na wykresie kołowym.
-
-```{r, echo=FALSE}
-ggplot(pie_chart_g) +
-  aes(
-    x0 = 0, y0 = 0,
-    r0 = 0, r = 1,
-    amount = n,
-    fill = CODE_GENDER
-  ) + 
-  geom_arc_bar(stat = "pie") +
-  coord_fixed() +
-  scale_fill_brewer(palette = "Set1")
-```
-
-Ze stworzonego wykresu wynika, że zdecydowaną większość próby to kobiety. Stanowią one około 67% populacji, a mężczyzny 33%.\
-
-Na kolejnym wykresie przedstawiono wykres pudełkowy, prezentujących dochód całkowity w zależności od statusu rodziny.
-
-```{r, echo=FALSE}
-ggplot(Data_hotdeck, aes(x = INCOME_LOG, fill = NAME_FAMILY_STATUS)) +
-  geom_boxplot() +
-  xlab("Dochody") +
-  ggtitle("Dochód całkowity w zależności od statusu rodziny") +
-  scale_fill_brewer(palette = "Set1")
-geom_boxplot()
-```
-
-Na osi poziomej przedstawiono zlogarytmowane wartości dochodów. Każdy wykres pudełkowy odpowiada innemu statusowi rodziny i prezentuje medianę oraz kwartyle i obserwacje odstające. Civil marriage charakteryzuje się najniższymi wartości z wyraźnymi obserwacjami odstającymi poniżej. Ze statusu married można wywnioskować, że dochody mieszczą się głównie w dolnym zakresie rozkładu. Dochody w statusie separated są bliskie neutralnego poziomu. Status single / not married charakteryzuje się dochodami zbliżonymi do średniego lub nieco wyższe, a status widow tym, że dochody są wyraźnie wyższe.\
-
-Trzeci wykres charakteryzujący próbę prezentuje udział osób spłacających kredyt w zależności od typu nieruchomości.
-
-```{r, echo=FALSE}
-ggplot(Data_hotdeck, aes(x = NAME_HOUSING_TYPE, fill = TARGET_2)) +
-  geom_bar() +
-  xlab("Typ nieruchomości") +
-  ggtitle("Udział osób spłacających kredyt w zależności od typu nieruchomości") +
-  scale_fill_brewer(palette = "Set1")
-```
-
-Z wykresu wynika, że najwięcej osób, które wzięły kredyt, posiadają dom albo mieszkanie. Kolejni kredytobiorcy to osoby mieszkające z rodzicami, zajmujący mieszkania kolumnalne oraz wynajmujący mieszkania. Niewielki odsetek osób stanowią pozostałe nieruchomości.\
-Na czerwono zaznaczono osoby, które mają problemy ze spłatą kredytu, a na niebiesko te, które nigdy problemów nie miały. Można zauważyć, że zdecydowaną większość stanowią osoby bez problemów ze spłatą kredytu.
-
-### Analiza danych
-
-W procesie analizy danych kluczowym etapem jest wykorzystanie wizualizacji, która pozwala na skuteczne przedstawienie informacji w sposób intuicyjny i łatwy do interpretacji. W niniejszym rozdziale skupiono się na wizualizacjach przygotowanych na podstawie oczyszczonego i przetworzonego zbioru danych, mających na celu zidentyfikowanie wzorców wskazujących na trudności klientów ze spłatą rat kredytowych.
-
-Dane zostały wcześniej odpowiednio przygotowane, w tym oczyszczone z braków. Ponadto zmienne zostały przekształcone w celu ułatwienia interpretacji, m.in. poprzez standaryzację, transformacje logarytmiczne oraz binning wybranych cech. Dzięki tym krokom możliwe jest uzyskanie precyzyjnych i wiarygodnych wniosków opartych na wizualnej analizie.\
-Zdecydowano się na użycie motywu z pakietu ggthemes. Dzięki temu wszystkie wykresy w ggplot2 będą wyglądały schludniej i bardziej estetycznie
+Dane zostały wcześniej odpowiednio przygotowane, w tym oczyszczone z braków. Ponadto zmienne zostały przekształcone w celu ułatwienia ich interpretacji, m.in. poprzez standaryzację, transformacje logarytmiczne oraz binning wybranych cech. Dzięki tym krokom możliwe jest uzyskanie precyzyjnych i wiarygodnych wniosków opartych na wizualnej analizie.\
+Zdecydowano się na użycie motywu z pakietu ggthemes. Dzięki temu wszystkie wykresy w ggplot2 będą wyglądały schludniej i bardziej estetycznie.
 
 ```{r, echo=FALSE}
 theme_set(theme_few())
@@ -397,39 +367,127 @@ Data_hotdeck <- Data_hotdeck %>%
   mutate(TARGET_2 = if_else(TARGET == 1, "Problemy ze spłatą", "Spłaca"))
 ```
 
-W celu stworzenia pierwszej wizualizacji policzono liczbę osób, które nie spłacają kredytu oraz tych, które go spłacają i stworzono nową tabelę. Następnie stworzono wykres kołowy prezentujący zestawienie tych dwóch wartości dla zmiennej.
+Zbadano także kolumnę "CNT_CHILDREN".
 
 ```{r, echo=FALSE}
-pie_chart <- Data_hotdeck %>%
-  count(TARGET_2)
+table(Data_hotdeck$CNT_CHILDREN)
+```
 
+Ta podstawie uzyskanego wyniku stworzono nową kolumną "HAS_CHILDREN" z wartościami: "Nie posiada dzieci", "Posiada jedno dziecko", "Posiada dwoje dzieci" oraz "Posiada więcej niż dwoje dzieci".
+
+```{r, echo=FALSE}
+Data_hotdeck <- Data_hotdeck %>% 
+  mutate(HAS_CHILDREN = case_when(
+    CNT_CHILDREN == 0 ~ "Nie posiada dzieci", 
+    CNT_CHILDREN == 1 ~ "Posiada jedno dziecko", 
+    CNT_CHILDREN == 2 ~ "Posiada dwoje dzieci", 
+    CNT_CHILDREN > 2 ~ "Posiada więcej niż dwoje dzieci"))
+```
+
+### Charakterystyka próby badawczej
+
+Na początku analizy podjęto się scharakteryzowania próby badawczej. Na poniższym wykresie przedstawiono rozkład płci na wykresie kołowym.
+
+```{r, echo=FALSE}
+ggplot(pie_chart_g) +
+  aes(
+    x0 = 0, y0 = 0,
+    r0 = 0, r = 1,
+    amount = n,
+    fill = CODE_GENDER
+  ) + 
+  geom_arc_bar(stat = "pie") +
+  coord_fixed() +
+  scale_fill_brewer(palette = "Set1") +
+  ggtitle("Udział kobiet i mężczyzn w próbie badawczej") +
+  theme_minimal()
+```
+
+Ze stworzonego wykresu wynika, że zdecydowana większość próby badawczej to kobiety. Stanowią one około 67% populacji, a mężczyzny 33%.
+
+Na kolejnym wykresie przedstawiono wykres pudełkowy, prezentujących dochód całkowity w zależności od statusu rodziny.
+
+```{r, echo=FALSE}
+ggplot(Data_hotdeck, aes(x = INCOME_LOG, fill = NAME_FAMILY_STATUS)) +
+  geom_boxplot() +
+  xlab("Dochody") +
+  ggtitle("Dochód całkowity w zależności od statusu rodziny") +
+  scale_fill_brewer(palette = "Set1") +
+  theme_minimal()
+geom_boxplot()
+```
+
+Na osi poziomej wykresu przedstawiono zlogarytmowane wartości dochodów. Każdy wykres pudełkowy odpowiada innemu statusowi rodziny i prezentuje medianę, kwartyle, wartości maksymalne, minimalne oraz obserwacje odstające. Status civil marriage charakteryzuje się dosyć niskimi wartościami z wyraźnie zauważalnymi obserwacjami odstającymi. Ze statusu married można wywnioskować, że dochody mieszczą się głównie w średnim zakresie rozkładu. Dochody w statusie separated są bliskie neutralnego poziomu. Status single / not married charakteryzuje się dochodami zbliżonymi do średniego poziomu, a status widow tym, że dochody są wyraźnie niższe w porównaniu do innych statusów rodzinnych badanych jednostek.
+
+Trzeci wykres charakteryzujący próbę badawczą analizowanego zbioru danych prezentuje udział osób spłacających kredyt w zależności od posiadanego przez nich typu nieruchomości.
+
+```{r, echo=FALSE}
+ggplot(Data_hotdeck, aes(x = NAME_HOUSING_TYPE, fill = HAS_CHILDREN)) +
+  geom_bar() +
+  xlab("Typ nieruchomości") +
+  ggtitle("Udział osób posiadających dzieci w zależności od typu zamieszkanej nieruchomości") +
+  scale_fill_brewer(palette = "Set1") +
+  theme_minimal()
+```
+
+Z wykresu wynika, że najwięcej osób, które wzięły kredyt, posiadają dom albo mieszkanie. Kolejni pod względem liczności kredytobiorcy to osoby mieszkające z rodzicami, zajmujący mieszkania komunalne oraz mieszkających w wynajmowanych nieruchomościach. Niewielki odsetek osób stanowią te, zamieszkujące pozostałe typy nieruchomości: mieszkania z częścią biurową oraz kooperatywne.
+
+Można zauważyć, że zdecydowana większość próby badawczej nie posiada dzieci. Jest także sporo osób w populacji, które posiadają jedno lub dwoje dzieci. Grupy mające więcej niż dwoje dzieci stanowią niewielki odsetek próby.
+
+Na wykresie widać także, że w grupie "Co-op apartment" większość osób posiada więcej niż dwoje dzieci, a z kolei w grupie "Office apartment" dominują kredytobiorcy bez dzieci. Pozostałe grupy charakteryzują się większym zróżnicowaniem.
+
+Ostatnim wykresem stworzonym w celu analizy próby badawczej jest udział osób z danym wykształceniem w zależności od typu wykonywanego zawodu.
+
+```{r, echo=FALSE}
+ggplot(Data_hotdeck, aes(x = OCCUPATION_TYPE, fill = NAME_EDUCATION_TYPE)) +
+  geom_bar() +
+  xlab("Typ wykonywanego zawodu") +
+  ggtitle("Udział osób z danym wykształceniem w zależności od typu wykonywanego zawodu") +
+  scale_fill_brewer(palette = "Set1") +
+  theme_minimal()
+```
+
+Z wykresu wynika, że najpopularniejsze wykonywane zawody w próbie badawczej to robotnicy, sprzedawcy, podstawowy personel, managerowie, kierowcy, pracownicy o umiejętnościach technicznych, księgowi, pracownicy medyczni, personel kuchenny, pracownicy ochrony oraz personel sprzątający. Pozostałe zawody tj. pracownicy HR i IT, robotnicy o niskich kwalifikacjach, prywatna kadra usługowa, agenci nieruchomości, sekretarze oraz kelnerzy i barmani są zdecydowanie mniej popularne.
+
+Można zauważyć, że w próbie badawczej dominuje wykształcenie średnie. Nieznaczny odsetek osób stanowią te z niższym wykształceniem lub nieukończonym wyższym. Sporą grupę stanowią kredytobiorcy o wykształceniu wyższym. Co ciekawe, grupa pracowników IT charakteryzuje się prawie całkowitą jednorodnością słupka na wykresie, co oznacza, że osoby pracujące w tej branży praktycznie zawsze posiadają wykształcenie wyższe. W innych branżach poziomy wykształcenia są między sobą bardziej zróżnicowane.
+
+### Analiza danych
+
+Po określeniu próby badawczej przystąpiono do wizualizacji danych dotyczących kredytów, jakie zaciągali kredytobiorcy. W celu skonstruowania pierwszej wizualizacji policzono liczbę osób, które nie spłacają kredytu oraz tych, które go spłacają i na tej podstawie stworzono nową tabelę. Następnie wykorzystano te dane i zaprezentowano je na wykresie kołowym.
+
+```{r, echo=FALSE}
 ggplot(pie_chart) +
   aes(
-    x0 = 0, y0 = 0, 
-    r0 = 0, r = 1,  
+    x0 = 0, y0 = 0,
+    r0 = 0, r = 1,
     amount = n, 
     fill = TARGET_2
   ) + 
-  geom_arc_bar(stat = "pie") +  
+  geom_arc_bar(stat = "pie") +
   coord_fixed() +
-  scale_fill_brewer(palette = "Set1")
+  scale_fill_brewer(palette = "Set1") +
+  ggtitle("Udział osób mających problemy ze spłatą kredytu i bez problemów ze spłatą kredytu w próbie") +
+  theme_minimal()
 ```
 
-Na przedstawionym wykresie można zauważyć, że zdecydowana większość osób spłaca kredyt.
+Na przedstawionym wykresie można zauważyć, że zdecydowana większość analizowanych osób spłaca kredyt.
 
-Kolejna wizualizacja prezentuje Udział osób mających problem ze spłatą kredytu w grupie dochodowej.
+Kolejna wizualizacja prezentuje udział osób mających problem ze spłatą kredytu w grupie dochodowej.
 
 ```{r, echo=FALSE}
 ggplot(Data_hotdeck, aes(x = INCOME_LOG, fill = TARGET_2)) +
   geom_histogram() +
   xlab("Dochód") +
   ggtitle("Udział osób mających problem ze spłatą kredytu w grupie dochodowej") +
-  scale_fill_brewer(palette = "Set1")
+  scale_fill_brewer(palette = "Set1") +
+  theme_minimal()
 ```
 
-Analizując wykres można powiedzieć, że większość klientów mieści się w środkowym przedziale dochodowym (ok. 11.5–12.5 na osi dochodu w skali logarytmicznej), co wskazuje na koncentrację klientów o przeciętnych dochodach. Problemy ze spłatą kredytu (kolor czerwony) występują w każdej grupie dochodowej, jednak ich proporcja jest różna. Chociaż w dolnych przedziałach dochodowych (poniżej 11.5) liczba klientów jest mała, odsetek problemów ze spłatą wydaje się wyższy w porównaniu do grup o średnich dochodach. Może to wskazywać na większe trudności w spłacie kredytów wśród osób o najniższych dochodach.\
-Dochód jest istotnym czynnikiem wpływającym na zdolność do spłaty kredytu. Klienci z niższych grup dochodowych są bardziej narażeni na trudności, podczas gdy osoby z wyższymi dochodami rzadziej mają problemy z regulowaniem zobowiązań.\
-Następnie stworzono wykres punktowy przedstawiający zależność zlogarytnowanej zmiennej "wielkość kredytu" od zlogarytowanej warotści "dochodów". Dodatkowo na wykresie rozrózniono płeć kolorem punktów. Kobiety zaznaczono kolorem pomarańczowym, mężczyzn kolorem niebieskim.
+Analizując wykres można powiedzieć, że większość klientów mieści się w środkowym przedziale dochodowym (ok. 11,5–12,5 na osi dochodu w skali logarytmicznej), co wskazuje na koncentrację klientów o przeciętnych dochodach. Problemy ze spłatą kredytu (kolor czerwony) występują w każdej grupie dochodowej, jednak ich proporcja jest różna. Chociaż w dolnych przedziałach dochodowych (poniżej 11,5) liczba klientów jest mała, odsetek problemów ze spłatą wydaje się wyższy w porównaniu do grup o średnich dochodach. Może to wskazywać na większe trudności w spłacie kredytów wśród osób o najniższych dochodach.
+
+Dochód jest istotnym czynnikiem wpływającym na zdolność do spłaty kredytu. Klienci z niższych grup dochodowych są bardziej narażeni na trudności, podczas gdy osoby z wyższymi dochodami rzadziej mają problemy z regulowaniem zobowiązań.
+
+Następnie stworzono wykres punktowy przedstawiający zależność zlogarytmowanej zmiennej "wielkość kredytu" od zlogarytowanej wartości "dochodów". Dodatkowo, na wykresie rozróżniono płeć kolorem punktów. Kobiety zaznaczono kolorem pomarańczowym, mężczyzn kolorem niebieskim.
 
 ```{r, echo=FALSE}
 ggplot(Data_hotdeck, aes(x = INCOME_LOG, y = CREDIT_LOG, color = CODE_GENDER))+
@@ -437,47 +495,57 @@ ggplot(Data_hotdeck, aes(x = INCOME_LOG, y = CREDIT_LOG, color = CODE_GENDER))+
   xlab("Dochody") +
   ylab("Wielkość kredytu") +
   ggtitle("Zależność wielkości kredytu od dochodów") +
-  scale_fill_brewer(palette = "Set1")
+  scale_fill_brewer(palette = "Set1") +
+  theme_minimal()
 ```
 
-Na wykresie można zauważyć zależność wielkości kredytu od dochodów. Im więcej zarabia dana osoba tym większy kredyt bierze. Punkty reprezentujące zarówno mężczyzn jak i kobiety są rozproszone po całym wykresie i trudno dostrzec jakąkolwiek zależność pomiędzy przynależnością do danej płci.Można zaobserwować wiele punktów odstających, niezgodnych z ogólnym trendem.\
-Kolejnym wykresem, który stworzono był wykres słupkowy pokazujący udział osób mających problem ze spłatą kredytu w zależności od rodzaju kontraktu./
+Z wykresu można wywnioskować, że im więcej zarabia dany kredytobiorca tym większy kredyt bierze. Punkty reprezentujące zarówno mężczyzn, jak i kobiety są rozproszone po całym wykresie i trudno dostrzec jakąkolwiek zależność pomiędzy przynależnością do danej płci. Można zaobserwować wiele punktów odstających, niezgodnych z ogólnym trendem.
+
+Kolejnym wykresem, który stworzono był wykres słupkowy pokazujący udział osób mających problem ze spłatą kredytu w zależności od rodzaju kontraktu.
 
 ```{r, echo=FALSE}
 ggplot(Data_hotdeck, aes(x = NAME_CONTRACT_TYPE, fill = TARGET_2)) +
   geom_bar() +
   xlab("Nazwa kontraktu") +
   ggtitle("Udział osób mających problem ze spłatą kredytu w zależności od rodzaju kontraktu") +
-  scale_fill_brewer(palette = "Set1")
+  scale_fill_brewer(palette = "Set1") +
+  theme_minimal()
 ```
 
-W danych można było wyróżnić dwa rodzaje kontraktów: kredyty odnawialne oraz pożyczki gotówkowe.Zdecydowaną wiekszość stanowią pożyczki gotówkowe, bo jest ich ponad 2000, natomiast kredyty odnawialne stanowią niewielką liczbę rekordów. Na stworzonym wykresie można zaobserwować, że zdecydowana wiekszość osób spłaca swoje zobowiązania. Na wykresach zaznaczono te osoby na kolor niebieski. Zarówno na słupku dotyczącym pożyczek gotówkowych, jak i tym z kredytami odnawialnymi większość obszaru słupka jest niebieska. Co istotne, obszar czerwony, odpowiadający ilość osób mających problem ze spłatą na słupku z pożyczkami gotówkowymi stanowi wiekszą część niż w przypadku kredytów odnawialnych. Może to sugerować, że większe problemy ze spłatą występują w przypadku osób korzystających z pożyczek gotówkowych.\
-Kolejnym krokiem było stworzenie wykresów skrzypcowych dla osób, które spłacają i niespłacają swoich zobowiązań, w zależności od wielkości zaciągniętego zobowiązania.
+W danych można było wyróżnić dwa rodzaje kontraktów: kredyty odnawialne oraz pożyczki gotówkowe. Zdecydowaną większość stanowią pożyczki gotówkowe, bo jest ich ponad dwa tysiące, natomiast kredyty odnawialne stanowią niewielką liczbę rekordów. Na stworzonym wykresie można zaobserwować zależność, mówiącą o tym, że większość osób spłaca swoje zobowiązania. Na wykresach zaznaczono te osoby kolorem niebieskim. Zarówno na słupku dotyczącym pożyczek gotówkowych, jak i tym z kredytami odnawialnymi, większość obszaru słupka jest niebieska.
+
+Kolejnym krokiem analizy było stworzenie wykresów skrzypcowych dla osób, które spłacają i nie spłacają swoich zobowiązań, w zależności od wielkości zaciągniętego zobowiązania.
 
 ```{r, echo=FALSE}
 ggplot(Data_hotdeck, aes(x = TARGET_2, y = CREDIT_LOG, fill = TARGET_2)) +
   geom_violin(trim = FALSE) +
   geom_boxplot(width = 0.1, fill = "white", outlier.shape = NA) +
   theme_minimal() +
-  labs(title = "Wykres skrzypcowy", x = "", y = "Wielkość kredytu") +
-  scale_fill_brewer(palette = "Set1")
+  labs(title = "Wielkość kredytu ze względu na grupy z problemami oraz bez problemów ze spłatą kredytów", 
+       x = "", y = "Wielkość kredytu") +
+  scale_fill_brewer(palette = "Set1") +
+  theme_minimal()
 ```
 
-Grupę osób mających problem ze spłatą zobowiązania przedstawiono na czerwonym wykresie. Średnia zlogarytmowana wartość kredytu dla tej grupy wynosi około 13. Wartość są skoncentrowane, co może oznaczać, że problem ze spłacaniem zobowiązań mają ludzie o podobnej wartość kredytu. Wykres niebieski przedstawia grupę osób, które regularnie spłacają swoje zobowiązania. Średnia wartość kredytu jest podobna do grupy niespłacającej zobowiązań. To co rózni oba wykresy to ich zakres. W przypadku grupy spłacającej wartości zaciągniętego kredytu są bardziej zróznicowane i więcej jest tych powyżej wartości 13,5.\
-W kolejnym kroku sworzono wykresy łączące w sobie informacje o poziomie edukacji, wielkości zaciągniętego kredytu oraz spłacania kredytu przez daną osobę.
+Grupę osób mających problem ze spłatą zobowiązania przedstawiono na czerwonym wykresie. Średnia zlogarytmowana wartość kredytu dla tej grupy wynosi około trzynastu. Wartości są skoncentrowane, co może oznaczać, że problem ze spłacaniem zobowiązań mają kredytobiorcy o podobnej wartość kredytu. Wykres niebieski przedstawia grupę osób, które regularnie spłacają swoje zobowiązania. Średnia wartość kredytu jest podobna do grupy niespłacającej zobowiązań. To, co różni oba wykresy to ich zakres. W przypadku grupy spłacającej wartości zaciągniętego kredytu są bardziej zróżnicowane i występuje więcej tych powyżej wartości 13,5.
+
+W celu dokładnego przeanalizowania danych stworzono także wykresy łączące w sobie informacje o poziomie edukacji, wielkości zaciągniętego kredytu oraz spłacania kredytu przez daną osobę.
 
 ```{r, echo=FALSE}
 ggplot(Data_hotdeck, aes(x = INCOME_LOG, y = CREDIT_LOG)) +
   geom_point() +
-  facet_wrap(TARGET_2 ~ NAME_EDUCATION_TYPE) +
-  scale_fill_brewer(palette = "Set1")
+  facet_wrap(TARGET_2 ~ NAME_EDUCATION_TYPE, ncol = 4) +
+  scale_fill_brewer(palette = "Set1") +
+  ggtitle("Problemy oraz brak problemów ze spłatą kredytu w zależności od poziomu edukacji kredytobiorcy") +
+  theme_minimal()
 ```
 
-Z wykresu można wywnioskować, że najliczniejsza grupa niespłacająca kredytu należy do poziomu edukacji "secondary/secondary special", najmniej liczna natomiast do "lower secondary". Wykres potwierdza fakt, że większość osób z bazy danych spłaca swoje zobowiązania.\
+Z wykresu można wywnioskować, że najliczniejsza grupa niespłacająca kredytu należy do poziomu edukacji "secondary/secondary special", najmniej liczna natomiast do "lower secondary". Wykres potwierdza wcześniej wysnuty wniosek, że większość osób z bazy danych spłaca swoje zobowiązania.\
 
 ## Analiza opisowa
 
-Analizę opisową rozpoczęto od stworzenia wykresu korelacji pomiędzy wybranymi zmiennymi numerycznymi wizualizowaną za pomocą funkcji z pakietu corrplot.\
+Analizę opisową rozpoczęto od stworzenia wykresu korelacji pomiędzy wybranymi zmiennymi numerycznymi wizualizowaną za pomocą funkcji z pakietu corrplot.
+
 Zakresem wartości korelacji jest zakres od -1 do 1, gdzie:
 
 -   Korelacja bliska **1** oznacza silny dodatni związek między zmiennymi.
@@ -492,11 +560,13 @@ corrplot(cor(Data_hotdeck[c("TARGET","CNT_CHILDREN", "AMT_INCOME_TOTAL", "AMT_CR
          method = "number", type = "upper", diag =FALSE)
 ```
 
-Najwyższą dodatnią korelację można zauważyć między APARTMENTS_AVG a ENTRANCES_AVG oraz BASEMENTAREA_AVG, co oznacza, że średnia powierzchnia mieszkań jest silnie powiązana z liczbą wejść do budynku oraz powierzchnią piwnicy.\
-AMT_INCOME_TOTAL wykazuje umiarkowaną korelację z AMT_CREDIT (0.38), co sugeruje, że osoby o wyższym dochodzie częściej zaciągają wyższe kredyty.\
-Wartość korelacji zmiennej REGION_RATING_CLIENT jest bliska zeru, co sugeruje brak silnego związku z innymi zmiennymi. Brak silnej korelacji między zmiennymi a TARGET sugeruje, że inne czynniki (np.zatrudnienie, poziom edukacji, typ pożyczki) mogą mieć większy wpływ na przewidywanie zmiennej dotyczącej regularnego spłacania i niespłacania kredytu.\
+Najwyższą dodatnią korelację można zauważyć między APARTMENTS_AVG a ENTRANCES_AVG oraz BASEMENTAREA_AVG, co oznacza, że średnia powierzchnia mieszkań jest silnie powiązana z liczbą wejść do budynku oraz powierzchnią piwnicy.
 
-Następnie stworzono wykres przedstawiający macierz korelacji. Kolory użyte w wizualizacji pozwalają na szybkie rozpoznanie siły oraz kierunku zależności między zmiennymi – ciemnoniebieskie odcienie oznaczają silną dodatnią korelację, natomiast czerwone wskazują na ujemną korelację.\
+AMT_INCOME_TOTAL wykazuje umiarkowaną korelację z AMT_CREDIT (0.38), co sugeruje, że osoby o wyższym dochodzie częściej zaciągają wyższe kredyty.
+
+Wartość korelacji zmiennej REGION_RATING_CLIENT jest bliska zeru, co sugeruje brak silnego związku z innymi zmiennymi. Brak silnej korelacji między zmiennymi a TARGET sugeruje, że inne czynniki (np. zatrudnienie, poziom edukacji, typ pożyczki) mogą mieć większy wpływ na przewidywanie zmiennej dotyczącej regularnego spłacania i niespłacania kredytu.
+
+Następnie stworzono wykres przedstawiający macierz korelacji. Kolory użyte w wizualizacji pozwalają na szybkie rozpoznanie siły oraz kierunku zależności między zmiennymi – ciemnoniebieskie odcienie oznaczają silną dodatnią korelację, natomiast czerwone wskazują na ujemną korelację.
 
 ```{r, echo=FALSE}
 corr_matrix<-cor(Data_hotdeck[c("TARGET","CNT_CHILDREN", "AMT_INCOME_TOTAL", "AMT_CREDIT", "REGION_RATING_CLIENT", 
@@ -505,7 +575,7 @@ corrplot(corr_matrix, method="color")
 
 ```
 
-Dzięki zastosowaniu kolorów w odniesieniu do każdej korelacji między zmiennymi oraz usunięciu danych liczbowych z macierzy wizualizacja stała się bardziej czytelna. Najwyższe wartości korelacji oznaczające silne powiązania dodatnie można zauważyć w dolnym prawym rogu wykresu. Pokazują one powiązania między zmiennymi opisujacymi charakterystykę nieruchomości.\
+Dzięki zastosowaniu kolorów w odniesieniu do każdej korelacji między zmiennymi oraz usunięciu danych liczbowych z macierzy wizualizacja stała się bardziej czytelna. Najwyższe wartości korelacji oznaczające silne powiązania dodatnie można zauważyć w dolnym prawym rogu wykresu. Pokazują one powiązania między zmiennymi opisującymi charakterystykę nieruchomości.
 
 W kolejnym etapie analizy zdefiniowano funkcję do obliczania statystyk opisowych dla wybranych zmiennych jakimi będą: wysokość kredytu oraz wysokość dochodów kredytobiorców. Zmienne te zostaną pogrupowane według zmiennej TARGET, aby sprawdzić różnice pomiędzy osobami spłacającymi kredyt oraz tymi, które posiadają problem ze spłatą.\
 Statystykami obliczanymi w funkcji są:
@@ -528,7 +598,6 @@ Statystykami obliczanymi w funkcji są:
 
 -   kurtoza.
 
-\
 Jako pierwszą przeanalizowano zmienną AMT_CREDIT opisującą wysokość kredytu.
 
 ```{r, echo=FALSE}
@@ -550,13 +619,17 @@ Data_hotdeck %>%
   column_spec(1:2, bold = F) %>%
   row_spec(1, bold = F, color = "black", background = "white")
 ```
+
 Podsumowując dane z powyższej tabeli średnia kredytów w grupie "spłaca" jest wyższa niż w grupie "problemy ze spłatą", co może sugerować, że osoby spłacające kredyty mają wyższe zobowiązania.\
-Najniższy kredyt w grupie posiadającej probelmy ze spłata wynosi 101880, a  najwyższy wynosi 3020760. W grupie osób bezproblemowo spłacających kredyt minimalną wartością udzielonego kredytu jestg 47970, a maksymalną 2517300.\
-Mediana wartości kredytu dla osób z problemami ze spłatą wynosi 495000, co wskazuje, że połowa kredytów jest mniejsza lub równa tej kwocie, a połowa większa. W przypadku grupy bez problemów ze spłatą mediana jest bliska średniej, co oznacza, że kredyty w tej grupie są bardziej jednorodne pod względem wartości niż w grupie osób mających problemy ze spłatą.
-Zmienność w obu grupach jest duża, ale grupa "problemy ze spłatą" ma wyższe odchylenie standardowe i wyższą kurtozę, co oznacza, że istnieje większe zróżnicowanie wysokości kredytów w tej grupie. \
-Skośność w grupie "problemy ze spłatą" jest znacznie większa, co oznacza, że kredyty w tej grupie mają długie ogony w prawo (więcej bardzo wysokich kredytów). \
-Z kolei kurtoza w grupie osób z problemami dotyczącymi spłaty wskazuje na rozkład z bardziej ekstremalnymi wartościami, podczas gdy w grupie spłacających bezproblemowo rozkład jest bardziej "normalny".\
-Te różnice mogą sugerować, że osoby z problemami ze spłatą kredytu mają bardziej zróżnicowane kredyty, w tym więcej kredytów o bardzo wysokiej wartości, podczas gdy osoby spłacające kredyty mają bardziej jednorodny rozkład kredytów.\
+Najniższy kredyt w grupie posiadającej problemy ze spłatą wynosi 101880, a najwyższy wynosi 3020760. W grupie osób bezproblemowo spłacających kredyt minimalną wartością udzielonego kredytu jest 47970, a maksymalną 2517300.
+
+Mediana wartości kredytu dla osób z problemami ze spłatą wynosi 495000, co wskazuje, że połowa kredytów jest mniejsza lub równa tej kwocie, a połowa większa. W przypadku grupy bez problemów ze spłatą mediana jest bliska średniej, co oznacza, że kredyty w tej grupie są bardziej jednorodne pod względem wartości niż w grupie osób mających problemy ze spłatą. Zmienność w obu grupach jest duża, ale grupa "problemy ze spłatą" ma wyższe odchylenie standardowe i wyższą kurtozę, co oznacza, że istnieje większe zróżnicowanie wysokości kredytów w tej grupie.
+
+Skośność w grupie "problemy ze spłatą" jest znacznie większa, co oznacza, że kredyty w tej grupie mają długie ogony w prawo (więcej bardzo wysokich kredytów).
+
+Z kolei kurtoza w grupie osób z problemami dotyczącymi spłaty wskazuje na rozkład z bardziej ekstremalnymi wartościami, podczas gdy w grupie spłacających bezproblemowo rozkład jest bardziej "normalny".
+
+Te różnice mogą sugerować, że osoby z problemami ze spłatą kredytu mają bardziej zróżnicowane kredyty, w tym więcej kredytów o bardzo wysokiej wartości, podczas gdy osoby spłacające kredyty mają bardziej jednorodny rozkład kredytów.
 
 Operację powtórzono dla zmiennej AMT_INCOME_TOTAL opisującej wysokość dochodów kredytobiorców.
 
@@ -580,12 +653,15 @@ Data_hotdeck %>%
   row_spec(1, bold = F, color = "black", background = "white")
 
 ```
-W związku z wysokością dochodów kredytobiorców można stwierdzić, że średnie dochody w grupie "problemy ze spłatą" są nieco wyższe i wynoszą 1693556 w porównaniu do drigiej grupy z dochodami równymi 1643476. \
-Mediana wynosi 135000, co oznacza, że połowa kredytobiorców zarabia mniej niż 135000, a połowa więcej.
-Zmienność dochodów w obu grupach jest dość duża, z wysokim odchyleniem standardowym w każdej z nich. Dochody są mocno zróżnicowane w obu grupach, ale szczególnie wyraźne są w grupie "spłaca", gdzie wartości ekstremalne są jeszcze bardziej rozproszone (wyższa kurtoza).\
-Skośność w obu grupach jest dodatnia, wskazując na większą liczbę osób z wyższymi dochodami w porównaniu do tych z niższymi dochodami. W grupie "spłaca" zauważalne jest silniejsze przesunięcie w stronę wyższych dochodów.\
-Kurtoza w obu grupach wskazuje na rozkład z koncentracją wokół średnich wartości dochodów. W grupie "spłaca" koncentracja jest wyraźniejsza, z większą liczbą osób o dochodach w górnej części rozkładu.\
-Wnioski mogą sugerować, że osoby spłacające kredyty mają bardziej jednorodny poziom dochodów, ale nadal istnieje grupa osób o bardzo wysokich dochodach. Z kolei osoby mające problemy ze spłatą mają bardziej zróżnicowane dochody, z większymi skrajnymi wartościami.\
+
+W związku z wysokością dochodów kredytobiorców można stwierdzić, że średnie dochody w grupie "problemy ze spłatą" są nieco wyższe i wynoszą 1693556 w porównaniu do drugiej grupy z dochodami równymi 1643476.
+
+Mediana wynosi 135000, co oznacza, że połowa kredytobiorców zarabia mniej niż 135000, a połowa więcej. Zmienność dochodów w obu grupach jest dość duża, z wysokim odchyleniem standardowym w każdej z nich. Dochody są mocno zróżnicowane w obu grupach, ale szczególnie wyraźne są w grupie "spłaca", gdzie wartości ekstremalne są jeszcze bardziej rozproszone (wyższa kurtoza).\
+Skośność w obu grupach jest dodatnia, wskazując na większą liczbę osób z wyższymi dochodami w porównaniu do tych z niższymi dochodami. W grupie "spłaca" zauważalne jest silniejsze przesunięcie w stronę wyższych dochodów.
+
+Kurtoza w obu grupach wskazuje na rozkład z koncentracją wokół średnich wartości dochodów. W grupie "spłaca" koncentracja jest wyraźniejsza, z większą liczbą osób o dochodach w górnej części rozkładu.
+
+Wnioski mogą sugerować, że osoby spłacające kredyty mają bardziej jednorodny poziom dochodów, ale nadal istnieje grupa osób o bardzo wysokich dochodach. Z kolei osoby mające problemy ze spłatą mają bardziej zróżnicowane dochody, z większymi skrajnymi wartościami.
 
 Statystyki opisowe przygotowano także do cech budynków mieszkaniowych analizowanych uprzednio w macierzy korelacji. Pogrupowano je tak jak w dwóch powyższych tabelach ze względu na zmienna TARGET_2 oznaczającą problemy ze spłatą lub ich brak.
 
@@ -608,12 +684,16 @@ Data_hotdeck %>%
   kable_paper("striped", full_width = F) %>%
   column_spec(1:2, bold = F) %>%
   row_spec(1, bold = F, color = "black", background = "white")
-```  
-Dla zmiennych APARTMENTS_AVG, BASEMENTAREA_AVG, COMMONAREA_AVG, ENTRANCES_AVG, LANDAREA_AVG minimum wynosi 0, co sugeruje, że niektóre nieruchomości nie mają w ogóle tych cech (np. brak wspólnych przestrzeni, piwnic, działek, wejść). Dla zmiennej YEARS_BUILD_AVG minimum wynosi 0.6192 dla osób z problemami w spłacie, co może wskazywać na stosunkowo nowe budynki w tej grupie, co jest ciekawe, ponieważ oczekiwalibyśmy, że starsze nieruchomości częściej będą miały problemy ze spłatą. \
-Średnia w grupie "problemy ze spłatą" dla zmiennej APARTMENTS_AVG wynosi 0.0974, a w grupie "spłaca" wynosi 0.1189, co sugeruje, że osoby spłacające kredyt mają nieco większe mieszkania niż osoby z problemami. Podobnie, osoby spłacające kredyt mają nieco większe powierzchnie piwnic i działek, podczas gdy powierzchnia wspólnych przestrzeni jest bardzo podobna w obu grupach. Dzięki zmiennej opisującej wiek nieruchomości można zauważyć, że osoby z problemami mają średnio nieco starsze budynki, choć różnice są niewielkie.\
-W przypadku zmiennych takich jak APARTMENTS_AVG czy LANDAREA_AVG, odchylenie standardowe wskazuje na dużą rozbieżność w wielkości nieruchomości, zwłaszcza w grupie spłacających kredyt. Natomiast dla zmiennych takich jak BASEMENTAREA_AVG czy COMMONAREA_AVG odchylenie jest mniejsze, co oznacza mniejszą zmienność w tych cechach.\
-Mediana dla powierzchni mieszkań, piwnic i działek jest nieco wyższa w grupie spłacających kredyt, co sugeruje, że osoby te mieszkają w nieruchomościach o większej powierzchni w tych kategoriach. Mediana dla wspólnych przestrzeni i liczby wejść jest w zasadzie identyczna w obu grupach.
-Wartości skośności wskazują, że w obu grupach występuje przesunięcie w stronę wyższych wartości, ale szczególnie mocne w grupie spłacających kredyt. Dla zmiennych takich jak BASEMENTAREA_AVG czy YEARS_BUILD_AVG skośność jest wyraźnie wyższa w grupie spłacających kredyt, co sugeruje większe odchylenie w tych grupach.\
+```
+
+Dla zmiennych APARTMENTS_AVG, BASEMENTAREA_AVG, COMMONAREA_AVG, ENTRANCES_AVG, LANDAREA_AVG minimum wynosi 0, co sugeruje, że niektóre nieruchomości nie mają w ogóle tych cech (np. brak wspólnych przestrzeni, piwnic, działek, wejść). Dla zmiennej YEARS_BUILD_AVG minimum wynosi 0.6192 dla osób z problemami w spłacie, co może wskazywać na stosunkowo nowe budynki w tej grupie, co jest ciekawe, ponieważ oczekiwalibyśmy, że starsze nieruchomości częściej będą miały problemy ze spłatą.
+
+Średnia w grupie "problemy ze spłatą" dla zmiennej APARTMENTS_AVG wynosi 0.0974, a w grupie "spłaca" wynosi 0.1189, co sugeruje, że osoby spłacające kredyt mają nieco większe mieszkania niż osoby z problemami. Podobnie, osoby spłacające kredyt mają nieco większe powierzchnie piwnic i działek, podczas gdy powierzchnia wspólnych przestrzeni jest bardzo podobna w obu grupach. Dzięki zmiennej opisującej wiek nieruchomości można zauważyć, że osoby z problemami mają średnio nieco starsze budynki, choć różnice są niewielkie.
+
+W przypadku zmiennych takich jak APARTMENTS_AVG czy LANDAREA_AVG, odchylenie standardowe wskazuje na dużą rozbieżność w wielkości nieruchomości, zwłaszcza w grupie spłacających kredyt. Natomiast dla zmiennych takich jak BASEMENTAREA_AVG czy COMMONAREA_AVG odchylenie jest mniejsze, co oznacza mniejszą zmienność w tych cechach.
+
+Mediana dla powierzchni mieszkań, piwnic i działek jest nieco wyższa w grupie spłacających kredyt, co sugeruje, że osoby te mieszkają w nieruchomościach o większej powierzchni w tych kategoriach. Mediana dla wspólnych przestrzeni i liczby wejść jest w zasadzie identyczna w obu grupach. Wartości skośności wskazują, że w obu grupach występuje przesunięcie w stronę wyższych wartości, ale szczególnie mocne w grupie spłacających kredyt. Dla zmiennych takich jak BASEMENTAREA_AVG czy YEARS_BUILD_AVG skośność jest wyraźnie wyższa w grupie spłacających kredyt, co sugeruje większe odchylenie w tych grupach.
+
 Kurtoza wskazuje na silną koncentrację danych wokół średnich wartości w obu grupach, z wyraźnie większą koncentracją w grupie spłacających kredyt. Wartości kurtozy są szczególnie wysokie w przypadku zmiennych takich jak APARTMENTS_AVG czy BASEMENTAREA_AVG, co sugeruje, że w tych grupach pojawiają się skrajne przypadki (np. bardzo duże mieszkania, czy piwnice).\
 
 Aby stworzyć wizualizację rozkładu danych oraz porównać dwie grupy pod kątem różnic w wartościach stworzono wykres skrzypcowy. Porównuje on kwoty kredytów (AMT_CREDIT) w zależności od posiadania nieruchomości (FLAG_OWN_REALTY).
@@ -628,12 +708,9 @@ ggstatsplot :: ggbetweenstats(
   palette = "Set1",
   title = "Porównanie kwot kredytów w zależności od posiadania nieruchomości"
 )
-``` 
+```
 
-Oś pozioma (X) przedstawia kategorię: N (Nie posiada nieruchomości) i Y (Posiada nieruchomość).
-Oś pionowa (Y) reprezentuje kwotę kredytu, gdzie kolory reprezentują dwie grupy:
-czerwony (osoby nieposiadające nieruchomości),
-niebieski (osoby posiadające nieruchomość). \
+Oś pozioma (X) przedstawia kategorię: N (Nie posiada nieruchomości) i Y (Posiada nieruchomość). Oś pionowa (Y) reprezentuje kwotę kredytu, gdzie kolory reprezentują dwie grupy: czerwony (osoby nieposiadające nieruchomości), niebieski (osoby posiadające nieruchomość).\
 Z wykresu można wywnioskować, że osoby nieposiadające nieruchomości zaciągają nieco wyższe kredyty (mediana = 536 tys.) niż osoby posiadające nieruchomości (mediana = 495 tys.). Rozkład kredytów w obu grupach jest zbliżony, ale osoby bez nieruchomości mają więcej ekstremalnych wartości. Wartość p = 3.39e-04 sugeruje, że różnica jest istotna statystycznie, ale efekt nie jest duży (r_biserial = 0.09).
 
 ## Wnioskowanie (testy statystyczne)
@@ -655,9 +732,11 @@ plot(data_kat_credit)
 ```
 
 Pierwsza hipoteza, którą zdecydowano się postawić, ma na celu zbadanie czy poziom edukacji (NAME_EDUCATION_TYPE) ma istotny wpływ na problemy ze spłatą kredytu (TARGET_2).\
-Hipotezy statystyczne:\
-- H₀: Nie ma istotnej zależności między poziomem edukacji, a problemami ze spłatą kredytu. Rozkład wartości TARGET_2 jest równomierny w różnych grupach edukacyjnych.\
-- H₁: Istnieje istotna zależność między poziomem edukacji, a problemami ze spłatą kredytu. Pewne grupy edukacyjne mają wyraźnie większe lub mniejsze ryzyko problemów kredytowych.
+Hipotezy statystyczne:
+
+-   H₀: Nie ma istotnej zależności między poziomem edukacji, a problemami ze spłatą kredytu. Rozkład wartości TARGET_2 jest równomierny w różnych grupach edukacyjnych.
+
+-   H₁: Istnieje istotna zależność między poziomem edukacji, a problemami ze spłatą kredytu. Pewne grupy edukacyjne mają wyraźnie większe lub mniejsze ryzyko problemów kredytowych.
 
 ```{r, echo=FALSE}
 ggpiestats(
@@ -669,15 +748,17 @@ ggpiestats(
 )  
 ```
 
-Wartość p=0.01 wskazuje na to, że poziom edukacji wpływa na problemy ze spłatą kredytu. Współczynnik V Craméra (0.06) sugeruje słabą zależność między zmiennymi.P-value jest mniejsze niż poziom istotności α=0.05. Odrzucamy hipotezę zerową. Oznacza to, że istnieje statystycznie istotna zależność między poziomem edukacji, a problemami ze spłatą kredytu.\
+Wartość p=0.01 wskazuje na to, że poziom edukacji wpływa na problemy ze spłatą kredytu. Współczynnik V Craméra (0.06) sugeruje słabą zależność między zmiennymi. P-value jest mniejsze niż poziom istotności α=0.05. Odrzucamy hipotezę zerową. Oznacza to, że istnieje statystycznie istotna zależność między poziomem edukacji, a problemami ze spłatą kredytu.
 
 Na podstawie rozkładu poziomu edukacji w zależności od problemów ze spłatą kredytu można zauważyć pewne różnice. Osoby z wykształceniem średnim dominują w obu grupach, ale ich udział jest większy wśród osób mających problemy ze spłatą kredytu (75%). Osoby z wykształceniem wyższym częściej spłacają kredyt regularnie (27%) w porównaniu do tych, które mają problemy (18%).
 
 Druga postawiona hipoteza związana jest ze sprawdzeniem, czy istnieje zależność między przedziałem kwot branego kredytu, a statusem rodzinnym. Chcemy zobaczyć jak np. małżeństwa czy osoby samotne różnią się pod względem wielkości kredytów, które biorą. Zdecydowano się na wizualizację kołową.
 
-Hipotezy statystyczne:\
-- H₀: Nie ma zależności między przedziałem kwoty kredytu (data_kat_credit), a statusem rodzinnym (NAME_FAMILY_STATUS). Rozkład wielkości kredytów jest taki sam we wszystkich grupach rodzinnych.\
-- H₁: Istnieje zależność między przedziałem kwoty kredyt, a statusem rodzinnym. Rozkład wielkości kredytów różni się w zależności od statusu rodziny.
+Hipotezy statystyczne:
+
+-   H₀: Nie ma zależności między przedziałem kwoty kredytu (data_kat_credit), a statusem rodzinnym (NAME_FAMILY_STATUS). Rozkład wielkości kredytów jest taki sam we wszystkich grupach rodzinnych.
+
+-   H₁: Istnieje zależność między przedziałem kwoty kredyt, a statusem rodzinnym. Rozkład wielkości kredytów różni się w zależności od statusu rodziny.
 
 ```{r, echo=FALSE}
 ggpiestats(
@@ -693,20 +774,25 @@ Na wykresie przedstawiono wyniki testu chi-kwadrat dla każdej grupy.\
 Dla każdej grupy p-value \< 0.05, co oznacza, że odrzucamy hipotezę zerową. Istnieje istotny statystycznie związek między przedziałem kwoty kredytu, a statusem rodzinnym. Współczynnik V Craméra (0.06), wskazuje na słaby, ale istotny związek między zmiennymi.\
 Najniższy przedział kredytów dominuje we wszystkich grupach rodzinnych:
 
-Największy udział najniższego przedziału kredytów (49770 - 642528) występuje w grupach: Widow (75%), Single / not married (74%), oraz Separated (71%). W grupie Married udział najniższego przedziału wynosi 59%, co oznacza, że małżeństwa częściej biorą kredyty w wyższych przedziałach niż inne grupy.\
+Największy udział najniższego przedziału kredytów (49770 - 642528) występuje w grupach: Widow (75%), Single / not married (74%), oraz Separated (71%). W grupie Married udział najniższego przedziału wynosi 59%, co oznacza, że małżeństwa częściej biorą kredyty w wyższych przedziałach niż inne grupy.
 
 Wyższe przedziały kredytów są bardziej popularne wśród osób pozostających w małżeństwie. W grupie Married, aż 41% osób korzysta z kredytów w wyższych przedziałach, w tym 8% z najwyższego przedziału. W innych grupach udział wyższych przedziałów kredytów jest znacznie mniejszy.\
 Osoby samotne, wdowy i osoby po rozwodzie częściej biorą niższe kredyty. W grupach Single, Widow i Separated, kredyty z wyższych przedziałów stanowią jedynie niewielki procent wszystkich przypadków, co sugeruje ograniczone możliwości finansowe tych grup.
 
-Wykorzystano również analizę waraincji (ANOVA). Celem tego testu jest zrozumienie, jak typ zawodu oraz sytuacja mieszkaniowa wpływają na to, czy klient ma problemy ze spłatą kredytu.\
+Wykorzystano również analizę wariancji (ANOVA). Celem tego testu jest zrozumienie, jak typ zawodu oraz sytuacja mieszkaniowa wpływają na to, czy klient ma problemy ze spłatą kredytu.\
 W modelu uwzględniono interakcję między zmiennymi OCCUPATION_TYPE i NAME_HOUSING_TYPE. Oznacza to, że sprawdzamy nie tylko główny wpływ każdej z tych zmiennych na TARGET, ale także, czy wpływ jednej zmiennej zależy od poziomu drugiej zmiennej.
 
-W przypadku tego modelu ANOVA postawiono następujące hipotezy dotyczące efektów:\
-- H₀:Typ zawodu OCCUPATION_TYPE nie ma wpływu na zmienną zależną TARGET, a typ sytuacji mieszkaniowej NAME_HOUSING_TYPE nie ma wpływu na zmienną zależną TARGET.\
-- H₁:Typ zawodu OCCUPATION_TYPE ma istotny wpływ na zmienną zależną TARGET, a Typ sytuacji mieszkaniowej NAME_HOUSING_TYPE ma istotny wpływ na zmienną zależną TARGET.\
-Postawiono również hipotezy dotyczące interakcji:\
-- H₀: Nie ma interakcji między typem zawodu (OCCUPATION_TYPE), a typem sytuacji mieszkaniowej (NAME_HOUSING_TYPE) w odniesieniu do zmiennej zależnej TARGET.\
-- H₁: Istnieje interakcja między typem zawodu (OCCUPATION_TYPE), a typem sytuacji mieszkaniowej (NAME_HOUSING_TYPE) w odniesieniu do zmiennej zależnej TARGET.\
+W przypadku tego modelu ANOVA postawiono następujące hipotezy dotyczące efektów:
+
+-   H₀: Typ zawodu OCCUPATION_TYPE nie ma wpływu na zmienną zależną TARGET, a typ sytuacji mieszkaniowej NAME_HOUSING_TYPE nie ma wpływu na zmienną zależną TARGET.
+
+-   H₁: Typ zawodu OCCUPATION_TYPE ma istotny wpływ na zmienną zależną TARGET, a Typ sytuacji mieszkaniowej NAME_HOUSING_TYPE ma istotny wpływ na zmienną zależną TARGET.
+
+Postawiono również hipotezy dotyczące interakcji:
+
+-   H₀: Nie ma interakcji między typem zawodu (OCCUPATION_TYPE), a typem sytuacji mieszkaniowej (NAME_HOUSING_TYPE) w odniesieniu do zmiennej zależnej TARGET.
+
+-   H₁: Istnieje interakcja między typem zawodu (OCCUPATION_TYPE), a typem sytuacji mieszkaniowej (NAME_HOUSING_TYPE) w odniesieniu do zmiennej zależnej TARGET.\
 
 ```{r, echo=FALSE}
 mod <- aov(

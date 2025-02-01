@@ -319,10 +319,25 @@ ggplot(Data_hotdeck, aes(x = INCOME_LOG, fill = NAME_FAMILY_STATUS)) +
   theme_minimal()
 geom_boxplot()
 
-ggplot(Data_hotdeck, aes(x = NAME_HOUSING_TYPE, fill = TARGET_2)) +
+table(Data_hotdeck$CNT_CHILDREN) 
+Data_hotdeck <- Data_hotdeck %>%
+  mutate(HAS_CHILDREN = case_when(
+    CNT_CHILDREN == 0 ~ "Nie posiada dzieci",
+    CNT_CHILDREN == 1 ~ "Posiada jedno dziecko",
+    CNT_CHILDREN == 2 ~ "Posiada dwoje dzieci",
+    CNT_CHILDREN > 2 ~ "Posiada więcej niż dwoje dzieci"))
+
+ggplot(Data_hotdeck, aes(x = NAME_HOUSING_TYPE, fill = HAS_CHILDREN)) +
   geom_bar() +
   xlab("Typ nieruchomości") +
-  ggtitle("Udział osób spłacających kredyt w zależności od typu nieruchomości") +
+  ggtitle("Udział osób posiadających dzieci w zależności od typu zamieszkanej nieruchomości") +
+  scale_fill_brewer(palette = "Set1") +
+  theme_minimal()
+
+ggplot(Data_hotdeck, aes(x = OCCUPATION_TYPE, fill = NAME_EDUCATION_TYPE)) +
+  geom_bar() +
+  xlab("Typ wykonywanego zawodu") +
+  ggtitle("Udział osób z danym wykształceniem w zależności od typu wykonywanego zawodu") +
   scale_fill_brewer(palette = "Set1") +
   theme_minimal()
 
@@ -390,6 +405,7 @@ Data_hotdeck %>%
   column_spec(1:2, bold = F) %>%
   row_spec(1, bold = F, color = "black", background = "white")
   
+#Hipotezy
 hist(Data_hotdeck$AMT_CREDIT)
 ggstatsplot :: ggbetweenstats(
   data = Data_hotdeck,
@@ -400,7 +416,6 @@ ggstatsplot :: ggbetweenstats(
   title = "Porównanie kwot kredytów w zależności od posiadania nieruchomości"
 )
 
-#Hipotezy
 Data_hotdeck <- Data_hotdeck %>%
   mutate(data_kat_income = binning(Data_hotdeck$AMT_INCOME_TOTAL, nbins = 5, type = "equal"))
 Data_hotdeck <- Data_hotdeck %>%
