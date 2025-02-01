@@ -451,6 +451,8 @@ Z wykresu wynika, że najpopularniejsze wykonywane zawody w próbie badawczej to
 
 Można zauważyć, że w próbie badawczej dominuje wykształcenie średnie. Nieznaczny odsetek osób stanowią te z niższym wykształceniem lub nieukończonym wyższym. Sporą grupę stanowią kredytobiorcy o wykształceniu wyższym. Co ciekawe, grupa pracowników IT charakteryzuje się prawie całkowitą jednorodnością słupka na wykresie, co oznacza, że osoby pracujące w tej branży praktycznie zawsze posiadają wykształcenie wyższe. W innych branżach poziomy wykształcenia są między sobą bardziej zróżnicowane.
 
+Z analizy próby badawczej można wywnioskować, że jej większość stanowią kobiety. Próba charakteryzuje się także dochodami na średnim poziomie oraz średnim wykształceniem. Dodatkowo, zdecydowana większość kredytobiorców mieszka we własnych domach lub mieszkaniach.
+
 ### Analiza danych
 
 Po określeniu próby badawczej przystąpiono do wizualizacji danych dotyczących kredytów, jakie zaciągali kredytobiorcy. W celu skonstruowania pierwszej wizualizacji policzono liczbę osób, które nie spłacają kredytu oraz tych, które go spłacają i na tej podstawie stworzono nową tabelę. Następnie wykorzystano te dane i zaprezentowano je na wykresie kołowym.
@@ -540,7 +542,9 @@ ggplot(Data_hotdeck, aes(x = INCOME_LOG, y = CREDIT_LOG)) +
   theme_minimal()
 ```
 
-Z wykresu można wywnioskować, że najliczniejsza grupa niespłacająca kredytu należy do poziomu edukacji "secondary/secondary special", najmniej liczna natomiast do "lower secondary". Wykres potwierdza wcześniej wysnuty wniosek, że większość osób z bazy danych spłaca swoje zobowiązania.\
+Z wykresu można wywnioskować, że najliczniejsza grupa niespłacająca kredytu należy do poziomu edukacji "secondary/secondary special", najmniej liczna natomiast do "lower secondary". Wykres potwierdza wcześniej wysnuty wniosek, że większość osób z bazy danych spłaca swoje zobowiązania.
+
+Analiza danych wykazała, że większość próby badawczej nie ma problemu ze spłacaniem kredytu. Jeżeli takie problemy występują to jest to zwykle uwarunkowanie niskimi bądź średnimi dochodami danej osoby. Zauważono także, że im dana osoba ma wyższy dochód, tym większy kredyt zaciąga. Co więcej, osoby o średnim wykształceniu to grupa najliczniejsza, co wpływa również na to, że te osoby mają problemy ze spłacaniem kredytu.
 
 ## Analiza opisowa
 
