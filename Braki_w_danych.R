@@ -418,8 +418,7 @@ ggplot(data_long_apartment, aes(x = Value)) +
   labs(title = "Dane o zamieszkiwanych nieruchomościach",
        x = "Wartość", 
        y = "Częstotliwość")
-  
-#Hipotezy
+ 
 hist(Data_hotdeck$AMT_CREDIT)
 ggstatsplot :: ggbetweenstats(
   data = Data_hotdeck,
@@ -430,6 +429,7 @@ ggstatsplot :: ggbetweenstats(
   title = "Porównanie kwot kredytów w zależności od posiadania nieruchomości"
 )
 
+#Hipotezy statystyczne
 Data_hotdeck <- Data_hotdeck %>%
   mutate(data_kat_income = binning(Data_hotdeck$AMT_INCOME_TOTAL, nbins = 5, type = "equal"))
 Data_hotdeck <- Data_hotdeck %>%
