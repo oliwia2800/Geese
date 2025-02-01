@@ -67,6 +67,7 @@ Po wybraniu zmiennych z najważniejszymi informacjami, ustalono ziarno generator
 W początkowym etapie analizy danych przystąpiono do identyfikacji braków danych.
 
 ```{r, echo=FALSE}
+NA_count <- n_miss(Data)
 NA_count
 ```
 
@@ -75,71 +76,70 @@ Na podstawie wyniku można wywnioskować, że baza danych ma 9409 braków w obse
 Następnie sprawdzono, w jakiej występują one proporcji do całego zbioru i przedstawiono ten wynik w postaci procentowej.
 
 ```{r, echo=FALSE}
+NA_proportion <- prop_miss(Data)
+NA_percentage <- pct_miss(Data)
 NA_proportion
 NA_percentage
 ```
 
-Stwierdzono, że braki danych stanowią 18,818% wszystkich obserwacji.
+Stwierdzono, że braki danych stanowią 17,107% wszystkich obserwacji.
 
 W celu dogłębniejszej ich analizy zbadano, ile jest braków w danej kolumnie oraz w jakiej proporcji procentowej w niej występują.
 
 ```{r, echo=FALSE}
+NA_summary <- miss_var_summary(Data)
 NA_summary
 ```
 
 Braki danych wystąpiły w kolumnach: COMMONAREA_AVG, YEARS_BUILD_AVG, LANDAREA_AVG, BASEMENTAREA_AVG, APARTMENTS_AVG, ENTRANCES_AVG i OCCUPATION_TYPE. Dla pozostałych kolumn nie zdiagnozowano braków.
 
-Podjęto się również wizualizacji braków danych na poniższym wykresie:
+Podjęto się również wizualizacji braków danych na poniższym wykresie.
 
 ```{r, echo=FALSE}
 vis_miss(Data, warn_large_data=FALSE)
 ```
+
+Wykres potwierdza, że braki danych występują jedynie w siedmiu kolumnach.
 
 Dodatkowym krokiem w analizie braków danych było stworzenie podsumowania, które analizuje, w ilu wierszach wystąpiło od zera do siedmiu braków danych oraz jaki jest to stosunek procentowy.
 
 ```{r, echo=FALSE}
+NA_summary_case <- miss_case_table(Data)
 NA_summary_case
 ```
 
-Podjęto się również wizualizacji braków danych na poniższym wykresie: Na podstawie braków danych, opierając się na zmiennej TARGET, stworzono mapę cieplną.
+Na podstawie braków danych, opierając się na zmiennej TARGET, stworzono mapę cieplną.
 
 ```{r, echo=FALSE}
-vis_miss(Data, warn_large_data=FALSE)
 target_heat_mapa <- gg_miss_fct(Data, fct = TARGET)
 print(target_heat_mapa)
 ```
-
-PO TYM DODAĆ GGPLOTA Z KOMPLETNOŚCIĄ DANYCH I OPISAĆ, BO TEGO TU BRAKUJE Z GŁÓWNEGO KODU
 
 Mapa cieplna ukazała procentowy udział braków danych w całym zbiorze. Skala zbudowana jest na kolorach od fioletowego do żółtego, gdzie fiolet oznacza 0%, a żółty 100%.
 
 Następnie stworzono wykres upset plot, który służy do wizualizacji braków danych lub analiz złożonych relacji między grupami cech.
 
-Oś pionowa wykresu pokazuje liczebność danych dla poszczególnych kombinacji braków w kolumnach. Najwyższe słupki wskazują najczęściej występujące zestawy braków w danych.
-
-Kropki i linie na osi poziomej poniżej słupków wskazują, które kolumny mają braki dla danej grupy.\
-W przypadku pojedynczych kropek brak dotyczy jednej kolumny, a linie między kropkami oznaczają brak danych w kilku kolumnach równocześnie.
-
-Lewy dolny wykres wyświetla całkowitą liczbę brakujących wartości dla każdej kolumny z osobna, co pozwala ocenić, które zmienne są najbardziej dotknięte brakami.
-
 ```{r, echo=FALSE}
 gg_miss_upset(Data, nsets = 122)
 ```
 
+Oś pionowa wykresu pokazuje liczebność danych dla poszczególnych kombinacji braków w kolumnach. Najwyższe słupki wskazują najczęściej występujące zestawy braków w danych.
+
+Kropki i linie na osi poziomej poniżej słupków wskazują, które kolumny mają braki dla danej grupy. W przypadku pojedynczych kropek brak dotyczy jednej kolumny, a linie między kropkami oznaczają brak danych w kilku kolumnach równocześnie.
+
+Lewy dolny wykres wyświetla całkowitą liczbę brakujących wartości dla każdej kolumny z osobna, co pozwala ocenić, które zmienne są najbardziej dotknięte brakami.
+
 Najczęstsze kombinacje braków dotyczą kilku kolumn jednocześnie (814 przypadków), co sugeruje, że brak danych może być skorelowany w tych zmiennych. Kolumny takie jak COMMONAREA_AVG_NA czy YEARS_BUILD_AVG_NA mają największe liczby braków.
 
-Podjęto się stworzenia również innej wizualizacji braków danych. Wykres po lewej przedstawia proporcje braków w zależności od TARGET. Na osi poziomej znajdują się wartości zmiennej TARGET. Natomiast na osi pionowej przedstawiona jest proporcja braków w danych.
-
-Wykres po prawej przedstawia macierz kombinacji braków. Na osi poziomej przedstawiono kombinacje braków danych w różnych kolumnach, a oś pozioma prezentuje wiersze w danych. Niebieskie pola przedstawiają komórki uzupełnione, a czerwone - braki danych. Z macierzy kombinacji braków można wywnioskować, że wzorce są wielowymiarowe, gdyż braki pojawiają się dla więcej niż jednej zmiennej. W kilku przypadkach można również stwierdzić, że braki są monotoniczne tak jak np. w ostatnim rekordzie. Można na tej podstawie przypuścić, że brak w jednej kolumnie przyczynił się do powstania braku w kolejnej. Wzorce są również w dużej mierze ze sobą połączone.
+Podjęto się stworzenia również innej wizualizacji braków danych, którą przedstawiono na rysunku poniżej.
 
 ```{r, echo=FALSE}
 VIM::aggr(Data_implications[,1:20])
 ```
 
-Na wykresie po lewej wartości zmiennej TARGET są powiązane z różnym udziałem braków w danych. Wyższe słupki przy jednej z wartości TARGET wskazują, że w tej grupie braki występują częściej.\
-Na drugim wykresie zgrupowane braki mogą sugerować, że braki w danych są skorelowane i występują wspólnie w określonych zmiennych.
+Wykres po lewej przedstawia proporcje braków w zależności od TARGET. Na osi poziomej znajdują się wartości zmiennej TARGET. Natomiast na osi pionowej przedstawiona jest proporcja braków w danych. Wartości zmiennej TARGET są powiązane z różnym udziałem braków w danych. Wyższe słupki wskazują, że w danej grupie braki występują częściej.
 
-Z obu wykresów można zatem wnioskować, że brakujące wartości mogą występować częściej dla określonych grup TARGET.
+Wykres po prawej przedstawia macierz kombinacji braków. Na osi poziomej przedstawiono kombinacje braków danych w różnych kolumnach, a oś pozioma prezentuje wiersze w danych. Niebieskie pola przedstawiają komórki uzupełnione, a czerwone - braki danych. Z macierzy kombinacji braków można wywnioskować, że wzorce są wielowymiarowe, gdyż braki pojawiają się dla więcej niż jednej zmiennej. W kilku przypadkach można również stwierdzić, że braki są monotoniczne tak jak np. w ostatnim rekordzie. Można na tej podstawie przypuścić, że brak w jednej kolumnie przyczynił się do powstania braku w kolejnej. Wzorce są również w dużej mierze ze sobą połączone. Zgrupowane braki mogą sugerować, że są one ze sobą skorelowane i występują wspólnie w określonych zmiennych.
 
 W celu pracy nad brakami danych, zamieniono wartości specjalne tj. Inf na NA. Dokonano tego za pomocą poniżej procedury:
 
@@ -157,6 +157,11 @@ for (n in colnames(Data)){
 
 Następnie przeprowadzono test Grubbsa, który sprawdza, czy w zbiorze danych występują wartości odstające.
 
+Dla testu postawiono dwie hipotezy:
+
+-   H₀: Nie ma wartości odstających w zbiorze wartości badanej zmiennej.
+-   H₁: Największa lub najmniejsza wartość w zbiorze jest outlierem.
+
 ```{r, echo=FALSE}
 test_grubbs <- function(column) {
   if (length(column) > 2) { 
@@ -172,17 +177,12 @@ results_grubbs
 
 ```
 
-Dla testu postawiono dwie hipotezy:
-
--   H₀: Nie ma wartości odstających w zbiorze wartości badanej zmiennej.
--   H₁: Największa lub najmniejsza wartość w zbiorze jest outlierem.
-
-Dla zmiennych AMT_INCOME_TOTAL, AMT_CREDIT, APARTMENTS_AVG, ENTRANCES_AVG, CNT_CHILDREN i YEARS_BUILD_AVG wartość p\<0.05, co dla poziomu istotności α=0.05 oznacza, że odrzucamy hipotezę zerową i najmniejsza lub największa wartość jest outlierem. W przypadku pozostałych zmiennych nie ma podstaw do odrzucenia hipotezy zerowej, co oznacza, że nie wykryto obserwacji odstających.
+Dla zmiennych AMT_INCOME_TOTAL, AMT_CREDIT, APARTMENTS_AVG, ENTRANCES_AVG, CNT_CHILDREN i YEARS_BUILD_AVG wartość p\<0,05, co dla poziomu istotności α=0,05 oznacza, że odrzucamy hipotezę zerową i najmniejsza lub największa wartość jest outlierem. W przypadku pozostałych zmiennych nie ma podstaw do odrzucenia hipotezy zerowej, co oznacza, że nie wykryto obserwacji odstających.
 
 Następnie skorzystano z metody Hot-deck imputation, mającej na celu uzupełnienie braków danych w posiadanym zbiorze.
 
 ```{r, echo=FALSE}
-Data_hotdeck<- Data_implications %>%
+Data_hotdeck <- Data_implications %>%
   group_by(TARGET) %>%
   group_modify(~ hotdeck(.x)) %>%
   ungroup()
@@ -266,23 +266,25 @@ Po eliminacji części błędnych danych postanowiono wykorzystać funkcję simp
 rules <- simplify_rules(rules)
 ```
 
-W celu dalszej eliminacji braków danych (0,9%) zastosowano metodę imputacji brakujących danych za pomocą algorytmu k-Nearest Neighbors (kNN), a wynik został przypisany z powrotem do tego samego zbioru danych.
+W celu dalszej eliminacji braków danych, stanowiących 0,9% całości, zastosowano metodę imputacji brakujących danych za pomocą algorytmu k-Nearest Neighbors (kNN), a wynik został przypisany z powrotem do tego samego zbioru danych.
 
 ```{r, echo=FALSE}
 Data_hotdeck <- kNN(Data_hotdeck)
 ```
 
-W uzupełnionym zbiorze danych po skorzystaniu z algorytmu kNN powstały nowe kolumny informujące o zastosowanej imputacji braków danych. Wartości w kolumnach wskazują czy dana wartość została uzupełniona. Zdecydowano się na usunięcie dodanych kolumn.
+W uzupełnionym zbiorze danych po skorzystaniu z algorytmu kNN powstały nowe kolumny informujące o zastosowanej imputacji braków danych. Wartości w kolumnach wskazują, czy dana wartość została uzupełniona. Zdecydowano się na usunięcie dodanych kolumn.
 
 ```{r, echo=FALSE}
 Data_hotdeck<- Data_hotdeck[,1:22]
 ```
 
-Upewniono się, tworząc tabelę dla kolumny ORGANIZATION_TYPE jaki jest rozkład wartości w zmiennej kategorycznej.
+Upewniono się, tworząc tabelę dla kolumny ORGANIZATION_TYPE, jaki jest rozkład wartości w zmiennej kategorycznej.
 
 ```{r, echo=FALSE}
 table(Data_hotdeck$ORGANIZATION_TYPE)
 ```
+
+Działaniem tym potwierdzono, że braki danych zostały uzupełnione.
 
 W następnym etapie projektu, skorzystano z transformacji danych. Skorzystano z procedury standaryzacji Z-score, aby ułatwić porównywanie rozkładów oraz identyfikację odstających wartości.\
 Przedstawiono wizualizację rozkładu standaryzowanych danych APARTMENTS_AVG_Z.
@@ -291,7 +293,7 @@ Przedstawiono wizualizację rozkładu standaryzowanych danych APARTMENTS_AVG_Z.
 Data_hotdeck %>% 
   mutate(APARTMENTS_AVG_Z = transform(Data_hotdeck$APARTMENTS_AVG, method = "zscore"))  %>% 
   select(APARTMENTS_AVG_Z) %>% 
-  boxplot()
+  boxplot(main = "Wykres pudełkowy dla zmiennej APARTMENTS_AVG")
 ```
 
 Wykres pokazuje, że większość danych mieści się wewnątrz pudełka. Znaczna liczba odstających wartości w górnej części wskazuje, że istnieją obserwacje, które są znacznie większe niż reszta danych. Można zauważyć sporo wartości odstających w górnej części rozkładu, co wskazuje na istnienie ekstremalnie dużych wartości w zmiennej APARTMENTS_AVG po transformacji Z-score. Mogą to być błędy lub anomalie, które wymagają dokładniejszej analizy.
@@ -303,51 +305,65 @@ find_skewness(Data_hotdeck, index=FALSE)
 find_skewness(Data_hotdeck, value=TRUE, thres=0.1)
 ```
 
-Według otrzymanych wyników zmienne, które powodują problem ze skośnością w zbiorze danych to "AMT_INCOME_TOTAL" "AMT_CREDIT", "APARTMENTS_AVG", "YEARS_BUILD_AVG", "ENTRANCES_AVG" oraz "CREDIT_LOG".
+Według otrzymanych wyników zmienne, które powodują problem ze skośnością w zbiorze danych to "AMT_INCOME_TOTAL", "AMT_CREDIT", "APARTMENTS_AVG", "YEARS_BUILD_AVG", "ENTRANCES_AVG" oraz "CREDIT_LOG".
 
 Dla poszczególnych sześciu zmiennych stworzono histogramy, aby zwizualizować ich rozkład danych. Dzięki niemu możliwe jest sprawdzenie m.in. czy rozkład jest skośny, czy występują wartości odstające, a także jakie wartości dominują. Histogramy przedstawiają kolejno analizę rozkładu dochodów, rozłożone kwoty kredytów klientów, średnią mieszkań, średni wiek budynków, średnią liczbę wejść do budynków, oraz rozłożoną wartość kredytu.
 
 ```{r, echo=FALSE}
-hist(Data_hotdeck$AMT_INCOME_TOTAL) 
-hist(Data_hotdeck$AMT_CREDIT)
-hist(Data_hotdeck$APARTMENTS_AVG)
-hist(Data_hotdeck$YEARS_BUILD_AVG)
-hist(Data_hotdeck$ENTRANCES_AVG)
-hist(Data_hotdeck$CREDIT_LOG)
+hist_vars <- c("AMT_INCOME_TOTAL", "AMT_CREDIT", "APARTMENTS_AVG", 
+               "BASEMENTAREA_AVG", "YEARS_BUILD_AVG", "COMMONAREA_AVG", 
+               "ENTRANCES_AVG", "LANDAREA_AVG")
+
+data_long <- Data_hotdeck %>%
+  select(all_of(hist_vars)) %>%
+  pivot_longer(cols = everything(), names_to = "Variable", values_to = "Value")
+
+ggplot(data_long, aes(x = Value)) +
+  geom_histogram(bins = 30, fill = "steelblue", color = "black") +
+  facet_wrap(~Variable, scales = "free") +
+  theme_minimal() +
+  labs(title = "Skośność zmiennych",
+       x = "Wartość", 
+       y = "Częstotliwość")
 ```
 
 Wcześniejsze kroki analizy potwierdziły się. Histogramy pokazały, że aby przeprowadzić dalszą analizę z wyszczególnionymi zmiennymi, ze względu na występującą skośność konieczne jest dokonanie transformacji zmiennych. Zdecydowano się na dokonanie jej przy użyciu logarytmu.\
 Na wyszczególnionych zmiennych dokonano transformacji oraz przedstawiono wizualizację.
 
 ```{r, echo=FALSE}
-AIT <- transform(Data_hotdeck$AMT_INCOME_TOTAL, method = "log")
-plot(AIT)
-AC <- transform(Data_hotdeck$AMT_CREDIT, method = "log")
-plot(AC)
-AA <- transform(Data_hotdeck$APARTMENTS_AVG, method = "log")
-plot(AA)
-YBA <- transform(Data_hotdeck$YEARS_BUILD_AVG, method = "log")
-plot(YBA)
-EA <- transform(Data_hotdeck$ENTRANCES_AVG, method = "log")
-plot(EA)
-CL <- transform(Data_hotdeck$CREDIT_LOG, method = "log")
-plot(CL)
+Data_hotdeck <- Data_hotdeck %>%
+  mutate(AMT_INCOME_TOTAL = log1p(AMT_INCOME_TOTAL),
+         AMT_CREDIT = log1p(AMT_CREDIT),
+         APARTMENTS_AVG = log1p(APARTMENTS_AVG),
+         BASEMENTAREA_AVG = log1p(BASEMENTAREA_AVG),
+         YEARS_BUILD_AVG = log1p(YEARS_BUILD_AVG),
+         COMMONAREA_AVG = log1p(COMMONAREA_AVG),
+         ENTRANCES_AVG = log1p(ENTRANCES_AVG),
+         LANDAREA_AVG = log1p(LANDAREA_AVG))
+```
+
+```{r, echo=FALSE}
+hist_vars2 <- c("AMT_INCOME_TOTAL", "AMT_CREDIT", "APARTMENTS_AVG", 
+               "BASEMENTAREA_AVG", "YEARS_BUILD_AVG", "COMMONAREA_AVG", 
+               "ENTRANCES_AVG", "LANDAREA_AVG")
+
+data_long2 <- Data_hotdeck %>%
+  select(all_of(hist_vars2)) %>%
+  pivot_longer(cols = everything(), names_to = "Variable", values_to = "Value")
+
+ggplot(data_long2, aes(x = Value)) +
+  geom_histogram(bins = 30, fill = "steelblue", color = "black") +
+  facet_wrap(~Variable, scales = "free") +
+  theme_minimal() +
+  labs(title = "Skośność zmiennych",
+       x = "Wartość", 
+       y = "Częstotliwość")
 ```
 
 Logarytmowanie spowodowało, że dane zostały "spłaszczone", pozwoliło to na zmniejszenie różnic pomiędzy wartościami dużymi i bardzo dużymi, co wpłynęło na bardziej symetryczny rozkładu.
 
 Kolejnym etapem projektu było wykonanie procedury "binningu", aby przekształcić zmienne ilościowe w kategoryczne. Zdecydowano się na zastosowanie tej procedury na dwóch zmiennych, pierwszej dotyczącej dochodu całkowitego oraz drugiej związanej z kwotą kredytu. Obie zmienne podzielono na pięć równych przedziałów o takiej samej szerokości.\
 Zmienne już kategoryczne "AMT_INCOME_TOTAL" oraz "AMT_CREDIT" przedstawiono na wykresie.
-
-```{r, echo=FALSE}
-data_kat_income <- binning(Data_hotdeck$AMT_INCOME_TOTAL, nbins = 5, type = "equal")
-summary(data_kat_income)
-plot(data_kat_income)
-
-data_kat_credit <- binning(Data_hotdeck$AMT_CREDIT, nbins = 5, type = "equal")
-summary(data_kat_credit)
-plot(data_kat_credit)
-```
 
 ## Wizualizacja danych
 
@@ -571,9 +587,8 @@ W celu dokładnego przeanalizowania danych z powyższej tabeli stworzono wykresy
 
 ```{r, echo=FALSE}
 ggplot(Data_hotdeck, aes(x = INCOME_LOG, y = CREDIT_LOG)) +
-  geom_point() +
+  geom_point(color = "steelblue") +
   facet_wrap(TARGET_2 ~ NAME_EDUCATION_TYPE, ncol = 4) +
-  scale_fill_brewer(palette = "Set1") +
   ggtitle("Problemy oraz brak problemów ze spłatą kredytu w zależności od poziomu edukacji kredytobiorcy") +
   theme_minimal()
 ```
@@ -582,7 +597,7 @@ Z wykresów można wywnioskować, że najliczniejsza grupa niespłacająca kredy
 
 Wykres potwierdza wcześniej wysnuty wniosek, że większość osób z bazy danych spłaca swoje zobowiązania.
 
-Analiza danych wykazała, że większość próby badawczej nie ma problemu ze spłacaniem kredytu. Jeżeli takie problemy występują to jest to zwykle uwarunkowanie niskimi bądź średnimi dochodami danej osoby. Zauważono także, że im dana osoba ma wyższy dochód, tym większy kredyt zaciąga. Co więcej, osoby o średnim wykształceniu to grupa najliczniejsza, co wpływa również na to, że te osoby mają problemy ze spłacaniem kredytu.
+Analiza danych wykazała, że większość próby badawczej nie ma problemu ze spłacaniem kredytu. Jeżeli takie problemy występują, to jest to zwykle uwarunkowane niskimi bądź średnimi dochodami danej osoby. Zauważono także, że im dana osoba ma wyższy dochód, tym większy kredyt zaciąga. Co więcej, wywnioskowano, że największe problemy ze spłatą kredytu znajdują się w grupach o niskim lub średnim wykształceniu.
 
 ## Analiza opisowa
 
@@ -738,23 +753,6 @@ Mediana dla powierzchni mieszkań, piwnic i działek jest nieco wyższa w grupie
 
 Kurtoza wskazuje na silną koncentrację danych wokół średnich wartości w obu grupach, z wyraźnie większą koncentracją w grupie spłacających kredyt. Wartości kurtozy są szczególnie wysokie w przypadku zmiennych takich jak APARTMENTS_AVG czy BASEMENTAREA_AVG, co sugeruje, że w tych grupach pojawiają się skrajne przypadki (np. bardzo duże mieszkania, czy piwnice).
 
-Aby stworzyć wizualizację rozkładu danych oraz porównać dwie grupy pod kątem różnic w wartościach stworzono wykres skrzypcowy. Porównuje on kwoty kredytów (AMT_CREDIT) w zależności od posiadania nieruchomości (FLAG_OWN_REALTY).
-
-```{r, echo=FALSE}
-hist(Data_hotdeck$AMT_CREDIT)
-ggstatsplot :: ggbetweenstats(
-  data = Data_hotdeck,
-  x = FLAG_OWN_REALTY,
-  y = AMT_CREDIT,
-  type = "np",
-  palette = "Set1",
-  title = "Porównanie kwot kredytów w zależności od posiadania nieruchomości"
-)
-```
-
-Oś pozioma (X) przedstawia kategorię: N (Nie posiada nieruchomości) i Y (Posiada nieruchomość). Oś pionowa (Y) reprezentuje kwotę kredytu, gdzie kolory reprezentują dwie grupy: czerwony (osoby nieposiadające nieruchomości), niebieski (osoby posiadające nieruchomość).\
-Z wykresu można wywnioskować, że osoby nieposiadające nieruchomości zaciągają nieco wyższe kredyty (mediana = 536 tys.) niż osoby posiadające nieruchomości (mediana = 495 tys.). Rozkład kredytów w obu grupach jest zbliżony, ale osoby bez nieruchomości mają więcej ekstremalnych wartości. Wartość p = 3.39e-04 sugeruje, że różnica jest istotna statystycznie, ale efekt nie jest duży (r_biserial = 0.09).
-
 ## Testy statystyczne - wnioskowanie
 
 W ramach niniejszego rozdziału przeprowadzono analizę statystyczną zbioru danych. Ma ona na celu zbadanie zależności pomiędzy wybranymi zmiennymi. Wykorzystane metody statystyczne pozwolą na ocenę istotności różnic oraz zidentyfikowanie potencjalnych zależności w danych.
@@ -781,13 +779,15 @@ Hipotezy statystyczne:
 -   H₁: Istnieje istotna zależność między poziomem edukacji, a problemami ze spłatą kredytu. Pewne grupy edukacyjne mają wyraźnie większe lub mniejsze ryzyko problemów kredytowych.
 
 ```{r, echo=FALSE}
-ggpiestats(
+ggbarstats(
   data = Data_hotdeck,
-  x = data_kat_credit,
-  y = NAME_FAMILY_STATUS,
-  palette = "Set1",
-  title = "Rozkład pięciu przedziałów kredytów w zależności od statusu rodziny"
-)  
+  x = NAME_EDUCATION_TYPE,
+  y = TARGET_2,
+  caption = "test",
+  package = "ggsci",
+  palette = "default_igv",
+  title = "Rozkład poziomu edukacji w zależności od problemów ze spłatą kredytu"
+)
 ```
 
 Wartość p=0.01 wskazuje na to, że poziom edukacji wpływa na problemy ze spłatą kredytu. Współczynnik V Craméra (0.06) sugeruje słabą zależność między zmiennymi. P-value jest mniejsze niż poziom istotności α=0.05. Odrzucamy hipotezę zerową. Oznacza to, że istnieje statystycznie istotna zależność między poziomem edukacji, a problemami ze spłatą kredytu.
@@ -850,5 +850,23 @@ ggcoefstats(mod, title = "Test Anova dla zmiennej TARGET w zależności od typu 
 
 Typ zawodu (OCCUPATION_TYPE) ma istotny wpływ na to, czy klient ma problemy ze spłatą kredytu, ponieważ wartość p-value jest bardzo mała (6.14e-10), odrzucamy hipotezę zerową. Sytuacja mieszkaniowa (NAME_HOUSING_TYPE) również ma istotny wpływ na problemy ze spłatą kredytu, z wartością p-value wynoszącą 0.00293, również odrzucamy w takim wypadku hipotezę zerową.\
 Interakcja między typem zawodu, a sytuacją mieszkaniową jest istotna statystycznie (p = 0.01130), oznacza to że wpływ jednego czynnika na TARGET (problemy ze spłatą kredytu) zależy od poziomu drugiego czynnika. Istotna interakcja pokazuje, że zawód i sytuacja mieszkaniowa razem mają bardziej złożony wpływ na to, czy klient ma problemy ze spłatą kredytu, niż gdybyśmy oceniali te zmienne oddzielnie.
+
+# DO POPRAWY!!!!!!!!!!!!!!!!!!!! 
+
+Aby stworzyć wizualizację rozkładu danych oraz porównać dwie grupy pod kątem różnic w wartościach stworzono wykres skrzypcowy. Porównuje on kwoty kredytów (AMT_CREDIT) w zależności od posiadania nieruchomości (FLAG_OWN_REALTY).
+
+```{r, echo=FALSE}
+ggstatsplot :: ggbetweenstats(
+  data = Data_hotdeck,
+  x = FLAG_OWN_REALTY,
+  y = AMT_CREDIT,
+  type = "np",
+  palette = "Set1",
+  title = "Porównanie kwot kredytów w zależności od posiadania nieruchomości"
+)
+```
+
+Oś pozioma (X) przedstawia kategorię: N (Nie posiada nieruchomości) i Y (Posiada nieruchomość). Oś pionowa (Y) reprezentuje kwotę kredytu, gdzie kolory reprezentują dwie grupy: czerwony (osoby nieposiadające nieruchomości), niebieski (osoby posiadające nieruchomość).\
+Z wykresu można wywnioskować, że osoby nieposiadające nieruchomości zaciągają nieco wyższe kredyty (mediana = 536 tys.) niż osoby posiadające nieruchomości (mediana = 495 tys.). Rozkład kredytów w obu grupach jest zbliżony, ale osoby bez nieruchomości mają więcej ekstremalnych wartości. Wartość p = 3.39e-04 sugeruje, że różnica jest istotna statystycznie, ale efekt nie jest duży (r_biserial = 0.09).
 
 ## Podsumowanie i wnioski końcowe

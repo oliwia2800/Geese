@@ -65,14 +65,6 @@ Data <- Data %>%
   mutate(INCOME_LOG = log(AMT_INCOME_TOTAL)) %>%
   mutate(CREDIT_LOG = log(AMT_CREDIT))
 
-ggplot(data = Data, aes(x = INCOME_LOG, y = CREDIT_LOG)) + 
-  geom_point() +
-  geom_miss_point() +
-  scale_fill_brewer(palette = "Set1") +
-  theme_minimal()+
-  ggtitle("Wykres ilustrujący kompletność danych dla zmiennych INCOME_LOG i CREDIT_LOG") +
-  theme(plot.title = element_text(hjust = 0.5)) 
-
 is.special <- function(x){if(is.numeric(x)) !is.finite(x) else is.na(x)}
 sapply(Data, is.special)
 for(n in colnames(Data)){is.na(Data[[n]]) <- is.special(Data[[n]])}
@@ -170,69 +162,47 @@ Data_hotdeck$LANDAREA_AVG <-as.numeric(Data_hotdeck$LANDAREA_AVG)
 find_skewness(Data_hotdeck, index=FALSE)      
 find_skewness(Data_hotdeck, value=TRUE, thres=0.1)
 
-hist(Data_hotdeck$AMT_INCOME_TOTAL, 
-     main = "Rozkład całkowitego dochodu", 
-     xlab = "Całkowity dochód", 
-     ylab = "Częstotliwość")
+hist_vars <- c("AMT_INCOME_TOTAL", "AMT_CREDIT", "APARTMENTS_AVG", 
+               "BASEMENTAREA_AVG", "YEARS_BUILD_AVG", "COMMONAREA_AVG", 
+               "ENTRANCES_AVG", "LANDAREA_AVG")
 
-hist(Data_hotdeck$AMT_CREDIT, 
-     main = "Rozkład całkowitej kwoty kredytu", 
-     xlab = "Kwota kredytu", 
-     ylab = "Częstotliwość")
+data_long <- Data_hotdeck %>%
+  select(all_of(hist_vars)) %>%
+  pivot_longer(cols = everything(), names_to = "Variable", values_to = "Value")
 
-hist(Data_hotdeck$APARTMENTS_AVG, 
-     main = "Rozkład powierzchni nieruchomości", 
-     xlab = "Znormalizowana powierzchnia", 
-     ylab = "Częstotliwość")
+ggplot(data_long, aes(x = Value)) +
+  geom_histogram(bins = 30, fill = "steelblue", color = "black") +
+  facet_wrap(~Variable, scales = "free") +
+  theme_minimal() +
+  labs(title = "Skośność zmiennych",
+       x = "Wartość", 
+       y = "Częstotliwość")
 
-hist(Data_hotdeck$BASEMENTAREA_AVG, 
-     main = "Rozkład powierzchni piwnicy", 
-     xlab = "Znormalizowana powierzchnia", 
-     ylab = "Częstotliwość")
+Data_hotdeck <- Data_hotdeck %>%
+  mutate(AMT_INCOME_TOTAL = log1p(AMT_INCOME_TOTAL),
+         AMT_CREDIT = log1p(AMT_CREDIT),
+         APARTMENTS_AVG = log1p(APARTMENTS_AVG),
+         BASEMENTAREA_AVG = log1p(BASEMENTAREA_AVG),
+         YEARS_BUILD_AVG = log1p(YEARS_BUILD_AVG),
+         COMMONAREA_AVG = log1p(COMMONAREA_AVG),
+         ENTRANCES_AVG = log1p(ENTRANCES_AVG),
+         LANDAREA_AVG = log1p(LANDAREA_AVG))
 
-hist(Data_hotdeck$YEARS_BUILD_AVG,
-     main = "Rozkład wieku nieruchomości", 
-     xlab = "Znormalizowany wiek", 
-     ylab = "Częstotliwość")
+hist_vars2 <- c("AMT_INCOME_TOTAL", "AMT_CREDIT", "APARTMENTS_AVG", 
+               "BASEMENTAREA_AVG", "YEARS_BUILD_AVG", "COMMONAREA_AVG", 
+               "ENTRANCES_AVG", "LANDAREA_AVG")
 
-hist(Data_hotdeck$COMMONAREA_AVG, 
-     main = "Rozkład powierzchni części wspólnej", 
-     xlab = "Znormalizowana powierzchnia", 
-     ylab = "Częstotliwość")
+data_long2 <- Data_hotdeck %>%
+  select(all_of(hist_vars2)) %>%
+  pivot_longer(cols = everything(), names_to = "Variable", values_to = "Value")
 
-hist(Data_hotdeck$ENTRANCES_AVG,
-     main = "Rozkład liczby wejść", 
-     xlab = "Znormalizowana liczba wejść", 
-     ylab = "Częstotliwość")
-
-hist(Data_hotdeck$LANDAREA_AVG,
-     main = "Rozkład powierzchnia terenu posesji", 
-     xlab = "Znormalizowana powierzchnia terenu posesji", 
-     ylab = "Częstotliwość")
-
-AIT <- transform(Data_hotdeck$AMT_INCOME_TOTAL, method = "log")
-plot(AIT)
-
-AC <- transform(Data_hotdeck$AMT_CREDIT, method = "log")
-plot(AC)
-
-AA <- transform(Data_hotdeck$APARTMENTS_AVG, method = "log")
-plot(AA)
-
-BA <- transform(Data_hotdeck$BASEMENTAREA_AVG, method = "log")
-plot(BA)
-
-YBA <- transform(Data_hotdeck$YEARS_BUILD_AVG, method = "log")
-plot(YBA)
-
-CA <- transform(Data_hotdeck$COMMONAREA_AVG, method = "log")
-plot(CA)
-
-EA <- transform(Data_hotdeck$ENTRANCES_AVG, method = "log")
-plot(EA)
-
-LA <- transform(Data_hotdeck$LANDAREA_AVG, method = "log")
-plot(LA)
+ggplot(data_long2, aes(x = Value)) +
+  geom_histogram(bins = 30, fill = "steelblue", color = "black") +
+  facet_wrap(~Variable, scales = "free") +
+  theme_minimal() +
+  labs(title = "Skośność zmiennych",
+       x = "Wartość", 
+       y = "Częstotliwość")
 
 #Wizualizacje
 theme_set(theme_few())
@@ -302,9 +272,8 @@ Data_hotdeck %>%
   mutate(Procent_nie_spłaca = (Nie_spłaca / Liczba_obserwacji) * 100) 
 
 ggplot(Data_hotdeck, aes(x = INCOME_LOG, y = CREDIT_LOG)) +
-  geom_point() +
+  geom_point(color = "steelblue") +
   facet_wrap(TARGET_2 ~ NAME_EDUCATION_TYPE, ncol = 4) +
-  scale_fill_brewer(palette = "Set1") +
   ggtitle("Problemy oraz brak problemów ze spłatą kredytu w zależności od poziomu edukacji kredytobiorcy") +
   theme_minimal()
 
