@@ -176,7 +176,8 @@ ggplot(data_long, aes(x = Value)) +
   theme_minimal() +
   labs(title = "Skośność zmiennych",
        x = "Wartość", 
-       y = "Częstotliwość")
+       y = "Częstotliwość")+ 
+  theme(plot.title = element_text(hjust = 0.5))
 
 Data_hotdeck <- Data_hotdeck %>%
   mutate(AMT_INCOME_TOTAL = log1p(AMT_INCOME_TOTAL),
@@ -202,7 +203,8 @@ ggplot(data_long2, aes(x = Value)) +
   theme_minimal() +
   labs(title = "Skośność zmiennych",
        x = "Wartość", 
-       y = "Częstotliwość")
+       y = "Częstotliwość")+ 
+  theme(plot.title = element_text(hjust = 0.5))
 
 #Wizualizacje
 theme_set(theme_few())
@@ -224,14 +226,16 @@ ggplot(pie_chart) +
   coord_fixed() +
   scale_fill_brewer(palette = "Set1") +
   ggtitle("Udział osób mających problemy ze spłatą kredytu i bez problemów ze spłatą kredytu w próbie") +
-  theme_minimal()
+  theme_minimal()+ 
+  theme(plot.title = element_text(hjust = 0.5))
 
 ggplot(Data_hotdeck, aes(x = INCOME_LOG, fill = TARGET_2)) +
   geom_histogram(binwidth = 0.25) +
   xlab("Dochód") +
   ggtitle("Udział osób mających problem ze spłatą kredytu w grupie dochodowej") +
   scale_fill_brewer(palette = "Set1") +
-  theme_minimal()
+  theme_minimal()+ 
+  theme(plot.title = element_text(hjust = 0.5))
 
 ggplot(Data_hotdeck, aes(x = INCOME_LOG, y = CREDIT_LOG, color = TARGET_2))+
   geom_point() +
@@ -239,7 +243,8 @@ ggplot(Data_hotdeck, aes(x = INCOME_LOG, y = CREDIT_LOG, color = TARGET_2))+
   ylab("Wielkość kredytu") +
   ggtitle("Zależność wielkości kredytu od dochodów") +
   scale_fill_brewer(palette = "Set1") +
-  theme_minimal()
+  theme_minimal()+ 
+  theme(plot.title = element_text(hjust = 0.5))
 
 Data_hotdeck %>%
   group_by(NAME_CONTRACT_TYPE) %>%
@@ -253,7 +258,8 @@ ggplot(Data_hotdeck, aes(x = NAME_CONTRACT_TYPE, fill = TARGET_2)) +
   xlab("Nazwa kontraktu") +
   ggtitle("Udział osób mających problem ze spłatą kredytu w zależności od rodzaju kontraktu") +
   scale_fill_brewer(palette = "Set1") +
-  theme_minimal()
+  theme_minimal()+ 
+  theme(plot.title = element_text(hjust = 0.5))
 
 ggplot(Data_hotdeck, aes(x = TARGET_2, y = CREDIT_LOG, fill = TARGET_2)) +
   geom_violin(trim = FALSE) +
@@ -262,7 +268,8 @@ ggplot(Data_hotdeck, aes(x = TARGET_2, y = CREDIT_LOG, fill = TARGET_2)) +
   labs(title = "Wielkość kredytu ze względu na grupy z problemami oraz bez problemów ze spłatą kredytów", 
        x = "", y = "Wielkość kredytu") +
   scale_fill_brewer(palette = "Set1") +
-  theme_minimal()
+  theme_minimal()+ 
+  theme(plot.title = element_text(hjust = 0.5))
 
 Data_hotdeck %>%
   group_by(NAME_EDUCATION_TYPE) %>%
@@ -275,7 +282,8 @@ ggplot(Data_hotdeck, aes(x = INCOME_LOG, y = CREDIT_LOG)) +
   geom_point(color = "steelblue") +
   facet_wrap(TARGET_2 ~ NAME_EDUCATION_TYPE, ncol = 4) +
   ggtitle("Problemy oraz brak problemów ze spłatą kredytu w zależności od poziomu edukacji kredytobiorcy") +
-  theme_minimal()
+  theme_minimal()+ 
+  theme(plot.title = element_text(hjust = 0.5))
 
 #Próba badawcza
 pie_chart_g <- Data_hotdeck %>%
@@ -292,14 +300,16 @@ ggplot(pie_chart_g) +
   coord_fixed() +
   scale_fill_brewer(palette = "Set1") +
   ggtitle("Udział kobiet i mężczyzn w próbie badawczej") +
-  theme_minimal()
+  theme_minimal()+ 
+  theme(plot.title = element_text(hjust = 0.5))
 
 ggplot(Data_hotdeck, aes(x = INCOME_LOG, fill = NAME_FAMILY_STATUS)) +
   geom_boxplot() +
   xlab("Dochody") +
   ggtitle("Dochód całkowity w zależności od statusu rodziny") +
   scale_fill_brewer(palette = "Set1") +
-  theme_minimal()
+  theme_minimal()+ 
+  theme(plot.title = element_text(hjust = 0.5))
 geom_boxplot()
 
 table(Data_hotdeck$CNT_CHILDREN) 
@@ -315,14 +325,17 @@ ggplot(Data_hotdeck, aes(x = NAME_HOUSING_TYPE, fill = HAS_CHILDREN)) +
   xlab("Typ nieruchomości") +
   ggtitle("Udział osób posiadających dzieci w zależności od typu zamieszkanej nieruchomości") +
   scale_fill_brewer(palette = "Set1") +
-  theme_minimal()
+  theme_minimal()+ 
+  theme(plot.title = element_text(hjust = 0.5))
 
 ggplot(Data_hotdeck, aes(x = OCCUPATION_TYPE, fill = NAME_EDUCATION_TYPE)) +
   geom_bar() +
   xlab("Typ wykonywanego zawodu") +
   ggtitle("Udział osób z danym wykształceniem w zależności od typu wykonywanego zawodu") +
   scale_fill_brewer(palette = "Set1") +
-  theme_minimal()
+  theme_minimal()+ 
+  theme(plot.title = element_text(hjust = 0.5))
+
 apartment_vars <- c("APARTMENTS_AVG", "BASEMENTAREA_AVG", 
                     "YEARS_BUILD_AVG", "COMMONAREA_AVG", 
                     "ENTRANCES_AVG", "LANDAREA_AVG")
@@ -337,7 +350,8 @@ ggplot(data_long_apartment, aes(x = Value)) +
   theme_minimal() +
   labs(title = "Dane o zamieszkiwanych nieruchomościach",
        x = "Wartość", 
-       y = "Częstotliwość")
+       y = "Częstotliwość") + 
+  theme(plot.title = element_text(hjust = 0.5))
 
 #Statystyki opisowe
 corrplot(cor(Data_hotdeck[c("TARGET","CNT_CHILDREN", "AMT_INCOME_TOTAL", "AMT_CREDIT", "REGION_RATING_CLIENT", 
@@ -417,7 +431,8 @@ ggplot(data_long_apartment, aes(x = Value)) +
   theme_minimal() +
   labs(title = "Dane o zamieszkiwanych nieruchomościach",
        x = "Wartość", 
-       y = "Częstotliwość")
+       y = "Częstotliwość") +
+  theme(plot.title = element_text(hjust = 0.5))
  
 hist(Data_hotdeck$AMT_CREDIT)
 ggstatsplot :: ggbetweenstats(
@@ -426,8 +441,8 @@ ggstatsplot :: ggbetweenstats(
   y = AMT_CREDIT,
   type = "np",
   palette = "Set1",
-  title = "Porównanie kwot kredytów w zależności od posiadania nieruchomości"
-)
+  title = "Porównanie kwot kredytów w zależności od posiadania nieruchomości") + 
+  theme(plot.title = element_text(hjust = 0.5))
 
 #Hipotezy statystyczne
 Data_hotdeck <- Data_hotdeck %>%
@@ -451,7 +466,8 @@ ggbarstats(
   package = "ggsci",
   palette = "default_igv",
   title = "Rozkład poziomu edukacji w zależności od problemów ze spłatą kredytu"
-)
+)+ 
+  theme(plot.title = element_text(hjust = 0.5))
 
 ggpiestats(
   data = Data_hotdeck,
@@ -459,11 +475,13 @@ ggpiestats(
   y = NAME_FAMILY_STATUS,
   palette = "Set1",
   title = "Rozkład pięciu przedziałów kredytów w zależności od statusu rodziny"
-)  
+)  + 
+  theme(plot.title = element_text(hjust = 0.5))
 
 mod <- aov(
   TARGET ~ OCCUPATION_TYPE * NAME_HOUSING_TYPE,
   data = Data_hotdeck
 )
 summary(mod)
-ggcoefstats(mod, title = "Test Anova dla zmiennej TARGET w zależności od typu zawodu i typu nieruchomości")
+ggcoefstats(mod, title = "Test Anova dla zmiennej TARGET w zależności od typu zawodu i typu nieruchomości")+ 
+  theme(plot.title = element_text(hjust = 0.5))
