@@ -60,7 +60,7 @@ W pierwszym etapie analizy zapoznano się z danymi. Baza składała się z 250 0
 
 -   LANDAREA_AVG - średnia znormalizowana powierzchnia terenu posesji.
 
-Po wybraniu zmiennych z najważniejszymi informacjami, ustalono ziarno generatora i wylosowano 2500 obserwacji do dalszej analizy. Jako najbardziej istotną uznano zmienną binarną TARGET, która mówi o tym, czy dana osoba regularnie spłaca kredyt.\
+Po wybraniu zmiennych z najważniejszymi informacjami, ustalono ziarno generatora i wylosowano 2500 obserwacji do dalszej analizy. Jako najbardziej istotną uznano zmienną binarną TARGET, która mówi o tym, czy dana osoba regularnie spłaca kredyt.
 
 ## Data Wrangling
 
@@ -72,7 +72,7 @@ NA_count
 
 Na podstawie wyniku można wywnioskować, że baza danych ma 9409 braków w obserwacjach.
 
-Następnie sprawdzono, w jakiej występują one proporcji do całego zbioru i przedstawiono ten wynik w postaci procentowej.\
+Następnie sprawdzono, w jakiej występują one proporcji do całego zbioru i przedstawiono ten wynik w postaci procentowej.
 
 ```{r, echo=FALSE}
 NA_proportion
@@ -455,6 +455,8 @@ Z analizy próby badawczej można wywnioskować, że jej większość stanowią 
 
 ### Analiza danych
 
+#### Spłata kredytu
+
 Po określeniu próby badawczej przystąpiono do wizualizacji danych dotyczących kredytów, jakie zaciągali kredytobiorcy. W celu skonstruowania pierwszej wizualizacji policzono liczbę osób, które nie spłacają kredytu oraz tych, które go spłacają i na tej podstawie stworzono nową tabelę. Następnie wykorzystano te dane i zaprezentowano je na wykresie kołowym.
 
 ```{r, echo=FALSE}
@@ -474,11 +476,13 @@ ggplot(pie_chart) +
 
 Na przedstawionym wykresie można zauważyć, że zdecydowana większość analizowanych osób spłaca kredyt.
 
+#### Spłata kredytu a grupa dochodowa
+
 Kolejna wizualizacja prezentuje udział osób mających problem ze spłatą kredytu w grupie dochodowej.
 
 ```{r, echo=FALSE}
 ggplot(Data_hotdeck, aes(x = INCOME_LOG, fill = TARGET_2)) +
-  geom_histogram() +
+  geom_histogram(binwidth = 0.25) +
   xlab("Dochód") +
   ggtitle("Udział osób mających problem ze spłatą kredytu w grupie dochodowej") +
   scale_fill_brewer(palette = "Set1") +
@@ -489,32 +493,7 @@ Analizując wykres można powiedzieć, że większość klientów mieści się w
 
 Dochód jest istotnym czynnikiem wpływającym na zdolność do spłaty kredytu. Klienci z niższych grup dochodowych są bardziej narażeni na trudności, podczas gdy osoby z wyższymi dochodami rzadziej mają problemy z regulowaniem zobowiązań.
 
-Następnie stworzono wykres punktowy przedstawiający zależność zlogarytmowanej zmiennej "wielkość kredytu" od zlogarytowanej wartości "dochodów". Dodatkowo, na wykresie rozróżniono płeć kolorem punktów. Kobiety zaznaczono kolorem pomarańczowym, mężczyzn kolorem niebieskim.
-
-```{r, echo=FALSE}
-ggplot(Data_hotdeck, aes(x = INCOME_LOG, y = CREDIT_LOG, color = CODE_GENDER))+
-  geom_point() +
-  xlab("Dochody") +
-  ylab("Wielkość kredytu") +
-  ggtitle("Zależność wielkości kredytu od dochodów") +
-  scale_fill_brewer(palette = "Set1") +
-  theme_minimal()
-```
-
-Z wykresu można wywnioskować, że im więcej zarabia dany kredytobiorca tym większy kredyt bierze. Punkty reprezentujące zarówno mężczyzn, jak i kobiety są rozproszone po całym wykresie i trudno dostrzec jakąkolwiek zależność pomiędzy przynależnością do danej płci. Można zaobserwować wiele punktów odstających, niezgodnych z ogólnym trendem.
-
-Kolejnym wykresem, który stworzono był wykres słupkowy pokazujący udział osób mających problem ze spłatą kredytu w zależności od rodzaju kontraktu.
-
-```{r, echo=FALSE}
-ggplot(Data_hotdeck, aes(x = NAME_CONTRACT_TYPE, fill = TARGET_2)) +
-  geom_bar() +
-  xlab("Nazwa kontraktu") +
-  ggtitle("Udział osób mających problem ze spłatą kredytu w zależności od rodzaju kontraktu") +
-  scale_fill_brewer(palette = "Set1") +
-  theme_minimal()
-```
-
-W danych można było wyróżnić dwa rodzaje kontraktów: kredyty odnawialne oraz pożyczki gotówkowe. Zdecydowaną większość stanowią pożyczki gotówkowe, bo jest ich ponad dwa tysiące, natomiast kredyty odnawialne stanowią niewielką liczbę rekordów. Na stworzonym wykresie można zaobserwować zależność, mówiącą o tym, że większość osób spłaca swoje zobowiązania. Na wykresach zaznaczono te osoby kolorem niebieskim. Zarówno na słupku dotyczącym pożyczek gotówkowych, jak i tym z kredytami odnawialnymi, większość obszaru słupka jest niebieska.
+#### Wielkość kredytu a spłata kredytu
 
 Kolejnym krokiem analizy było stworzenie wykresów skrzypcowych dla osób, które spłacają i nie spłacają swoich zobowiązań, w zależności od wielkości zaciągniętego zobowiązania.
 
@@ -531,7 +510,64 @@ ggplot(Data_hotdeck, aes(x = TARGET_2, y = CREDIT_LOG, fill = TARGET_2)) +
 
 Grupę osób mających problem ze spłatą zobowiązania przedstawiono na czerwonym wykresie. Średnia zlogarytmowana wartość kredytu dla tej grupy wynosi około trzynastu. Wartości są skoncentrowane, co może oznaczać, że problem ze spłacaniem zobowiązań mają kredytobiorcy o podobnej wartość kredytu. Wykres niebieski przedstawia grupę osób, które regularnie spłacają swoje zobowiązania. Średnia wartość kredytu jest podobna do grupy niespłacającej zobowiązań. To, co różni oba wykresy to ich zakres. W przypadku grupy spłacającej wartości zaciągniętego kredytu są bardziej zróżnicowane i występuje więcej tych powyżej wartości 13,5.
 
-W celu dokładnego przeanalizowania danych stworzono także wykresy łączące w sobie informacje o poziomie edukacji, wielkości zaciągniętego kredytu oraz spłacania kredytu przez daną osobę.
+#### Wielkość kredytu a wielkość dochodów
+
+Następnie stworzono wykres punktowy przedstawiający zależność zlogarytmowanej zmiennej "wielkość kredytu" od zlogarytowanej wartości "dochodów". Dodatkowo, na wykresie problemy ze spłatą i spłacanie kredytu kolorem punktów.
+
+```{r, echo=FALSE}
+ggplot(Data_hotdeck, aes(x = INCOME_LOG, y = CREDIT_LOG, color = TARGET_2))+
+  geom_point() +
+  xlab("Dochody") +
+  ylab("Wielkość kredytu") +
+  ggtitle("Zależność wielkości kredytu od dochodów") +
+  scale_fill_brewer(palette = "Set1") +
+  theme_minimal()
+```
+
+Z wykresu można wywnioskować, że im więcej zarabia dany kredytobiorca tym większy kredyt bierze. Dominują osoby spłacające kredyt. Można zaobserwować wiele punktów odstających, niezgodnych z ogólnym trendem.
+
+#### Spłata kredytu a rodzaj kontraktu
+
+W następnej kolejności podjęto się analizy zmiennej TARGET_2 w zależności od rodzaju kontraktu. Procentowy rozkład osób niespłacających kredyt w tych grupach przedstawiono w poniższej tabeli.
+
+```{r, echo=FALSE}
+Data_hotdeck %>%
+  group_by(NAME_CONTRACT_TYPE) %>%
+  summarise(Liczba_obserwacji = n(),
+            Spłaca = sum(TARGET_2 == "Spłaca"),
+            Nie_spłaca = sum(TARGET_2 == "Problemy ze spłatą")) %>%
+  mutate(Procent_nie_spłaca = (Nie_spłaca / Liczba_obserwacji) * 100)
+```
+
+Z tabeli wynika, że nie istnieje widoczna różnica osób niespłacających kredyt w analizowanych grupach kontraktowych. Dane te zwizualizowano w postaci wykresu słupkowego pokazującego udział osób mających problem ze spłatą kredytu w zależności od rodzaju kontraktu.
+
+```{r, echo=FALSE}
+ggplot(Data_hotdeck, aes(x = NAME_CONTRACT_TYPE, fill = TARGET_2)) +
+  geom_bar() +
+  xlab("Nazwa kontraktu") +
+  ggtitle("Udział osób mających problem ze spłatą kredytu w zależności od rodzaju kontraktu") +
+  scale_fill_brewer(palette = "Set1") +
+  theme_minimal()
+```
+
+W danych można było wyróżnić dwa rodzaje kontraktów: kredyty odnawialne oraz pożyczki gotówkowe. Zdecydowaną większość stanowią pożyczki gotówkowe, bo jest ich ponad dwa tysiące, natomiast kredyty odnawialne stanowią niewielką liczbę rekordów. Na stworzonym wykresie można zaobserwować zależność, mówiącą o tym, że większość osób spłaca swoje zobowiązania. Na wykresach zaznaczono te osoby kolorem niebieskim. Zarówno na słupku dotyczącym pożyczek gotówkowych, jak i tym z kredytami odnawialnymi, większość obszaru słupka jest niebieska.
+
+#### Spłata kredytu a poziom edukacji
+
+W następnym etapie analizy danych stworzono tabelę podsumowującą liczbę spłat i problemów ze spłatą w grupach poziomu edukacji.
+
+```{r, echo=FALSE}
+Data_hotdeck %>%
+  group_by(NAME_EDUCATION_TYPE) %>%
+  summarise(Liczba_obserwacji = n(),
+            Spłaca = sum(TARGET_2 == "Spłaca"),
+            Nie_spłaca = sum(TARGET_2 == "Problemy ze spłatą")) %>%
+  mutate(Procent_nie_spłaca = (Nie_spłaca / Liczba_obserwacji) * 100) 
+```
+
+Ze stworzonej tabeli można wywnioskować, że największy odsetek osób niespłacających kredytu jest w grupie kredytobiorców z niższym wykształceniem, gdyż stanowią one 13,79% swojej grupy. Podobny wynik, bo 11,84% zauważono w grupie niepełnego wyższego wykształcenia. Najmniejsze problemy ze spłatą kredytu mają osoby z wysokim wykształceniem, a osoby o średnim wykształceniu znajdują się na średnim poziomie w porównaniu do innych grup.
+
+W celu dokładnego przeanalizowania danych z powyższej tabeli stworzono wykresy łączące w sobie informacje o poziomie edukacji, wielkości zaciągniętego kredytu oraz spłacania kredytu przez daną osobę.
 
 ```{r, echo=FALSE}
 ggplot(Data_hotdeck, aes(x = INCOME_LOG, y = CREDIT_LOG)) +
@@ -542,7 +578,9 @@ ggplot(Data_hotdeck, aes(x = INCOME_LOG, y = CREDIT_LOG)) +
   theme_minimal()
 ```
 
-Z wykresu można wywnioskować, że najliczniejsza grupa niespłacająca kredytu należy do poziomu edukacji "secondary/secondary special", najmniej liczna natomiast do "lower secondary". Wykres potwierdza wcześniej wysnuty wniosek, że większość osób z bazy danych spłaca swoje zobowiązania.
+Z wykresów można wywnioskować, że najliczniejsza grupa niespłacająca kredytu należy do poziomu edukacji "secondary/secondary special", najmniej liczna natomiast do "lower secondary". Wniosek ten wynika głównie z liczby osób w każdej grupie. Na wykresie zauważono także zależność, że zarobki osób z wyższym wykształceniem są skumulowane na wyższym poziomie niż w innych grupach. Zaciągają oni również najwyższe kredyty. Opozycją dla nich jest grupa o niższym poziomie wykształcenia. Osoby o średnim i niepełnym wyższym wykształceniu mają najbardziej regularne rozproszenie danych.
+
+Wykres potwierdza wcześniej wysnuty wniosek, że większość osób z bazy danych spłaca swoje zobowiązania.
 
 Analiza danych wykazała, że większość próby badawczej nie ma problemu ze spłacaniem kredytu. Jeżeli takie problemy występują to jest to zwykle uwarunkowanie niskimi bądź średnimi dochodami danej osoby. Zauważono także, że im dana osoba ma wyższy dochód, tym większy kredyt zaciąga. Co więcej, osoby o średnim wykształceniu to grupa najliczniejsza, co wpływa również na to, że te osoby mają problemy ze spłacaniem kredytu.
 
@@ -556,7 +594,7 @@ Zakresem wartości korelacji jest zakres od -1 do 1, gdzie:
 
 -   Korelacja bliska **0** wskazuje na brak związku.
 
--   Korelacja bliska **-1** sugeruje silną zależność ujemną.\
+-   Korelacja bliska **-1** sugeruje silną zależność ujemną.
 
 ```{r, echo=FALSE}
 corrplot(cor(Data_hotdeck[c("TARGET","CNT_CHILDREN", "AMT_INCOME_TOTAL", "AMT_CREDIT", "REGION_RATING_CLIENT", 
@@ -698,7 +736,7 @@ W przypadku zmiennych takich jak APARTMENTS_AVG czy LANDAREA_AVG, odchylenie sta
 
 Mediana dla powierzchni mieszkań, piwnic i działek jest nieco wyższa w grupie spłacających kredyt, co sugeruje, że osoby te mieszkają w nieruchomościach o większej powierzchni w tych kategoriach. Mediana dla wspólnych przestrzeni i liczby wejść jest w zasadzie identyczna w obu grupach. Wartości skośności wskazują, że w obu grupach występuje przesunięcie w stronę wyższych wartości, ale szczególnie mocne w grupie spłacających kredyt. Dla zmiennych takich jak BASEMENTAREA_AVG czy YEARS_BUILD_AVG skośność jest wyraźnie wyższa w grupie spłacających kredyt, co sugeruje większe odchylenie w tych grupach.
 
-Kurtoza wskazuje na silną koncentrację danych wokół średnich wartości w obu grupach, z wyraźnie większą koncentracją w grupie spłacających kredyt. Wartości kurtozy są szczególnie wysokie w przypadku zmiennych takich jak APARTMENTS_AVG czy BASEMENTAREA_AVG, co sugeruje, że w tych grupach pojawiają się skrajne przypadki (np. bardzo duże mieszkania, czy piwnice).\
+Kurtoza wskazuje na silną koncentrację danych wokół średnich wartości w obu grupach, z wyraźnie większą koncentracją w grupie spłacających kredyt. Wartości kurtozy są szczególnie wysokie w przypadku zmiennych takich jak APARTMENTS_AVG czy BASEMENTAREA_AVG, co sugeruje, że w tych grupach pojawiają się skrajne przypadki (np. bardzo duże mieszkania, czy piwnice).
 
 Aby stworzyć wizualizację rozkładu danych oraz porównać dwie grupy pod kątem różnic w wartościach stworzono wykres skrzypcowy. Porównuje on kwoty kredytów (AMT_CREDIT) w zależności od posiadania nieruchomości (FLAG_OWN_REALTY).
 
@@ -717,7 +755,7 @@ ggstatsplot :: ggbetweenstats(
 Oś pozioma (X) przedstawia kategorię: N (Nie posiada nieruchomości) i Y (Posiada nieruchomość). Oś pionowa (Y) reprezentuje kwotę kredytu, gdzie kolory reprezentują dwie grupy: czerwony (osoby nieposiadające nieruchomości), niebieski (osoby posiadające nieruchomość).\
 Z wykresu można wywnioskować, że osoby nieposiadające nieruchomości zaciągają nieco wyższe kredyty (mediana = 536 tys.) niż osoby posiadające nieruchomości (mediana = 495 tys.). Rozkład kredytów w obu grupach jest zbliżony, ale osoby bez nieruchomości mają więcej ekstremalnych wartości. Wartość p = 3.39e-04 sugeruje, że różnica jest istotna statystycznie, ale efekt nie jest duży (r_biserial = 0.09).
 
-## Wnioskowanie (testy statystyczne)
+## Testy statystyczne - wnioskowanie
 
 W ramach niniejszego rozdziału przeprowadzono analizę statystyczną zbioru danych. Ma ona na celu zbadanie zależności pomiędzy wybranymi zmiennymi. Wykorzystane metody statystyczne pozwolą na ocenę istotności różnic oraz zidentyfikowanie potencjalnych zależności w danych.
 
@@ -796,7 +834,7 @@ Postawiono również hipotezy dotyczące interakcji:
 
 -   H₀: Nie ma interakcji między typem zawodu (OCCUPATION_TYPE), a typem sytuacji mieszkaniowej (NAME_HOUSING_TYPE) w odniesieniu do zmiennej zależnej TARGET.
 
--   H₁: Istnieje interakcja między typem zawodu (OCCUPATION_TYPE), a typem sytuacji mieszkaniowej (NAME_HOUSING_TYPE) w odniesieniu do zmiennej zależnej TARGET.\
+-   H₁: Istnieje interakcja między typem zawodu (OCCUPATION_TYPE), a typem sytuacji mieszkaniowej (NAME_HOUSING_TYPE) w odniesieniu do zmiennej zależnej TARGET.
 
 ```{r, echo=FALSE}
 mod <- aov(

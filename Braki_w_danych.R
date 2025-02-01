@@ -257,19 +257,26 @@ ggplot(pie_chart) +
   theme_minimal()
 
 ggplot(Data_hotdeck, aes(x = INCOME_LOG, fill = TARGET_2)) +
-  geom_histogram() +
+  geom_histogram(binwidth = 0.25) +
   xlab("Dochód") +
   ggtitle("Udział osób mających problem ze spłatą kredytu w grupie dochodowej") +
   scale_fill_brewer(palette = "Set1") +
   theme_minimal()
 
-ggplot(Data_hotdeck, aes(x = INCOME_LOG, y = CREDIT_LOG, color = CODE_GENDER))+
+ggplot(Data_hotdeck, aes(x = INCOME_LOG, y = CREDIT_LOG, color = TARGET_2))+
   geom_point() +
   xlab("Dochody") +
   ylab("Wielkość kredytu") +
   ggtitle("Zależność wielkości kredytu od dochodów") +
   scale_fill_brewer(palette = "Set1") +
   theme_minimal()
+
+Data_hotdeck %>%
+  group_by(NAME_CONTRACT_TYPE) %>%
+  summarise(Liczba_obserwacji = n(),
+            Spłaca = sum(TARGET_2 == "Spłaca"),
+            Nie_spłaca = sum(TARGET_2 == "Problemy ze spłatą")) %>%
+  mutate(Procent_nie_spłaca = (Nie_spłaca / Liczba_obserwacji) * 100)
 
 ggplot(Data_hotdeck, aes(x = NAME_CONTRACT_TYPE, fill = TARGET_2)) +
   geom_bar() +
@@ -286,6 +293,13 @@ ggplot(Data_hotdeck, aes(x = TARGET_2, y = CREDIT_LOG, fill = TARGET_2)) +
        x = "", y = "Wielkość kredytu") +
   scale_fill_brewer(palette = "Set1") +
   theme_minimal()
+
+Data_hotdeck %>%
+  group_by(NAME_EDUCATION_TYPE) %>%
+  summarise(Liczba_obserwacji = n(),
+            Spłaca = sum(TARGET_2 == "Spłaca"),
+            Nie_spłaca = sum(TARGET_2 == "Problemy ze spłatą")) %>%
+  mutate(Procent_nie_spłaca = (Nie_spłaca / Liczba_obserwacji) * 100) 
 
 ggplot(Data_hotdeck, aes(x = INCOME_LOG, y = CREDIT_LOG)) +
   geom_point() +
