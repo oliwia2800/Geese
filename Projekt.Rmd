@@ -528,7 +528,8 @@ ggplot(Data_hotdeck, aes(x = OCCUPATION_TYPE, fill = NAME_EDUCATION_TYPE)) +
   scale_fill_brewer(palette = "Set1") +
   theme_minimal()+ 
   theme(plot.title = element_text(hjust = 0.5),
-        legend.position = "bottom")
+        legend.position = "bottom") +
+  coord_flip()
 ```
 
 Z wykresu wynika, że najpopularniejsze wykonywane zawody w próbie badawczej to robotnicy, sprzedawcy, podstawowy personel, managerowie, kierowcy, pracownicy o umiejętnościach technicznych, księgowi, pracownicy medyczni, personel kuchenny, pracownicy ochrony oraz personel sprzątający. Pozostałe zawody tj. pracownicy HR i IT, robotnicy o niskich kwalifikacjach, prywatna kadra usługowa, agenci nieruchomości, sekretarze oraz kelnerzy i barmani są zdecydowanie mniej popularne.

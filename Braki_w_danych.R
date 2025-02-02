@@ -352,7 +352,8 @@ ggplot(Data_hotdeck, aes(x = OCCUPATION_TYPE, fill = NAME_EDUCATION_TYPE)) +
   scale_fill_brewer(palette = "Set1") +
   theme_minimal()+ 
   theme(plot.title = element_text(hjust = 0.5),
-        legend.position = "bottom")
+        legend.position = "bottom") +
+  coord_flip()
 
 apartment_vars <- c("APARTMENTS_AVG", "BASEMENTAREA_AVG", 
                     "YEARS_BUILD_AVG", "COMMONAREA_AVG", 
