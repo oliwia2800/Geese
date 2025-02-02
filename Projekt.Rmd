@@ -851,7 +851,8 @@ Z wykresu można wywnioskować, że osoby nieposiadające nieruchomości zaciąg
 
 W ramach niniejszego rozdziału przeprowadzono analizę statystyczną zbioru danych. Ma ona na celu zbadanie zależności pomiędzy wybranymi zmiennymi. Wykorzystane metody statystyczne pozwolą na ocenę istotności różnic oraz zidentyfikowanie potencjalnych zależności w danych.
 
-Dokonano kategoryzacji danych liczbowych dotyczących dochodów (AMT_INCOME_TOTAL) oraz kwoty kredytu (AMT_CREDIT) na pięć równych przedziałów, co pozwala na lepsze przedstawienie struktury tych zmiennych. W celu wizualizacji wyników wykorzystano histogramy oraz wykresy słupkowe, co ułatwia interpretację rozkładów.
+Dokonano kategoryzacji danych liczbowych dotyczących dochodów (AMT_INCOME_TOTAL) oraz kwoty kredytu (AMT_CREDIT) na pięć równych przedziałów, co pozwala na lepsze przedstawienie struktury tych zmiennych. Podział ten umożliwia łatwiejszą intrpretację wyników i identyfikację ewentualnych różnic między grupami dochodowymi. W celu wizualizacji wyników wykorzystano histogramy oraz wykresy słupkowe, co ułatwia interpretację rozkładów.\
+Uzyskane wyniki dostarczają cennych informacji na temat struktury dochodów oraz udzielanych kredytów.
 
 ```{r, echo=FALSE}
 data_kat_income <- binning(Data_hotdeck$AMT_INCOME_TOTAL, nbins = 5, type = "equal")
@@ -886,7 +887,7 @@ ggbarstats(
 
 Wartość p=0.01 wskazuje na to, że poziom edukacji wpływa na problemy ze spłatą kredytu. Współczynnik V Craméra (0.06) sugeruje słabą zależność między zmiennymi. P-value jest mniejsze niż poziom istotności α=0.05. Odrzucamy hipotezę zerową. Oznacza to, że istnieje statystycznie istotna zależność między poziomem edukacji, a problemami ze spłatą kredytu.
 
-Na podstawie rozkładu poziomu edukacji w zależności od problemów ze spłatą kredytu można zauważyć pewne różnice. Osoby z wykształceniem średnim dominują w obu grupach, ale ich udział jest większy wśród osób mających problemy ze spłatą kredytu (75%). Osoby z wykształceniem wyższym częściej spłacają kredyt regularnie (27%) w porównaniu do tych, które mają problemy (18%).
+Na podstawie rozkładu poziomu edukacji w zależności od problemów ze spłatą kredytu można zauważyć pewne różnice. Osoby z wykształceniem średnim dominują w obu grupach, ale ich udział jest większy wśród osób mających problemy ze spłatą kredytu (75%). Sugeruje to, że wykształcenie średnie jest najczęściej występującym poziomem edukacji w badanej próbie, jednak w grupie z problemami kredytowymi odsetek ten jest większy. Osoby z wykształceniem wyższym częściej spłacają kredyt regularnie (27%) w porównaniu do tych, które mają problemy (18%).
 
 Druga postawiona hipoteza związana jest ze sprawdzeniem, czy istnieje zależność między przedziałem kwot branego kredytu, a statusem rodzinnym. Chcemy zobaczyć jak np. małżeństwa czy osoby samotne różnią się pod względem wielkości kredytów, które biorą. Zdecydowano się na wizualizację kołową.
 
@@ -907,13 +908,15 @@ ggpiestats(
 ```
 
 Na wykresie przedstawiono wyniki testu chi-kwadrat dla każdej grupy.\
-Dla każdej grupy p-value \< 0.05, co oznacza, że odrzucamy hipotezę zerową. Istnieje istotny statystycznie związek między przedziałem kwoty kredytu, a statusem rodzinnym. Współczynnik V Craméra (0.06), wskazuje na słaby, ale istotny związek między zmiennymi.\
-Najniższy przedział kredytów dominuje we wszystkich grupach rodzinnych:
+Dla każdej grupy p-value < 0.05, co oznacza, że odrzucamy hipotezę zerową. Istnieje istotny statystycznie związek między przedziałem kwoty kredytu, a statusem rodzinnym. Współczynnik V Craméra (0.08), wskazuje na słaby, ale istotny związek między zmiennymi.\
+Analizując otrzymane wykresy można zauważyć kilka istotnych wniosków.\
+W większości grup statusu rodzinnego, kredyty w średnim przedziale (12.43542 - 13.26395) stanowią największy udział. W grupie ozaczone jako "Wdowy", 45% osób korzysta z tego przedziału kredytowego, a w grupie „Single / not married” jest to 43%.\
 
-Największy udział najniższego przedziału kredytów (49770 - 642528) występuje w grupach: Widow (75%), Single / not married (74%), oraz Separated (71%). W grupie Married udział najniższego przedziału wynosi 59%, co oznacza, że małżeństwa częściej biorą kredyty w wyższych przedziałach niż inne grupy.
+Największy udział jednego z  niższych przedziałów kredytowych (11.60689 - 12.43542) występuje w grupach: Widow (24%), Single / not married (23%), oraz Separated (19%). W grupie Married udział najniższego przedziału wynosi 15%, co oznacza, że małżeństwa częściej biorą kredyty w wyższych przedziałach niż inne grupy.
 
-Wyższe przedziały kredytów są bardziej popularne wśród osób pozostających w małżeństwie. W grupie Married, aż 41% osób korzysta z kredytów w wyższych przedziałach, w tym 8% z najwyższego przedziału. W innych grupach udział wyższych przedziałów kredytów jest znacznie mniejszy.\
-Osoby samotne, wdowy i osoby po rozwodzie częściej biorą niższe kredyty. W grupach Single, Widow i Separated, kredyty z wyższych przedziałów stanowią jedynie niewielki procent wszystkich przypadków, co sugeruje ograniczone możliwości finansowe tych grup.
+Wyższe przedziały kredytów są bardziej popularne wśród osób pozostających w małżeństwie. W grupie Married, aż 39% osób korzysta z kredytów w wyższych przedziałach, w tym 7% z najwyższego przedziału. W innych grupach udział wyższych przedziałów kredytów jest znacznie mniejszy.\
+Osoby samotne i osoby po rozwodzie częściej biorą niższe kredyty. W grupach Single, Widow i Separated, kredyty z wyższych przedziałów stanowią jedynie niewielki procent wszystkich przypadków, co sugeruje ograniczone możliwości finansowe tych grup.\
+Wyniki wskazują na istotne różnice w struktorze kwot kredytów między osobami z poszczególnych grup ze względy na status rodzinny. Warto jednak zauważyć, że uwzględniając współczynnik V Craméra sugeruje, że zależność ta nie jest dominującym czynnikiem.
 
 Wykorzystano również analizę wariancji (ANOVA). Celem tego testu jest zrozumienie, jak typ zawodu oraz sytuacja mieszkaniowa wpływają na to, czy klient ma problemy ze spłatą kredytu.\
 W modelu uwzględniono interakcję między zmiennymi OCCUPATION_TYPE i NAME_HOUSING_TYPE. Oznacza to, że sprawdzamy nie tylko główny wpływ każdej z tych zmiennych na TARGET, ale także, czy wpływ jednej zmiennej zależy od poziomu drugiej zmiennej.
@@ -943,7 +946,7 @@ ggcoefstats(mod, title = "Test Anova dla zmiennej TARGET w zależności od typu 
   theme(plot.title = element_text(hjust = 0.5))
 ```
 
-Typ zawodu (OCCUPATION_TYPE) ma istotny wpływ na to, czy klient ma problemy ze spłatą kredytu, ponieważ wartość p-value jest bardzo mała (6.14e-10), odrzucamy hipotezę zerową. Sytuacja mieszkaniowa (NAME_HOUSING_TYPE) również ma istotny wpływ na problemy ze spłatą kredytu, z wartością p-value wynoszącą 0.00293, również odrzucamy w takim wypadku hipotezę zerową.\
-Interakcja między typem zawodu, a sytuacją mieszkaniową jest istotna statystycznie (p = 0.01130), oznacza to że wpływ jednego czynnika na TARGET (problemy ze spłatą kredytu) zależy od poziomu drugiego czynnika. Istotna interakcja pokazuje, że zawód i sytuacja mieszkaniowa razem mają bardziej złożony wpływ na to, czy klient ma problemy ze spłatą kredytu, niż gdybyśmy oceniali te zmienne oddzielnie.
+Typ zawodu (OCCUPATION_TYPE) ma istotny wpływ na to, czy klient ma problemy ze spłatą kredytu, ponieważ wartość p-value jest bardzo mała (9.59e-05), odrzucamy hipotezę zerową. Sytuacja mieszkaniowa (NAME_HOUSING_TYPE) również ma istotny wpływ na problemy ze spłatą kredytu, z wartością p-value wynoszącą 0.00233, również odrzucamy w takim wypadku hipotezę zerową.\
+Interakcja między typem zawodu, a sytuacją mieszkaniową jest istotna statystycznie (p = 0.00388), oznacza to że wpływ jednego czynnika na TARGET (problemy ze spłatą kredytu) zależy od poziomu drugiego czynnika. Istotna interakcja pokazuje, że zawód i sytuacja mieszkaniowa razem mają bardziej złożony wpływ na to, czy klient ma problemy ze spłatą kredytu, niż gdybyśmy oceniali te zmienne oddzielnie.
 
-## Podsumowanie i wnioski końcowe
+## Podsumowanie i wnioski ńcowe
