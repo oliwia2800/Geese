@@ -285,6 +285,23 @@ ggplot(Data_hotdeck, aes(x = INCOME_LOG, y = CREDIT_LOG)) +
   theme_minimal()+ 
   theme(plot.title = element_text(hjust = 0.5))
 
+apartment_vars <- c("APARTMENTS_AVG", "BASEMENTAREA_AVG", 
+                    "YEARS_BUILD_AVG", "COMMONAREA_AVG", 
+                    "ENTRANCES_AVG", "LANDAREA_AVG")
+
+data_long_apartment <- Data_hotdeck %>%
+  select(all_of(apartment_vars)) %>%
+  pivot_longer(cols = everything(), names_to = "Variable", values_to = "Value")
+
+ggplot(data_long_apartment, aes(x = Value)) +
+  geom_density(fill = "steelblue", color = "black") +
+  facet_wrap(~Variable, scales = "free") +
+  theme_minimal() +
+  labs(title = "Dane o zamieszkiwanych nieruchomościach",
+       x = "Wartość", 
+       y = "Częstotliwość") +
+  theme(plot.title = element_text(hjust = 0.5))
+
 #Próba badawcza
 pie_chart_g <- Data_hotdeck %>%
   count(CODE_GENDER)
@@ -334,7 +351,8 @@ ggplot(Data_hotdeck, aes(x = OCCUPATION_TYPE, fill = NAME_EDUCATION_TYPE)) +
   ggtitle("Udział osób z danym wykształceniem w zależności od typu wykonywanego zawodu") +
   scale_fill_brewer(palette = "Set1") +
   theme_minimal()+ 
-  theme(plot.title = element_text(hjust = 0.5))
+  theme(plot.title = element_text(hjust = 0.5),
+        legend.position = "bottom")
 
 apartment_vars <- c("APARTMENTS_AVG", "BASEMENTAREA_AVG", 
                     "YEARS_BUILD_AVG", "COMMONAREA_AVG", 
@@ -416,23 +434,6 @@ Data_hotdeck %>%
   kable_paper("striped", full_width = F) %>%
   column_spec(1:2, bold = F) %>%
   row_spec(1, bold = F, color = "black", background = "white")
-
-apartment_vars <- c("APARTMENTS_AVG", "BASEMENTAREA_AVG", 
-                    "YEARS_BUILD_AVG", "COMMONAREA_AVG", 
-                    "ENTRANCES_AVG", "LANDAREA_AVG")
- 
-data_long_apartment <- Data_hotdeck %>%
-  select(all_of(apartment_vars)) %>%
-  pivot_longer(cols = everything(), names_to = "Variable", values_to = "Value")
- 
-ggplot(data_long_apartment, aes(x = Value)) +
-  geom_density(fill = "steelblue", color = "black") +
-  facet_wrap(~Variable, scales = "free") +
-  theme_minimal() +
-  labs(title = "Dane o zamieszkiwanych nieruchomościach",
-       x = "Wartość", 
-       y = "Częstotliwość") +
-  theme(plot.title = element_text(hjust = 0.5))
  
 hist(Data_hotdeck$AMT_CREDIT)
 ggstatsplot :: ggbetweenstats(

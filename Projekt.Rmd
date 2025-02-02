@@ -526,8 +526,9 @@ ggplot(Data_hotdeck, aes(x = OCCUPATION_TYPE, fill = NAME_EDUCATION_TYPE)) +
   xlab("Typ wykonywanego zawodu") +
   ggtitle("Udział osób z danym wykształceniem w zależności od typu wykonywanego zawodu") +
   scale_fill_brewer(palette = "Set1") +
-  theme_minimal() + 
-  theme(plot.title = element_text(hjust = 0.5))
+  theme_minimal()+ 
+  theme(plot.title = element_text(hjust = 0.5),
+        legend.position = "bottom")
 ```
 
 Z wykresu wynika, że najpopularniejsze wykonywane zawody w próbie badawczej to robotnicy, sprzedawcy, podstawowy personel, managerowie, kierowcy, pracownicy o umiejętnościach technicznych, księgowi, pracownicy medyczni, personel kuchenny, pracownicy ochrony oraz personel sprzątający. Pozostałe zawody tj. pracownicy HR i IT, robotnicy o niskich kwalifikacjach, prywatna kadra usługowa, agenci nieruchomości, sekretarze oraz kelnerzy i barmani są zdecydowanie mniej popularne.
@@ -535,25 +536,6 @@ Z wykresu wynika, że najpopularniejsze wykonywane zawody w próbie badawczej to
 Można zauważyć, że w próbie badawczej dominuje wykształcenie średnie. Nieznaczny odsetek osób stanowią te z niższym wykształceniem lub nieukończonym wyższym. Sporą grupę stanowią kredytobiorcy o wykształceniu wyższym. Co ciekawe, grupa pracowników IT charakteryzuje się prawie całkowitą jednorodnością słupka na wykresie, co oznacza, że osoby pracujące w tej branży praktycznie zawsze posiadają wykształcenie wyższe. W innych branżach poziomy wykształcenia są między sobą bardziej zróżnicowane.
 
 Z analizy próby badawczej można wywnioskować, że jej większość stanowią kobiety. Próba charakteryzuje się także dochodami na średnim poziomie oraz średnim wykształceniem. Dodatkowo, zdecydowana większość kredytobiorców mieszka we własnych domach lub mieszkaniach.
-
-```{r}
-apartment_vars <- c("APARTMENTS_AVG", "BASEMENTAREA_AVG", 
-                    "YEARS_BUILD_AVG", "COMMONAREA_AVG", 
-                    "ENTRANCES_AVG", "LANDAREA_AVG")
-
-data_long_apartment <- Data_hotdeck %>%
-  select(all_of(apartment_vars)) %>%
-  pivot_longer(cols = everything(), names_to = "Variable", values_to = "Value")
-
-ggplot(data_long_apartment, aes(x = Value)) +
-  geom_density(fill = "steelblue", color = "black") +
-  facet_wrap(~Variable, scales = "free") +
-  theme_minimal() +
-  labs(title = "Dane o zamieszkiwanych nieruchomościach",
-       x = "Wartość", 
-       y = "Częstotliwość") + 
-  theme(plot.title = element_text(hjust = 0.5))
-```
 
 ### Analiza danych
 
