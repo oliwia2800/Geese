@@ -336,7 +336,8 @@ ggplot(data_long, aes(x = Value)) +
   theme(plot.title = element_text(hjust = 0.5))
 ```
 
-Wcześniejsze kroki analizy potwierdziły się. Histogramy pokazały, że aby przeprowadzić dalszą analizę z wyszczególnionymi zmiennymi, ze względu na występującą skośność konieczne jest dokonanie transformacji zmiennych. Zdecydowano się na dokonanie jej przy użyciu logarytmu.\
+Wcześniejsze kroki analizy potwierdziły się. Histogramy pokazały, że aby przeprowadzić dalszą analizę z wyszczególnionymi zmiennymi, ze względu na występującą skośność konieczne jest dokonanie transformacji zmiennych. Zdecydowano się na dokonanie jej przy użyciu logarytmu.
+
 Na wyszczególnionych zmiennych dokonano transformacji oraz przedstawiono wizualizację.
 
 ```{r, echo=FALSE}
@@ -631,7 +632,7 @@ ggplot(Data_hotdeck, aes(x = INCOME_LOG, y = CREDIT_LOG)) +
 
 Z wykresów można wywnioskować, że najliczniejsza grupa niespłacająca kredytu należy do poziomu edukacji "secondary/secondary special", najmniej liczna natomiast do "lower secondary". Wniosek ten wynika głównie z liczby osób w każdej grupie. Na wykresie zauważono także zależność, że zarobki osób z wyższym wykształceniem są skumulowane na wyższym poziomie niż w innych grupach. Zaciągają oni również najwyższe kredyty. Opozycją dla nich jest grupa o niższym poziomie wykształcenia. Osoby o średnim i niepełnym wyższym wykształceniu mają najbardziej regularne rozproszenie danych.
 
-Wykres potwierdza wcześniej wysnuty wniosek, że większość osób z bazy danych spłaca swoje zobowiązania.\
+Wykres potwierdza wcześniej wysnuty wniosek, że większość osób z bazy danych spłaca swoje zobowiązania.
 
 #### Dane o zamieszkiwanych nieruchomościach
 
@@ -656,7 +657,7 @@ ggplot(data_long_apartment, aes(x = Value)) +
   theme(plot.title = element_text(hjust = 0.5))
 ```
 
-Analiza wykazała, że dla większości cech rozkład wartości jest przesunięty w lewo i cechuje się prawoskośnością. Świadczy to o tym, że wartości są w wielu przypadkach bliskie zeru. Jedynie dla zmiennej dotyczącej wieku budowanej nieruchomości są one lewoskośne i osiągają wartości powyżej 0,5.\
+Analiza wykazała, że dla większości cech rozkład wartości jest przesunięty w lewo i cechuje się prawoskośnością. Świadczy to o tym, że wartości są w wielu przypadkach bliskie zeru. Jedynie dla zmiennej dotyczącej wieku budowanej nieruchomości są one lewoskośne i osiągają wartości powyżej 0,5.
 
 Analiza danych wykazała, że większość próby badawczej nie ma problemu ze spłacaniem kredytu. Jeżeli takie problemy występują, to jest to zwykle uwarunkowane niskimi bądź średnimi dochodami danej osoby. Zauważono także, że im dana osoba ma wyższy dochód, tym większy kredyt zaciąga. Co więcej, wywnioskowano, że największe problemy ze spłatą kredytu znajdują się w grupach o niskim lub średnim wykształceniu.
 
@@ -739,11 +740,16 @@ Data_hotdeck %>%
 ```
 
 Podsumowując dane z powyższej tabeli średnia kredytów w grupie "spłaca" jest wyższa niż w grupie "problemy ze spłatą", co może sugerować, że osoby spłacające kredyty mają wyższe zobowiązania.\
-Najniższy kredyt w grupie posiadającej problemy ze spłatą wynosi 1153156, a najwyższy 1492102. W grupie osób bezproblemowo spłacających kredyt minimalną wartością udzielonego kredytu jest 1077835, a maksymalną 1473870.\
-Mediana wartości kredytu dla osób z problemami ze spłatą wynosi 1311232, co wskazuje, że połowa kredytów jest mniejsza lub równa tej kwocie, a połowa większa. W przypadku grupy bez problemów ze spłatą mediana (1314384) również znajduje się blisko średniej, co sugeruje, że wartości kredytów w obu grupach są stosunkowo jednorodne, choć nieco bardziej w grupie "spłaca".\
-Zmienność w obu grupach jest widoczna, jednak to grupa "spłaca" charakteryzuje się większym odchyleniem standardowym (0.7228547) w porównaniu do grupy "problemy ze spłatą" (0.6118171), co oznacza większe zróżnicowanie wartości kredytów wśród osób spłacających bezproblemowo.\
-Skośność w grupie "problemy ze spłatą" (0.0505161) jest bliska zeru, co sugeruje symetryczny rozkład wartości kredytów, natomiast w grupie "spłaca" skośność wynosi -0.3324083, co oznacza lekkie przesunięcie rozkładu w lewo (więcej niższych wartości kredytów).\
-Z kolei kurtoza w obu grupach ma wartości ujemne (-0.2885967 w grupie "problemy ze spłatą" i -0.3040258 w grupie "spłaca"), co oznacza, że rozkłady są bardziej płaskie niż rozkład normalny – wartości kredytów są mniej skoncentrowane wokół średniej, a ich rozproszenie jest większe.\
+Najniższy kredyt w grupie posiadającej problemy ze spłatą wynosi 1153156, a najwyższy 1492102. W grupie osób bezproblemowo spłacających kredyt minimalną wartością udzielonego kredytu jest 1077835, a maksymalną 1473870.
+
+Mediana wartości kredytu dla osób z problemami ze spłatą wynosi 1311232, co wskazuje, że połowa kredytów jest mniejsza lub równa tej kwocie, a połowa większa. W przypadku grupy bez problemów ze spłatą mediana (1314384) również znajduje się blisko średniej, co sugeruje, że wartości kredytów w obu grupach są stosunkowo jednorodne, choć nieco bardziej w grupie "spłaca".
+
+Zmienność w obu grupach jest widoczna, jednak to grupa "spłaca" charakteryzuje się większym odchyleniem standardowym (0.7228547) w porównaniu do grupy "problemy ze spłatą" (0.6118171), co oznacza większe zróżnicowanie wartości kredytów wśród osób spłacających bezproblemowo.
+
+Skośność w grupie "problemy ze spłatą" (0.0505161) jest bliska zeru, co sugeruje symetryczny rozkład wartości kredytów, natomiast w grupie "spłaca" skośność wynosi -0.3324083, co oznacza lekkie przesunięcie rozkładu w lewo (więcej niższych wartości kredytów).
+
+Z kolei kurtoza w obu grupach ma wartości ujemne (-0.2885967 w grupie "problemy ze spłatą" i -0.3040258 w grupie "spłaca"), co oznacza, że rozkłady są bardziej płaskie niż rozkład normalny – wartości kredytów są mniej skoncentrowane wokół średniej, a ich rozproszenie jest większe.
+
 Dane sugerują, że osoby z problemami ze spłatą mają nieco bardziej jednorodne zobowiązania niż osoby spłacające kredyty, a ich wartości kredytów są mniej zróżnicowane. Z kolei w grupie "spłaca" kredyty mają większą rozpiętość, co może oznaczać, że w tej grupie znajdują się zarówno osoby z niskimi, jak i wysokimi zobowiązaniami.
 
 Operację powtórzono dla zmiennej AMT_INCOME_TOTAL opisującej wysokość dochodów kredytobiorców.
@@ -769,10 +775,14 @@ Data_hotdeck %>%
 
 ```
 
-W związku z wysokością dochodów kredytobiorców można stwierdzić, że średnie dochody w grupie "problemy ze spłatą" są nieco wyższe i wynoszą 1192960, w porównaniu do drugiej grupy, gdzie średnie dochody wynoszą 1188559.\
-Mediana dochodów w grupie "problemy ze spłatą" wynosi 1190835, co oznacza, że połowa kredytobiorców w tej grupie zarabia mniej niż ta wartość, a połowa więcej. W grupie "spłaca" mediana jest nieco niższa i wynosi 1181304, co sugeruje, że dochody w tej grupie są minimalnie niższe, ale dość zbliżone do grupy mającej problemy ze spłatą. Zmienność dochodów w obu grupach jest zauważalna, a odchylenie standardowe wynosi 0.4661756 w grupie "problemy ze spłatą" i 0.4948417 w grupie "spłaca". Wskazuje to, że rozproszenie dochodów jest większe wśród osób bezproblemowo spłacających kredyt.\
-Skośność w obu grupach jest dodatnia (0.0978233 w grupie "problemy ze spłatą" i 0.0429838 w grupie "spłaca"), co sugeruje lekką asymetrię w kierunku wyższych wartości dochodów. Nie oznacza to jednak znaczącej przewagi bardzo wysokich dochodów, ponieważ wartości skośności są bliskie zeru.\
-Kurtoza w obu grupach ma wartości dodatnie (0.2433553 w grupie "problemy ze spłatą" i 0.3255798 w grupie "spłaca"), co oznacza, że rozkłady dochodów są bardziej skupione wokół wartości centralnych niż w rozkładzie normalnym. Grupa "spłaca" charakteryzuje się wyższą kurtozą, co wskazuje na większą koncentrację dochodów wokół średnich wartości.\
+W związku z wysokością dochodów kredytobiorców można stwierdzić, że średnie dochody w grupie "problemy ze spłatą" są nieco wyższe i wynoszą 1192960, w porównaniu do drugiej grupy, gdzie średnie dochody wynoszą 1188559.
+
+Mediana dochodów w grupie "problemy ze spłatą" wynosi 1190835, co oznacza, że połowa kredytobiorców w tej grupie zarabia mniej niż ta wartość, a połowa więcej. W grupie "spłaca" mediana jest nieco niższa i wynosi 1181304, co sugeruje, że dochody w tej grupie są minimalnie niższe, ale dość zbliżone do grupy mającej problemy ze spłatą. Zmienność dochodów w obu grupach jest zauważalna, a odchylenie standardowe wynosi 0.4661756 w grupie "problemy ze spłatą" i 0.4948417 w grupie "spłaca". Wskazuje to, że rozproszenie dochodów jest większe wśród osób bezproblemowo spłacających kredyt.
+
+Skośność w obu grupach jest dodatnia (0.0978233 w grupie "problemy ze spłatą" i 0.0429838 w grupie "spłaca"), co sugeruje lekką asymetrię w kierunku wyższych wartości dochodów. Nie oznacza to jednak znaczącej przewagi bardzo wysokich dochodów, ponieważ wartości skośności są bliskie zeru.
+
+Kurtoza w obu grupach ma wartości dodatnie (0.2433553 w grupie "problemy ze spłatą" i 0.3255798 w grupie "spłaca"), co oznacza, że rozkłady dochodów są bardziej skupione wokół wartości centralnych niż w rozkładzie normalnym. Grupa "spłaca" charakteryzuje się wyższą kurtozą, co wskazuje na większą koncentrację dochodów wokół średnich wartości.
+
 Wnioski mogą sugerować, że osoby spłacające kredyty mają bardziej skoncentrowane dochody wokół mediany, a wartości skrajne są mniej wyraźne. Z kolei osoby mające problemy ze spłatą mają dochody o podobnym poziomie, jednak ich rozkład jest nieco bardziej rozproszony.
 
 Statystyki opisowe przygotowano także do cech budynków mieszkaniowych analizowanych uprzednio w macierzy korelacji. Pogrupowano je tak jak w dwóch powyższych tabelach ze względu na zmienna TARGET_2 oznaczającą problemy ze spłatą lub ich brak.
@@ -798,13 +808,18 @@ Data_hotdeck %>%
   row_spec(1, bold = F, color = "black", background = "white")
 ```
 
-Dla zmiennych APARTMENTS_AVG, BASEMENTAREA_AVG, COMMONAREA_AVG, ENTRANCES_AVG, LANDAREA_AVG minimum wynosi 0, co sugeruje, że niektóre nieruchomości nie mają w ogóle tych cech (np. brak wspólnych przestrzeni, piwnic, działek, wejść). Dla zmiennej YEARS_BUILD_AVG minimum wynosi 0.2138202 dla osób spłacających kredyt, co może wskazywać na obecność nowszych budynków w tej grupie. W grupie osób mających problemy ze spłatą najniższa wartość tej zmiennej wynosi 0.4819322, co sugeruje, że nieruchomości w tej grupie są starsze.\
-Średnia w grupie "problemy ze spłatą" dla zmiennej APARTMENTS_AVG wynosi 0.0975958, a w grupie "spłaca" wynosi 0.1095510, co sugeruje, że osoby spłacające kredyt mają nieco większe mieszkania niż osoby z problemami. Podobna tendencja widoczna jest w przypadku powierzchni piwnic (0.0809718 w porównaniu do 0.0838537) i działek (0.0538882 w porównaniu do 0.0614972), co wskazuje, że osoby spłacające kredyt mają nieco większe nieruchomości. Natomiast powierzchnia wspólnych przestrzeni jest zbliżona w obu grupach (0.0398865 w porównaniu do 0.0446941).\
-Dzięki zmiennej opisującej wiek nieruchomości można zauważyć, że osoby z problemami mają średnio nieco starsze budynki, choć różnice są niewielkie.\
+Dla zmiennych APARTMENTS_AVG, BASEMENTAREA_AVG, COMMONAREA_AVG, ENTRANCES_AVG, LANDAREA_AVG minimum wynosi 0, co sugeruje, że niektóre nieruchomości nie mają w ogóle tych cech (np. brak wspólnych przestrzeni, piwnic, działek, wejść). Dla zmiennej YEARS_BUILD_AVG minimum wynosi 0.2138202 dla osób spłacających kredyt, co może wskazywać na obecność nowszych budynków w tej grupie. W grupie osób mających problemy ze spłatą najniższa wartość tej zmiennej wynosi 0.4819322, co sugeruje, że nieruchomości w tej grupie są starsze.
+
+Średnia w grupie "problemy ze spłatą" dla zmiennej APARTMENTS_AVG wynosi 0.0975958, a w grupie "spłaca" wynosi 0.1095510, co sugeruje, że osoby spłacające kredyt mają nieco większe mieszkania niż osoby z problemami. Podobna tendencja widoczna jest w przypadku powierzchni piwnic (0.0809718 w porównaniu do 0.0838537) i działek (0.0538882 w porównaniu do 0.0614972), co wskazuje, że osoby spłacające kredyt mają nieco większe nieruchomości. Natomiast powierzchnia wspólnych przestrzeni jest zbliżona w obu grupach (0.0398865 w porównaniu do 0.0446941).
+
+Dzięki zmiennej opisującej wiek nieruchomości można zauważyć, że osoby z problemami mają średnio nieco starsze budynki, choć różnice są niewielkie.
+
 W przypadku zmiennych takich jak APARTMENTS_AVG czy LANDAREA_AVG, odchylenie standardowe wskazuje na dużą rozbieżność w wielkości nieruchomości, zwłaszcza w grupie spłacających kredyt (0.0892077 porównując do 0.0634068 dla mieszkań, 0.0711802 do 0.0458839 dla działek). Natomiast dla zmiennych takich jak BASEMENTAREA_AVG czy COMMONAREA_AVG, odchylenie jest mniejsze, co oznacza mniejszą zmienność w tych cechach.
 
-Mediana dla powierzchni mieszkań, piwnic i działek jest nieco wyższa w grupie spłacających kredyt, co sugeruje, że osoby te mieszkają w nieruchomościach o większej powierzchni w tych kategoriach. Mediana dla wspólnych przestrzeni jest niższa w grupie spłacających, co sugeruje, że nieruchomości w tej grupie mają mniejsze przestrzenie wspólne. Mediana liczby wejść jest identyczna w obu grupach i wynosi 0.1291845.\
-Wartości skośności wskazują, że w obu grupach występuje przesunięcie w stronę wyższych wartości, ale jest szczególnie widoczne w grupie spłacających kredyt - skośność dla BASEMENTAREA_AVG wynosi 3.5008441 porównując do 0.8922185 w grupie z problemami. Sugeruje to, że w grupie "spłaca" występują bardziej ekstremalne wartości, np. pojedyncze nieruchomości z bardzo dużymi piwnicami.\
+Mediana dla powierzchni mieszkań, piwnic i działek jest nieco wyższa w grupie spłacających kredyt, co sugeruje, że osoby te mieszkają w nieruchomościach o większej powierzchni w tych kategoriach. Mediana dla wspólnych przestrzeni jest niższa w grupie spłacających, co sugeruje, że nieruchomości w tej grupie mają mniejsze przestrzenie wspólne. Mediana liczby wejść jest identyczna w obu grupach i wynosi 0.1291845.
+
+Wartości skośności wskazują, że w obu grupach występuje przesunięcie w stronę wyższych wartości, ale jest szczególnie widoczne w grupie spłacających kredyt - skośność dla BASEMENTAREA_AVG wynosi 3.5008441 porównując do 0.8922185 w grupie z problemami. Sugeruje to, że w grupie "spłaca" występują bardziej ekstremalne wartości, np. pojedyncze nieruchomości z bardzo dużymi piwnicami.
+
 Kurtoza wskazuje na silną koncentrację danych wokół średnich wartości w obu grupach, z wyraźnie większą koncentracją w grupie spłacających kredyt. Wartości kurtozy są szczególnie wysokie w przypadku zmiennych takich jak APARTMENTS_AVG czy BASEMENTAREA_AVG, co sugeruje, że w tych grupach pojawiają się skrajne przypadki (np. bardzo duże mieszkania, czy piwnice).
 
 Dla każdej analizowanej w powyższej tabeli zamiennej dotyczącej nieruchomości stworzono wykres gęstości. Analiza graficzna dostarczy cennych informacji o rozkładzie i potencjalnych zależnościach między zmiennymi. Dzięki niej możliwe będzie okrelenie jak często występują określone wartości oraz czy dane cechy skoncentrowane są wokół pewnych przedziałów, czy też charakteryzują się dużym zróżnicowaniem.
@@ -844,14 +859,16 @@ ggstatsplot :: ggbetweenstats(
 )+ theme(plot.title = element_text(hjust = 0.5))
 ```
 
-Oś pozioma (X) przedstawia kategorię: N (Nie posiada nieruchomości) i Y (Posiada nieruchomość). Oś pionowa reprezentuje kwotę kredytu, gdzie kolory reprezentują dwie grupy: czerwony (osoby nieposiadające nieruchomości), niebieski (osoby posiadające nieruchomość).\
+Oś pozioma (X) przedstawia kategorię: N (Nie posiada nieruchomości) i Y (Posiada nieruchomość). Oś pionowa reprezentuje kwotę kredytu, gdzie kolory reprezentują dwie grupy: czerwony (osoby nieposiadające nieruchomości), niebieski (osoby posiadające nieruchomość).
+
 Z wykresu można wywnioskować, że osoby nieposiadające nieruchomości zaciągają nieco wyższe kredyty (mediana = 536 tys.) niż osoby posiadające nieruchomości (mediana = 495 tys.). Rozkład kredytów w obu grupach jest zbliżony, ale osoby bez nieruchomości mają więcej ekstremalnych wartości. Wartość p = 3.39e-04 sugeruje, że różnica jest istotna statystycznie, ale efekt nie jest duży (r_biserial = 0.09).
 
 ## Testy statystyczne - wnioskowanie
 
 W ramach niniejszego rozdziału przeprowadzono analizę statystyczną zbioru danych. Ma ona na celu zbadanie zależności pomiędzy wybranymi zmiennymi. Wykorzystane metody statystyczne pozwolą na ocenę istotności różnic oraz zidentyfikowanie potencjalnych zależności w danych.
 
-Dokonano kategoryzacji danych liczbowych dotyczących dochodów (AMT_INCOME_TOTAL) oraz kwoty kredytu (AMT_CREDIT) na pięć równych przedziałów, co pozwala na lepsze przedstawienie struktury tych zmiennych. Podział ten umożliwia łatwiejszą intrpretację wyników i identyfikację ewentualnych różnic między grupami dochodowymi. W celu wizualizacji wyników wykorzystano histogramy oraz wykresy słupkowe, co ułatwia interpretację rozkładów.\
+Dokonano kategoryzacji danych liczbowych dotyczących dochodów (AMT_INCOME_TOTAL) oraz kwoty kredytu (AMT_CREDIT) na pięć równych przedziałów, co pozwala na lepsze przedstawienie struktury tych zmiennych. Podział ten umożliwia łatwiejszą intrpretację wyników i identyfikację ewentualnych różnic między grupami dochodowymi. W celu wizualizacji wyników wykorzystano histogramy oraz wykresy słupkowe, co ułatwia interpretację rozkładów.
+
 Uzyskane wyniki dostarczają cennych informacji na temat struktury dochodów oraz udzielanych kredytów.
 
 ```{r, echo=FALSE}
@@ -907,18 +924,20 @@ ggpiestats(
 )  + theme(plot.title = element_text(hjust = 0.5))
 ```
 
-Na wykresie przedstawiono wyniki testu chi-kwadrat dla każdej grupy.\
-Dla każdej grupy p-value < 0.05, co oznacza, że odrzucamy hipotezę zerową. Istnieje istotny statystycznie związek między przedziałem kwoty kredytu, a statusem rodzinnym. Współczynnik V Craméra (0.08), wskazuje na słaby, ale istotny związek między zmiennymi.\
-Analizując otrzymane wykresy można zauważyć kilka istotnych wniosków.\
-W większości grup statusu rodzinnego, kredyty w średnim przedziale (12.43542 - 13.26395) stanowią największy udział. W grupie ozaczone jako "Wdowy", 45% osób korzysta z tego przedziału kredytowego, a w grupie „Single / not married” jest to 43%.\
+Na wykresie przedstawiono wyniki testu chi-kwadrat dla każdej grupy. Dla każdej z nich p-value \< 0.05, co oznacza, że odrzucamy hipotezę zerową. Istnieje istotny statystycznie związek między przedziałem kwoty kredytu, a statusem rodzinnym. Współczynnik V Craméra (0.08), wskazuje na słaby, ale istotny związek między zmiennymi.
 
-Największy udział jednego z  niższych przedziałów kredytowych (11.60689 - 12.43542) występuje w grupach: Widow (24%), Single / not married (23%), oraz Separated (19%). W grupie Married udział najniższego przedziału wynosi 15%, co oznacza, że małżeństwa częściej biorą kredyty w wyższych przedziałach niż inne grupy.
+Analizując otrzymane wykresy można zauważyć kilka istotnych wniosków. W większości grup statusu rodzinnego, kredyty w średnim przedziale (12.43542 - 13.26395) stanowią największy udział. W grupie ozaczone jako "Wdowy", 45% osób korzysta z tego przedziału kredytowego, a w grupie „Single / not married” jest to 43%.
 
-Wyższe przedziały kredytów są bardziej popularne wśród osób pozostających w małżeństwie. W grupie Married, aż 39% osób korzysta z kredytów w wyższych przedziałach, w tym 7% z najwyższego przedziału. W innych grupach udział wyższych przedziałów kredytów jest znacznie mniejszy.\
-Osoby samotne i osoby po rozwodzie częściej biorą niższe kredyty. W grupach Single, Widow i Separated, kredyty z wyższych przedziałów stanowią jedynie niewielki procent wszystkich przypadków, co sugeruje ograniczone możliwości finansowe tych grup.\
+Największy udział jednego z niższych przedziałów kredytowych (11.60689 - 12.43542) występuje w grupach: Widow (24%), Single / not married (23%), oraz Separated (19%). W grupie Married udział najniższego przedziału wynosi 15%, co oznacza, że małżeństwa częściej biorą kredyty w wyższych przedziałach niż inne grupy.
+
+Wyższe przedziały kredytów są bardziej popularne wśród osób pozostających w małżeństwie. W grupie Married, aż 39% osób korzysta z kredytów w wyższych przedziałach, w tym 7% z najwyższego przedziału. W innych grupach udział wyższych przedziałów kredytów jest znacznie mniejszy.
+
+Osoby samotne i osoby po rozwodzie częściej biorą niższe kredyty. W grupach Single, Widow i Separated, kredyty z wyższych przedziałów stanowią jedynie niewielki procent wszystkich przypadków, co sugeruje ograniczone możliwości finansowe tych grup.
+
 Wyniki wskazują na istotne różnice w struktorze kwot kredytów między osobami z poszczególnych grup ze względy na status rodzinny. Warto jednak zauważyć, że uwzględniając współczynnik V Craméra sugeruje, że zależność ta nie jest dominującym czynnikiem.
 
-Wykorzystano również analizę wariancji (ANOVA). Celem tego testu jest zrozumienie, jak typ zawodu oraz sytuacja mieszkaniowa wpływają na to, czy klient ma problemy ze spłatą kredytu.\
+Wykorzystano również analizę wariancji (ANOVA). Celem tego testu jest zrozumienie, jak typ zawodu oraz sytuacja mieszkaniowa wpływają na to, czy klient ma problemy ze spłatą kredytu.
+
 W modelu uwzględniono interakcję między zmiennymi OCCUPATION_TYPE i NAME_HOUSING_TYPE. Oznacza to, że sprawdzamy nie tylko główny wpływ każdej z tych zmiennych na TARGET, ale także, czy wpływ jednej zmiennej zależy od poziomu drugiej zmiennej.
 
 W przypadku tego modelu ANOVA postawiono następujące hipotezy dotyczące efektów:
@@ -949,4 +968,4 @@ ggcoefstats(mod, title = "Test Anova dla zmiennej TARGET w zależności od typu 
 Typ zawodu (OCCUPATION_TYPE) ma istotny wpływ na to, czy klient ma problemy ze spłatą kredytu, ponieważ wartość p-value jest bardzo mała (9.59e-05), odrzucamy hipotezę zerową. Sytuacja mieszkaniowa (NAME_HOUSING_TYPE) również ma istotny wpływ na problemy ze spłatą kredytu, z wartością p-value wynoszącą 0.00233, również odrzucamy w takim wypadku hipotezę zerową.\
 Interakcja między typem zawodu, a sytuacją mieszkaniową jest istotna statystycznie (p = 0.00388), oznacza to że wpływ jednego czynnika na TARGET (problemy ze spłatą kredytu) zależy od poziomu drugiego czynnika. Istotna interakcja pokazuje, że zawód i sytuacja mieszkaniowa razem mają bardziej złożony wpływ na to, czy klient ma problemy ze spłatą kredytu, niż gdybyśmy oceniali te zmienne oddzielnie.
 
-## Podsumowanie i wnioski ńcowe
+## Podsumowanie i wnioski końcowe
