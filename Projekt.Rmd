@@ -118,11 +118,13 @@ Następnie sprawdzono, w jakiej występują one proporcji do całego zbioru i pr
 
 ```{r, }
 NA_proportion <- prop_miss(Data)
-NA_percentage <- pct_miss(Data)
 NA_proportion
-NA_percentage
 ```
 
+```{r, }
+NA_percentage <- pct_miss(Data)
+NA_percentage
+```
 Stwierdzono, że braki danych stanowią 18,818% wszystkich obserwacji.
 
 W celu dogłębniejszej ich analizy zbadano, ile jest braków w danej kolumnie oraz w jakiej proporcji procentowej w niej występują.
@@ -535,7 +537,7 @@ ggplot(Data_hotdeck, aes(x = OCCUPATION_TYPE, fill = NAME_EDUCATION_TYPE)) +
 
 Z wykresu wynika, że najpopularniejsze wykonywane zawody w próbie badawczej to robotnicy, sprzedawcy, podstawowy personel, managerowie, kierowcy, pracownicy o umiejętnościach technicznych, księgowi, pracownicy medyczni, personel kuchenny, pracownicy ochrony oraz personel sprzątający. Pozostałe zawody tj. pracownicy HR i IT, robotnicy o niskich kwalifikacjach, prywatna kadra usługowa, agenci nieruchomości, sekretarze oraz kelnerzy i barmani są zdecydowanie mniej popularne.
 
-Można zauważyć, że w próbie badawczej dominuje wykształcenie średnie. Nieznaczny odsetek osób stanowią te z niższym wykształceniem lub nieukończonym wyższym. Sporą grupę stanowią kredytobiorcy o wykształceniu wyższym. Co ciekawe, grupa pracowników IT charakteryzuje się prawie całkowitą jednorodnością słupka na wykresie, co oznacza, że osoby pracujące w tej branży praktycznie zawsze posiadają wykształcenie wyższe. W innych branżach poziomy wykształcenia są między sobą bardziej zróżnicowane.
+Można zauważyć, że w próbie badawczej dominuje wykształcenie średnie. Nieznaczny odsetek osób stanowią te z niższym wykształceniem lub nieukończonym wyższym. Sporą grupę stanowią kredytobiorcy o wykształceniu wyższym.
 
 Z analizy próby badawczej można wywnioskować, że jej większość stanowią kobiety. Próba charakteryzuje się także dochodami na średnim poziomie oraz średnim wykształceniem. Dodatkowo, zdecydowana większość kredytobiorców mieszka we własnych domach lub mieszkaniach.
 
