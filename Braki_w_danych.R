@@ -1,3 +1,4 @@
+options(repos = c(CRAN = "https://cloud.r-project.org/"))
 library(naniar)
 library(dplyr)
 library(ggplot2)
@@ -48,16 +49,9 @@ ncol(Data)
 
 vis_miss(Data, warn_large_data=FALSE)
 
-target_miss <- Data %>%
-  group_by(TARGET) %>%
-  miss_var_summary
-
 target_heat_mapa <- gg_miss_fct(Data, fct = TARGET)
 print(target_heat_mapa)
 
-NA_filter <- NA_summary %>%
-  filter(n_miss>0)
-  
 gg_miss_upset(Data,
               nsets = 122)
 
@@ -67,7 +61,7 @@ Data <- Data %>%
 
 is.special <- function(x){if(is.numeric(x)) !is.finite(x) else is.na(x)}
 sapply(Data, is.special)
-for(n in colnames(Data)){is.na(Data[[n]]) <- is.special(Data[[n]])}
+wynik_is.special <- for(n in colnames(Data)){is.na(Data[[n]]) <- is.special(Data[[n]])}
 summary(Data)
 
 data_numeric <- Data %>%
@@ -125,6 +119,12 @@ rules <- validator(TARGET == 1 | TARGET == 0,
                    ORGANIZATION_TYPE != "XNA")
 results <- confront(Data_hotdeck, rules, key="TARGET")
 summary(results)
+
+failed_columns <- summary(results) %>%
+  filter(fails > 0) %>%
+  select(name, passes, fails, expression)
+print(failed_columns)
+
 barplot(results, main="Dane niespełniające reguł")
 
 Data_hotdeck <- Data_hotdeck %>%
