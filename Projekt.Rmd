@@ -859,9 +859,8 @@ ggstatsplot :: ggbetweenstats(
 )+ theme(plot.title = element_text(hjust = 0.5))
 ```
 
-Oś pozioma (X) przedstawia kategorię: N (Nie posiada nieruchomości) i Y (Posiada nieruchomość). Oś pionowa reprezentuje kwotę kredytu, gdzie kolory reprezentują dwie grupy: czerwony (osoby nieposiadające nieruchomości), niebieski (osoby posiadające nieruchomość).
-
-Z wykresu można wywnioskować, że osoby nieposiadające nieruchomości zaciągają nieco wyższe kredyty (mediana = 536 tys.) niż osoby posiadające nieruchomości (mediana = 495 tys.). Rozkład kredytów w obu grupach jest zbliżony, ale osoby bez nieruchomości mają więcej ekstremalnych wartości. Wartość p = 3.39e-04 sugeruje, że różnica jest istotna statystycznie, ale efekt nie jest duży (r_biserial = 0.09).
+Oś pozioma (X) przedstawia kategorię: N (Nie posiada nieruchomości) i Y (Posiada nieruchomość). Oś pionowa reprezentuje kwotę kredytu, gdzie kolory reprezentują dwie grupy: czerwony (osoby nieposiadające nieruchomości), niebieski (osoby posiadające nieruchomość).\
+Na wykresie można zauważyć, że mediana kwoty kredytu w obu grupach jest identyczna (2.65 mln), co sugeruje brak istotnej różnicy w wysokości kredytów między grupami. Rozkład wartości jest podobny, choć osoby nieposiadające nieruchomości wykazują nieco większą zmienność danych i więcej wartości odstających. Wartość p = 3.39e-04 wskazuje na istotność statystyczną różnicy między grupami, jednak wielkość efektu jest niewielka (r_biserial = 0.09).
 
 ## Testy statystyczne - wnioskowanie
 
